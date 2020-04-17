@@ -89,7 +89,7 @@ namespace Tar1.Models.DAL
             cmd = CreateCommand(cStr, con);
             try
             {
-                int numEffected = cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
@@ -114,7 +114,7 @@ namespace Tar1.Models.DAL
 
             string G = unit.Numofguides.ToString();
             string R = unit.Numofresidents.ToString();
-            sb.AppendFormat("Values('{0}', '{1}','{2}', '{3}','{4}','{5}')", unit.Unitname, unit.Numofresidents, unit.Numofguides, unit.City, unit.Street_hnumber, unit.Unittype);
+            sb.AppendFormat("Values('{0}', '{1}','{2}', '{3}','{4}','{5}')", unit.Unitname, R, G, unit.City, unit.Street_hnumber, unit.Unittype);
             String prefix = "INSERT INTO OrganizeUnit_2020" + "(UnitName,NumOfResidents,NumOfGuides,City,Street_HNumber,UnitType)";
             command = prefix + sb.ToString();
             return command;
@@ -164,7 +164,7 @@ namespace Tar1.Models.DAL
             SqlCommand cmd = CreateCommand(cStr, con);
             try
             {
-                int numEffected = cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
@@ -231,7 +231,7 @@ namespace Tar1.Models.DAL
             cmd = CreateCommand(cStr, con);
             try
             {
-                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                cmd.ExecuteNonQuery(); // execute the command
             }
             catch (Exception ex)
             {
@@ -287,11 +287,6 @@ namespace Tar1.Models.DAL
                     con.Close();
                 }
             }
-
-
-
-
-
         }
         public void UpdateGuide(TrainingLevel tl, int id)
         {
@@ -310,7 +305,7 @@ namespace Tar1.Models.DAL
             cmd = CreateCommand(cStr, con);
             try
             {
-                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                cmd.ExecuteNonQuery(); // execute the command
             }
             catch (Exception ex)
             {
@@ -326,18 +321,10 @@ namespace Tar1.Models.DAL
         }
         private String BuildInsertCommand(TrainingLevel tl, int id)
         {
-            String command;
-
-            StringBuilder sb = new StringBuilder();
-            StringBuilder sb1 = new StringBuilder();
             string p = id.ToString();
             string trl = tl.Id.ToString();
 
-
-            command = "UPDATE Guide_2020 SET TrainingLevelId =" + trl + " WHERE UserId =" + p;
-
-
-            return command;
+            return "UPDATE Guide_2020 SET TrainingLevelId =" + trl + " WHERE UserId =" + p;
         }
         public void InsertUser(User user)
         {
@@ -355,7 +342,7 @@ namespace Tar1.Models.DAL
             cmd = CreateCommand(cStr, con);
             try
             {
-                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                cmd.ExecuteNonQuery(); // execute the command
             }
             catch (Exception ex)
             {
@@ -363,7 +350,6 @@ namespace Tar1.Models.DAL
             }
             finally
             {
-
                 if (con != null)
                 {
                     con.Close();
@@ -379,8 +365,6 @@ namespace Tar1.Models.DAL
             int day = user.Birthdate.Day;
             int month = user.Birthdate.Month;
             int year = user.Birthdate.Year;
-            //DateTime d = new DateTime(year,month,day);
-
             string bdate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
             //Insert big manager
             if (user.Unitid == 0)
@@ -568,7 +552,7 @@ namespace Tar1.Models.DAL
             double extra = 0;
             double normal = 0;
             SqlConnection con = null;
-            List< Constraint> ConstList = getConstraintM();
+            List<Constraint> ConstList = getConstraintM();
             float RegularShift = ConstList[6].ConstraintValue;
             float SpeNightShift = ConstList[7].ConstraintValue;
             try
@@ -610,7 +594,6 @@ namespace Tar1.Models.DAL
                         else
                         {
                             normal += x1;
-                            extra += 0.0;
                         }
                     }
                     else
@@ -623,7 +606,6 @@ namespace Tar1.Models.DAL
                         else
                         {
                             normal += x;
-                            extra += 0.0;
                         }
                     }
                     Os.MonthlyHours = normal;
