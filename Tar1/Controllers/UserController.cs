@@ -14,7 +14,8 @@ namespace AkimShifts.Controllers
         public List<User> Get()
         {
             User u = new User();
-            return u.GetUsers();
+            List<User> U = u.GetUsers();
+            return U;
         }
 
         // GET api/<controller>/5

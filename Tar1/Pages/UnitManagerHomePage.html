@@ -13,12 +13,12 @@
     <script type="text/javascript"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
     <script>
-        function GoToGuides() {
-            window.location.href = "AddGuide.html";
-        }
-        function GoToPeriod() {
-            window.location.href = "AddPeriod.html";
-        }
+        //function GoToGuides() {
+        //    window.location.href = "AddGuide.html";
+        //}
+        //function GoToPeriod() {
+        //    window.location.href = "AddPeriod.html";
+        //}
 
     </script>
     <title></title>
@@ -32,28 +32,34 @@
         <h1 style="font-size:100px"> מנהל יחידה ארגונית</h1><br />
         <div class="row">
             <div class="col-4" onclick="GoToGuides()" style="cursor: pointer;">
-                <div class="row">
-                    <label style="cursor: pointer;">הוספה/עריכת מדריכים</label>
-                </div>
-                <div class="row">
-                    <img src="../Photos/group-friends.jpg" class="unitmanagerpics"  />
-                </div>
+                <a href="AddGuide.html">
+                    <div class="row">
+                        <label style="cursor: pointer;">הוספה/עריכת מדריכים</label>
+                    </div>
+                    <div class="row">
+                        <img src="../Photos/group-friends.jpg" class="unitmanagerpics" />
+                    </div>
+                </a>
             </div>
             <div class="col-4" onclick="GoToPeriod()" style="cursor: pointer;">
-                <div class="row">
-                    <label style="cursor: pointer;">הוספה/עריכת תקופות שיבוץ</label>
-                </div>
-                <div class="row">
-                    <img src="../Photos/calendar-mock-up.jpg" class="unitmanagerpics" style="margin-right:35px;" />
-                </div>
+                <a href="AddPeriod.html">
+                    <div class="row">
+                        <label style="cursor: pointer;">הוספה/עריכת תקופות שיבוץ</label>
+                    </div>
+                    <div class="row">
+                        <img src="../Photos/calendar-mock-up.jpg" class="unitmanagerpics" style="margin-right:35px;" />
+                    </div>
+                </a>
             </div>
             <div class="col-4" style="cursor: pointer;">
-                <div class="row">
-                    <label style="cursor: pointer;">שיבוץ משמרות לסידור  הבא</label>
-                </div>
-                <div class="row">
-                    <img src="../Photos/Post-it-notes.jpg" class="unitmanagerpics" />
-                </div>
+                <a href="WorkArrangement.html">
+                    <div class="row">
+                        <label style="cursor: pointer;">שיבוץ משמרות לסידור  הבא</label>
+                    </div>
+                    <div class="row">
+                        <img src="../Photos/Post-it-notes.jpg" class="unitmanagerpics" />
+                    </div>
+                </a>
             </div>
         </div>
         <br />

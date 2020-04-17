@@ -63,7 +63,8 @@ namespace Tar1.Models
         {
 
             DBservices dbs = new DBservices();
-           return dbs.GetUser();
+            List<User> U = dbs.GetUser();
+            return U;
         }
 
         public List<User> GetUnitUsers(int id)
