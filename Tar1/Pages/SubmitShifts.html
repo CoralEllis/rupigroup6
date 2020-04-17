@@ -12,7 +12,8 @@
             crossorigin="anonymous"></script>
     <script type="text/javascript"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
-    <script src="../Scripts/moment.js"></script>S
+    <script src="../Scripts/moment.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script>
         //user;
         //function GetUser() {
@@ -28,6 +29,7 @@
             ajaxCall("GET", "../api/Shifts/" + Unitid, "", GETShiftS, GETShiftE);
         }
         function GETShiftS(data) {
+    
             for (var i = 0; i < data.length; i++) {
                 d = data[i].Shiftdate.split("T");
                 x = data[i].Start.split("T");
@@ -83,7 +85,7 @@
         }
         function PostBlockShifts() {
             unitid = 2;
-            userid = 6543321;
+            userid = 9438;
             for (var i = 0; i < ShiftsArray.length; i++) {
                 datestr = ShiftsArray[i].StartShift.format("YYYY-MM-DD");
                 IdShift = datestr + "|" + ShiftsArray[i].Type;
@@ -109,8 +111,7 @@
             ajaxCall("POST", "../api/ApplyShift", JSON.stringify(ApplyShift), PostAShiftS, PostAShiftE);
         }
         function PostAShiftS(data) {
-            alert("SABABA!");
-
+                Swal.fire('המשמרות הוגשו בהצלחה!', '', 'success')
         }
         function PostAShiftE(error) {
             alert("BASSA");

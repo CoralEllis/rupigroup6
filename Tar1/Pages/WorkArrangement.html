@@ -23,7 +23,7 @@
         }
     </style>
     <script>
-        //user;
+        //user='';
         //function GetUser() {
         //    x = localStorage.getItem("User");
         //   user = JSON.parse(x);
@@ -228,7 +228,7 @@
                     break;
             }
         }
-        function showBigShift(div, numinarrshift) {   
+        function showBigShift(div, numinarrshift) {
             r = moment(ShiftsArray[numinarrshift].StartShift.format("YYYY-MM-DD"));
             YomBa = r.day();
             yom = "";
@@ -297,162 +297,162 @@
                         if (ShiftsArray[numinarrshift - 1].NuminOfficialShift[i].Occupied == true)
                             embed++;
                     }
+                    st = yom + " " + ShiftsArray[numinarrshift - 1].Type + " " + r + " <br /> משובצים: " + embed + "/" + ShiftsArray[numinarrshift - 1].Guidenum;
+                    $("#before").html(st);
                 }
-                st = yom + " " + ShiftsArray[numinarrshift - 1].Type + " " + r + " <br /> משובצים: " + embed + "/" + ShiftsArray[numinarrshift - 1].Guidenum;
-                $("#before").html(st);
-            }
 
+            }
         }
-        function PutGuides(div, numinarrshift) {
-            RedArr = [];
-            ResonsArray = [];
-            GreenArr = [];
-            Eligible = true;
-            Res = "";
-            loop1:
-            for (var j = 0; j < Guides.length; j++) {
-                Eligible = true;
+            function PutGuides(div, numinarrshift) {
+                RedArr = [];
                 ResonsArray = [];
-                isApply = true;
-                if (Guides[j].ShiftsSorted.length > 0) {
-                    Guides[j].ShiftsSorted.sort(sortByDateAsc);
-                    if (numinarrshift != 0) {
-                        //checkes if the guide is work the shift before
-                        loop2:
-                        for (var l = 0; l < Guides[j].ShiftsSorted.length; l++) {
-                            if (ShiftsArray[numinarrshift - 1].StartShift.format("YYYY-MM-DD") == Guides[j].ShiftsSorted[l].ShiftDate && ShiftsArray[numinarrshift - 1].Type == Guides[j].ShiftsSorted[l].ShiftType)
-                                continue loop1;
-                        }
-                    }
-                }
-                if (Guides[j].WeeklyHours > HoursPerWeek)//60  job hours per week
-                {
-                    Res = {
-                        "Res": Guides[j].Username + "   עובד יותר מ- 60 שעות בשבוע העבודה",
-                        "Emoji": "&#xf017;"
-                    }
-                    ResonsArray.push(Res);
-                    Eligible = false;
-                }
-                if (Guides[j].MonthlyNormalHours >= MonthNormalHours)  //200 hours
-                {
-                    Res = {
-                        "Res": Guides[j].Username + "   עובד יותר מ- 200 שעות החודש",
-                        "Emoji": "&#xf024;"
-                    }
-                    ResonsArray.push(Res);
-                    Eligible = false;
-                }
-                if (Guides[j].MonthlyExtraHours > ExtraHours)//60 extra hours per month
-                {
-                    Res = {
-                        "Res": Guides[j].Username + "   עובד יותר מ- 60 שעות נוספות החודש",
-                        "Emoji": "&#xf0fe;"
-                    }
-                    ResonsArray.push(Res);
-                    Eligible = false;
-                }
-                for (var i = 0; i < GuidesPref.length; i++) {
-                    Dd = GuidesPref[i].Shiftdate.split("T");
-                    if (ShiftsArray[numinarrshift].StartShift.format("YYYY-MM-DD") == Dd[0] && ShiftsArray[numinarrshift].Type == GuidesPref[i].Shifttype && Guides[j].UserId == GuidesPref[i].Userid) {
-                        if (GuidesPref[i].Isaplly1 == false) {
-                            Res = {
-                                "Res": Guides[j].Username + "   לא הגיש את המשמרת",
-                                "Emoji": "&#xf056;",
+                GreenArr = [];
+                Eligible = true;
+                Res = "";
+                loop1:
+                for (var j = 0; j < Guides.length; j++) {
+                    Eligible = true;
+                    ResonsArray = [];
+                    isApply = true;
+                    if (Guides[j].ShiftsSorted.length > 0) {
+                        Guides[j].ShiftsSorted.sort(sortByDateAsc);
+                        if (numinarrshift != 0) {
+                            //checkes if the guide is work the shift before
+                            loop2:
+                            for (var l = 0; l < Guides[j].ShiftsSorted.length; l++) {
+                                if (ShiftsArray[numinarrshift - 1].StartShift.format("YYYY-MM-DD") == Guides[j].ShiftsSorted[l].ShiftDate && ShiftsArray[numinarrshift - 1].Type == Guides[j].ShiftsSorted[l].ShiftType)
+                                    continue loop1;
                             }
-                            ResonsArray.push(Res);
-                            Eligible = false;
-                            isApply = false;
                         }
                     }
-                }
-                if (Eligible == true) {
-                    GreenGuide = {
-                        "UserName": Guides[j].Username,
-                        "UserID": Guides[j].UserId,
-                        "CountPref": Guides[j].CountPref,
-                        "ExtraHours": Guides[j].MonthlyExtraHours
+                    if (Guides[j].WeeklyHours > HoursPerWeek)//60  job hours per week
+                    {
+                        Res = {
+                            "Res": Guides[j].Username + "   עובד יותר מ- 60 שעות בשבוע העבודה",
+                            "Emoji": "&#xf017;"
+                        }
+                        ResonsArray.push(Res);
+                        Eligible = false;
                     }
-                    GreenArr.push(GreenGuide);
-                }
-                else if (Eligible == false) {
-                    RedGuide = {
-                        "UserName": Guides[j].Username,
-                        "UserID": Guides[j].UserId,
-                        "Reason": ResonsArray,
-                        "IsApply": isApply,
-                        "ExtraHours": Guides[j].MonthlyExtraHours
+                    if (Guides[j].MonthlyNormalHours >= MonthNormalHours)  //200 hours
+                    {
+                        Res = {
+                            "Res": Guides[j].Username + "   עובד יותר מ- 200 שעות החודש",
+                            "Emoji": "&#xf024;"
+                        }
+                        ResonsArray.push(Res);
+                        Eligible = false;
                     }
-                    RedArr.push(RedGuide);
+                    if (Guides[j].MonthlyExtraHours > ExtraHours)//60 extra hours per month
+                    {
+                        Res = {
+                            "Res": Guides[j].Username + "   עובד יותר מ- 60 שעות נוספות החודש",
+                            "Emoji": "&#xf0fe;"
+                        }
+                        ResonsArray.push(Res);
+                        Eligible = false;
+                    }
+                    for (var i = 0; i < GuidesPref.length; i++) {
+                        Dd = GuidesPref[i].Shiftdate.split("T");
+                        if (ShiftsArray[numinarrshift].StartShift.format("YYYY-MM-DD") == Dd[0] && ShiftsArray[numinarrshift].Type == GuidesPref[i].Shifttype && Guides[j].UserId == GuidesPref[i].Userid) {
+                            if (GuidesPref[i].Isaplly1 == false) {
+                                Res = {
+                                    "Res": Guides[j].Username + "   לא הגיש את המשמרת",
+                                    "Emoji": "&#xf056;",
+                                }
+                                ResonsArray.push(Res);
+                                Eligible = false;
+                                isApply = false;
+                            }
+                        }
+                    }
+                    if (Eligible == true) {
+                        GreenGuide = {
+                            "UserName": Guides[j].Username,
+                            "UserID": Guides[j].UserId,
+                            "CountPref": Guides[j].CountPref,
+                            "ExtraHours": Guides[j].MonthlyExtraHours
+                        }
+                        GreenArr.push(GreenGuide);
+                    }
+                    else if (Eligible == false) {
+                        RedGuide = {
+                            "UserName": Guides[j].Username,
+                            "UserID": Guides[j].UserId,
+                            "Reason": ResonsArray,
+                            "IsApply": isApply,
+                            "ExtraHours": Guides[j].MonthlyExtraHours
+                        }
+                        RedArr.push(RedGuide);
+                    }
                 }
-            }
-            fafa = "";
-            SortRed = RedArr.sort(sortRedGuides);
-            for (var r = 0; r < SortRed.length; r++) {
                 fafa = "";
-                for (var m = 0; m < SortRed[r].Reason.length; m++) {
-                    fafa += SortRed[r].Reason[m].Emoji + " ";
+                SortRed = RedArr.sort(sortRedGuides);
+                for (var r = 0; r < SortRed.length; r++) {
+                    fafa = "";
+                    for (var m = 0; m < SortRed[r].Reason.length; m++) {
+                        fafa += SortRed[r].Reason[m].Emoji + " ";
+                    }
+                    document.getElementById("badGuids").innerHTML += "<option value='" + SortRed[r].UserID + "'>" + SortRed[r].UserName + "    " + fafa + " </option>";
                 }
-                document.getElementById("badGuids").innerHTML += "<option value='" + SortRed[r].UserID + "'>" + SortRed[r].UserName + "    " + fafa + " </option>";
+                SortGreen = GreenArr.sort(sortGreenGuides);
+                for (var g = 0; g < SortGreen.length; g++) {
+                    document.getElementById("goodGuids").innerHTML += "<option value='" + SortGreen[g].UserID + "'>" + SortGreen[g].UserName + " </option>";
+                }
             }
-            SortGreen = GreenArr.sort(sortGreenGuides);
-            for (var g = 0; g < SortGreen.length; g++) {
-                document.getElementById("goodGuids").innerHTML += "<option value='" + SortGreen[g].UserID + "'>" + SortGreen[g].UserName + " </option>";
+            sortGreenGuides = function (a, b) { return a.CountPref - b.CountPref || a.ExtraHours - b.ExtraHours };
+            sortRedGuides = function (a, b) { return b.IsApply - a.IsApply || a.ExtraHours - b.ExtraHours };
+            function InsertGuide(select, numinarrshift) {
+                var result = select.options[select.selectedIndex].text;
+                userid = select.options[select.selectedIndex].value;
+                resultStr = "<div id='div" + userid + "'  style='font-family: fontAwesome'><br />" + "<i class='fas fa-times' id='" + userid + "' onclick='DeleteDiv(" + userid + ")'></i>" + "  " + result + "   ";
+                endHour = OfficialShifts[ShiftsArray[numinarrshift].NuminOfficialShift[0].NumInArray].Endshifthour;
+                startHour = OfficialShifts[ShiftsArray[numinarrshift].NuminOfficialShift[0].NumInArray].Startshifthour;
+                resultStr += "<input type='time' value='" + endHour + "'  id='" + userid + "E'/>" + "  -  " + "<input type='time' value='" + startHour + "' id='" + userid + "S'/>" + "    " + "<button onclick='SaveUpdateshift(this," + userid + "," + numinarrshift + ")'>שבץ מדריך</button></div>";
+                classstr = $(select).parent().parent().prop('className');
+                document.getElementsByClassName(classstr)[0].innerHTML += resultStr;
             }
-        }
-        sortGreenGuides = function (a, b) { return a.CountPref - b.CountPref || a.ExtraHours - b.ExtraHours };
-        sortRedGuides = function (a, b) { return b.IsApply - a.IsApply || a.ExtraHours - b.ExtraHours };
-        function InsertGuide(select, numinarrshift) {
-            var result = select.options[select.selectedIndex].text;
-            userid = select.options[select.selectedIndex].value;
-            resultStr = "<div id='div" + userid + "'  style='font-family: fontAwesome'><br />" + "<i class='fas fa-times' id='" + userid + "' onclick='DeleteDiv(" + userid + ")'></i>" + "  " + result + "   ";
-            endHour = OfficialShifts[ShiftsArray[numinarrshift].NuminOfficialShift[0].NumInArray].Endshifthour;
-            startHour = OfficialShifts[ShiftsArray[numinarrshift].NuminOfficialShift[0].NumInArray].Startshifthour;
-            resultStr += "<input type='time' value='" + endHour + "'  id='" + userid + "E'/>" + "  -  " + "<input type='time' value='" + startHour + "' id='" + userid + "S'/>" + "    " + "<button onclick='SaveUpdateshift(this," + userid + "," + numinarrshift + ")'>שבץ מדריך</button></div>";
-                  classstr = $(select).parent().parent().prop('className');
-            document.getElementsByClassName(classstr)[0].innerHTML += resultStr;
-        }
 
 
-        function SaveUpdateshift(x, id, num) {
-            Command = x.textContent;
-            mispar = ShiftsArray[num].NuminOfficialShift.length;
-            if (x.textContent == 'שבץ מדריך') {
-                x.textContent = 'מחק מדריך';
-                x.style.backgroundColor = "#FF0000";
-                x.style.color = "#FCF1F1";
-                $("#" + id).remove();
-                StratH = $("#" + id + "S").val();
-                endHour = $("#" + id + "E").val();
-                $("#" + id + "S").prop("disabled", true);
-                $("#" + id + "E").prop("disabled", true);
-                for (var i = 0; i < mispar; i++) {
-                    if (OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid.toString().length == 1 && ShiftsArray[num].NuminOfficialShift[i].Occupied == false) {
-                        OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid = id;
-                        OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Startshifthour = StratH;
-                        OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Endshifthour = endHour;
-                        ShiftsArray[num].NuminOfficialShift[i].Occupied = true;
-                        break;
+            function SaveUpdateshift(x, id, num) {
+                Command = x.textContent;
+                mispar = ShiftsArray[num].NuminOfficialShift.length;
+                if (x.textContent == 'שבץ מדריך') {
+                    x.textContent = 'מחק מדריך';
+                    x.style.backgroundColor = "#FF0000";
+                    x.style.color = "#FCF1F1";
+                    $("#" + id).remove();
+                    StratH = $("#" + id + "S").val();
+                    endHour = $("#" + id + "E").val();
+                    $("#" + id + "S").prop("disabled", true);
+                    $("#" + id + "E").prop("disabled", true);
+                    for (var i = 0; i < mispar; i++) {
+                        if (OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid.toString().length == 1 && ShiftsArray[num].NuminOfficialShift[i].Occupied == false) {
+                            OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid = id;
+                            OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Startshifthour = StratH;
+                            OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Endshifthour = endHour;
+                            ShiftsArray[num].NuminOfficialShift[i].Occupied = true;
+                            break;
+                        }
+                    }
+                    Mstart = moment(StratH, 'HH:mm A');
+                    Mend = moment(endHour, 'HH:mm A');
+                    milisecond = moment.duration(Mend.diff(Mstart));
+                    ShiftDuration = milisecond.asHours();
+                    if (ShiftDuration < 0) {
+                        ShiftDuration = 24 + ShiftDuration;
+                    }
+                    if (ShiftDuration > LongerShift) {
+                        swal("שים לב משך המשמרת גדול מ-12 שעות!");
                     }
                 }
-                Mstart = moment(StratH, 'HH:mm A');
-                Mend = moment(endHour, 'HH:mm A');
-                milisecond = moment.duration(Mend.diff(Mstart));
-                ShiftDuration = milisecond.asHours();
-                if (ShiftDuration < 0) {
-                    ShiftDuration = 24 + ShiftDuration;
-                }
-                if (ShiftDuration > LongerShift) {
-                    swal("שים לב משך המשמרת גדול מ-12 שעות!");
-                }
-            }
-            else if (x.textContent == 'מחק מדריך') {
-                x.textContent = 'שבץ מדריך';
-                x.style.backgroundColor = "cadetblue";
-                x.style.color = "honeydew";
-                $("#div" + id).prepend("<i class='fas fa-times' id='" + id + "' onclick='DeleteDiv(" + id + ")'></i>");
-                $("#" + id + "S").prop("disabled", false);
-                $("#" + id + "E").prop("disabled", false);     
+                else if (x.textContent == 'מחק מדריך') {
+                    x.textContent = 'שבץ מדריך';
+                    x.style.backgroundColor = "cadetblue";
+                    x.style.color = "honeydew";
+                    $("#div" + id).prepend("<i class='fas fa-times' id='" + id + "' onclick='DeleteDiv(" + id + ")'></i>");
+                    $("#" + id + "S").prop("disabled", false);
+                    $("#" + id + "E").prop("disabled", false);
                     for (var i = 0; i < mispar; i++) {
                         if (OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid = id && ShiftsArray[num].NuminOfficialShift[i].Occupied == true) {
                             //Delete guide's shift from ShiftArray
@@ -461,178 +461,178 @@
                             OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid = " ";
                             break;
                         }
-                    }   
-            }
-            dateShift = OfficialShifts[ShiftsArray[num].NuminOfficialShift[0].NumInArray].Shiftdate;
-            type = OfficialShifts[ShiftsArray[num].NuminOfficialShift[0].NumInArray].Shifttype;
-            for (var i = 0; i < Guides.length; i++) {
-                if (Guides[i].UserId == id) {
-                    if (Command == 'מחק מדריך') {
-                        for (var f = 0; f < Guides[i].ShiftsSorted.length; f++) {
-                            if (Guides[i].ShiftsSorted[f].ShiftDate == dateShift && Guides[i].ShiftsSorted[f].ShiftType == type)
-                                Guides[i].ShiftsSorted.splice(f, 1);
+                    }
+                }
+                dateShift = OfficialShifts[ShiftsArray[num].NuminOfficialShift[0].NumInArray].Shiftdate;
+                type = OfficialShifts[ShiftsArray[num].NuminOfficialShift[0].NumInArray].Shifttype;
+                for (var i = 0; i < Guides.length; i++) {
+                    if (Guides[i].UserId == id) {
+                        if (Command == 'מחק מדריך') {
+                            for (var f = 0; f < Guides[i].ShiftsSorted.length; f++) {
+                                if (Guides[i].ShiftsSorted[f].ShiftDate == dateShift && Guides[i].ShiftsSorted[f].ShiftType == type)
+                                    Guides[i].ShiftsSorted.splice(f, 1);
+                            }
                         }
-                    }              
-                    else if (Command == 'שבץ מדריך') {
-                        shiftdatetime = dateShift + " " + StratH;
-                        Hathala = moment(shiftdatetime);
-                        shiftend = dateShift + " " + endHour;
-                        sium = moment(shiftend);
-                        GuideShiftR = {
-                            "ShiftDate": dateShift,
-                            "ShiftType": type,
-                            "StartShift": Hathala,
-                            "EndHour": sium
-                        }
-                        Guides[i].ShiftsSorted.push(GuideShiftR);                     
-                        if (Preperness == true && type == "לילה") {
-                            if (ShiftDuration > SNightShiftHours) {
-                                Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours + SNightShiftHours;
-                                Guides[i].MonthlyExtraHours = Guides[i].MonthlyExtraHours + ShiftDuration - SNightShiftHours;
-                                Guides[i].WeeklyHours = Guides[i].WeeklyHours + ShiftDuration;
-                                UpdateExtra(Guides[i].Username, Guides[i].MonthlyExtraHours, Guides[i].UserId);
+                        else if (Command == 'שבץ מדריך') {
+                            shiftdatetime = dateShift + " " + StratH;
+                            Hathala = moment(shiftdatetime);
+                            shiftend = dateShift + " " + endHour;
+                            sium = moment(shiftend);
+                            GuideShiftR = {
+                                "ShiftDate": dateShift,
+                                "ShiftType": type,
+                                "StartShift": Hathala,
+                                "EndHour": sium
+                            }
+                            Guides[i].ShiftsSorted.push(GuideShiftR);
+                            if (Preperness == true && type == "לילה") {
+                                if (ShiftDuration > SNightShiftHours) {
+                                    Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours + SNightShiftHours;
+                                    Guides[i].MonthlyExtraHours = Guides[i].MonthlyExtraHours + ShiftDuration - SNightShiftHours;
+                                    Guides[i].WeeklyHours = Guides[i].WeeklyHours + ShiftDuration;
+                                    UpdateExtra(Guides[i].Username, Guides[i].MonthlyExtraHours, Guides[i].UserId);
+                                }
+                                else {
+                                    Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours + ShiftDuration;
+                                    Guides[i].WeeklyHours = Guides[i].WeeklyHours + ShiftDuration;
+                                }
                             }
                             else {
-                                Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours + ShiftDuration;
-                                Guides[i].WeeklyHours = Guides[i].WeeklyHours + ShiftDuration;
+                                if (ShiftDuration > Regularshifthours) {
+                                    Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours + Regularshifthours;
+                                    Guides[i].MonthlyExtraHours = Guides[i].MonthlyExtraHours + ShiftDuration - Regularshifthours;
+                                    Guides[i].WeeklyHours = Guides[i].WeeklyHours + ShiftDuration;
+                                    UpdateExtra(Guides[i].Username, Guides[i].MonthlyExtraHours, Guides[i].UserId);
+                                }
+                                else {
+                                    Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours + ShiftDuration;
+                                    Guides[i].WeeklyHours = Guides[i].WeeklyHours + ShiftDuration;
+                                }
                             }
-                        }
-                        else {
-                            if (ShiftDuration > Regularshifthours) {
-                                Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours + Regularshifthours;
-                                Guides[i].MonthlyExtraHours = Guides[i].MonthlyExtraHours + ShiftDuration - Regularshifthours;
-                                Guides[i].WeeklyHours = Guides[i].WeeklyHours + ShiftDuration;
-                                UpdateExtra(Guides[i].Username, Guides[i].MonthlyExtraHours, Guides[i].UserId);
+                            if (Guides[i].MonthlyHours > MonthNormalHours)// 200 normal hours per month
+                            {
+                                swal("שים לב! שעות העבודה החודשיות עולות על 200 שעות!");
                             }
-                            else {
-                                Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours + ShiftDuration;
-                                Guides[i].WeeklyHours = Guides[i].WeeklyHours + ShiftDuration;
+                            if (Guides[i].MonthlyExtraHours > ExtraHours)//60 extra hours per month
+                            {
+                                swal("שים לב! שעות העבודה הנוספות בחודש זה עולות על 60 שעות!");
                             }
+                            break;
                         }
-                        if (Guides[i].MonthlyHours > MonthNormalHours)// 200 normal hours per month
-                        {
-                            swal("שים לב! שעות העבודה החודשיות עולות על 200 שעות!");
-                        }
-                        if (Guides[i].MonthlyExtraHours > ExtraHours)//60 extra hours per month
-                        {
-                            swal("שים לב! שעות העבודה הנוספות בחודש זה עולות על 60 שעות!");
-                        }
-                        break;
                     }
                 }
             }
-        }   
-        function PostWorkArrangment() {
-            for (var g = 0; g < Guides.length; g++) {
-                if (Guides[g].ShiftsSorted.length > 0)
-                    Guides[g].ShiftsSorted.sort(sortByDateAsc);
-            }
-            //dayofscheduele = moment(ShiftsArray[0].Shiftdate);
-            //from_date = dayofscheduele.isoWeekday(1).startOf('week');
-            //to_date = dayofscheduele.endOf('week');
-            for (var j = 0; j < Guides.length; j++) {
-                if (Guides[j].ShiftsSorted.length > 0) {
-                    HasABreak = false;//36 hours break
-                    for (var f = 0; f < Guides[j].ShiftsSorted.length; f++) {
-                        if (f == 0) {
-                            FirstShift = ShiftsArray[0].StartShift;
-                            Roshmish = Guides[j].ShiftsSorted[f].StartShift;
-                            milisecond = moment.duration(Roshmish.diff(FirstShift));
-                            BreakShift = milisecond.asHours();
-                            if (BreakShift >= MaxRestHours) {
-                                HasABreak = true;
-                                //break;
+            function PostWorkArrangment() {
+                for (var g = 0; g < Guides.length; g++) {
+                    if (Guides[g].ShiftsSorted.length > 0)
+                        Guides[g].ShiftsSorted.sort(sortByDateAsc);
+                }
+                //dayofscheduele = moment(ShiftsArray[0].Shiftdate);
+                //from_date = dayofscheduele.isoWeekday(1).startOf('week');
+                //to_date = dayofscheduele.endOf('week');
+                for (var j = 0; j < Guides.length; j++) {
+                    if (Guides[j].ShiftsSorted.length > 0) {
+                        HasABreak = false;//36 hours break
+                        for (var f = 0; f < Guides[j].ShiftsSorted.length; f++) {
+                            if (f == 0) {
+                                FirstShift = ShiftsArray[0].StartShift;
+                                Roshmish = Guides[j].ShiftsSorted[f].StartShift;
+                                milisecond = moment.duration(Roshmish.diff(FirstShift));
+                                BreakShift = milisecond.asHours();
+                                if (BreakShift >= MaxRestHours) {
+                                    HasABreak = true;
+                                    //break;
+                                }
                             }
-                        }
-                        if (f == Guides[j].ShiftsSorted.length - 1 && HasABreak == false) {
-                            Sofmish = Guides[j].ShiftsSorted[f].EndHour;
-                            Lastshift = ShiftsArray[ShiftsArray.length - 1].EndShift;
-                            milisecond = moment.duration(Lastshift.diff(Sofmish));
-                            BreakShift = milisecond.asHours();
-                            if (BreakShift >= MaxRestHours) {
-                                HasABreak = true;
-                                //break;
+                            if (f == Guides[j].ShiftsSorted.length - 1 && HasABreak == false) {
+                                Sofmish = Guides[j].ShiftsSorted[f].EndHour;
+                                Lastshift = ShiftsArray[ShiftsArray.length - 1].EndShift;
+                                milisecond = moment.duration(Lastshift.diff(Sofmish));
+                                BreakShift = milisecond.asHours();
+                                if (BreakShift >= MaxRestHours) {
+                                    HasABreak = true;
+                                    //break;
+                                }
                             }
-                        }
-                        if (f + 1 < Guides[j].ShiftsSorted.length && HasABreak == false) {
-                            Roshmish = Guides[j].ShiftsSorted[f + 1].StartShift;
-                            Sofmish = Guides[j].ShiftsSorted[f].EndHour;
-                            milisecond = moment.duration(Roshmish.diff(Sofmish));
-                            BreakShift = milisecond.asHours();
-                            if (BreakShift >= MaxRestHours) {
-                                HasABreak = true;
-                                //break;
+                            if (f + 1 < Guides[j].ShiftsSorted.length && HasABreak == false) {
+                                Roshmish = Guides[j].ShiftsSorted[f + 1].StartShift;
+                                Sofmish = Guides[j].ShiftsSorted[f].EndHour;
+                                milisecond = moment.duration(Roshmish.diff(Sofmish));
+                                BreakShift = milisecond.asHours();
+                                if (BreakShift >= MaxRestHours) {
+                                    HasABreak = true;
+                                    //break;
+                                }
                             }
-                        }
-                        if (CheckEightHours == true) {
-                            if (f + 1 < Guides[j].ShiftsSorted.length) {
-                                Roshmish1 = Guides[j].ShiftsSorted[f + 1].StartShift;
-                                Sofmish1 = Guides[j].ShiftsSorted[f].EndHour;
-                                milisecond1 = moment.duration(Roshmish1.diff(Sofmish1));
-                                BreakShift1 = milisecond1.asHours();
-                                if (BreakShift1 < HoursBetweenShifts) {
-                                    Swal.fire({
-                                        title: 'שים לב!',
-                                        text: 'ישנו הפרש של פחות מ- 8 שעות עבור  ' + Guides[j].Username + '  בין המשמרות:  ' + Guides[j].ShiftsSorted[f].ShiftDate + ' ' + Guides[j].ShiftsSorted[f].ShiftType + ' ו' + Guides[j].ShiftsSorted[f + 1].ShiftDate + ' ' + Guides[j].ShiftsSorted[f + 1].ShiftType,
-                                        icon: 'warning',
-                                        showCancelButton: true,
-                                        confirmButtonColor: '#3085d6',
-                                        cancelButtonColor: '#d33',
-                                        confirmButtonText: 'הגש סידור עבודה',
-                                        cancelButtonText: 'בטל וחזור',
-                                    }).then((result) => {
+                            if (CheckEightHours == true) {
+                                if (f + 1 < Guides[j].ShiftsSorted.length) {
+                                    Roshmish1 = Guides[j].ShiftsSorted[f + 1].StartShift;
+                                    Sofmish1 = Guides[j].ShiftsSorted[f].EndHour;
+                                    milisecond1 = moment.duration(Roshmish1.diff(Sofmish1));
+                                    BreakShift1 = milisecond1.asHours();
+                                    if (BreakShift1 < HoursBetweenShifts) {
+                                        Swal.fire({
+                                            title: 'שים לב!',
+                                            text: 'ישנו הפרש של פחות מ- 8 שעות עבור  ' + Guides[j].Username + '  בין המשמרות:  ' + Guides[j].ShiftsSorted[f].ShiftDate + ' ' + Guides[j].ShiftsSorted[f].ShiftType + ' ו' + Guides[j].ShiftsSorted[f + 1].ShiftDate + ' ' + Guides[j].ShiftsSorted[f + 1].ShiftType,
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+                                            confirmButtonText: 'הגש סידור עבודה',
+                                            cancelButtonText: 'בטל וחזור',
+                                        }).then((result) => {
 
-                                        if (result.dismiss == 'cancel') {
-                                            //return;
-                                        }
-                                        if (result.value) {
-                                            Swal.fire(
-                                                'הסידור הוגש',
-                                                '',
-                                                'success'
-                                            )
-                                        }
-                                    })
+                                            if (result.dismiss == 'cancel') {
+                                                //return;
+                                            }
+                                            if (result.value) {
+                                                Swal.fire(
+                                                    'הסידור הוגש',
+                                                    '',
+                                                    'success'
+                                                )
+                                            }
+                                        })
+                                    }
                                 }
                             }
                         }
-                    }
-                    if (HasABreak == false) {
-                        Swal.fire({
-                            title: 'שים לב!',
-                            text: Guides[j].Username + " לא קיבל 36 שעות מנוחה ברציפות",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'הגש סידור עבודה',
-                            cancelButtonText: 'בטל וחזור',
-                        }).then((result) => {
-                            if (result.dismiss == 'cancel') {
-                                //return;
-                            }
-                            if (result.value) {
-                                Swal.fire(
-                                    'הסידור הוגש',
-                                    '',
-                                    'success'
-                                )
-                            }
-                        })
+                        if (HasABreak == false) {
+                            Swal.fire({
+                                title: 'שים לב!',
+                                text: Guides[j].Username + " לא קיבל 36 שעות מנוחה ברציפות",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'הגש סידור עבודה',
+                                cancelButtonText: 'בטל וחזור',
+                            }).then((result) => {
+                                if (result.dismiss == 'cancel') {
+                                    //return;
+                                }
+                                if (result.value) {
+                                    Swal.fire(
+                                        'הסידור הוגש',
+                                        '',
+                                        'success'
+                                    )
+                                }
+                            })
+                        }
                     }
                 }
             }
-        }
-        function DeleteDiv(userid) {
-            divstr = "div" + userid;
-            $("#" + divstr).remove();
+            function DeleteDiv(userid) {
+                divstr = "div" + userid;
+                $("#" + divstr).remove();
 
-        }
-        function UpdateExtra(name, hours, ID) {
-            userDiv = $("#Extra" + ID);
-            userDiv.html(name + ": " + hours.toFixed(2));
-        }
-        sortByDateAsc = function (lhs, rhs) { return lhs.StartShift > rhs.StartShift ? 1 : lhs.StartShift < rhs.StartShift ? -1 : 0 }
+            }
+            function UpdateExtra(name, hours, ID) {
+                userDiv = $("#Extra" + ID);
+                userDiv.html(name + ": " + hours.toFixed(2));
+            }
+            sortByDateAsc = function (lhs, rhs) { return lhs.StartShift > rhs.StartShift ? 1 : lhs.StartShift < rhs.StartShift ? -1 : 0 }
     </script>
     <title></title>
 </head>
