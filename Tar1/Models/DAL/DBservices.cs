@@ -440,7 +440,6 @@ namespace Tar1.Models.DAL
                 }
             }
         }
-
         public void updateTLTable(TrainingLevel tl, int id)
         {
             {
@@ -529,7 +528,6 @@ namespace Tar1.Models.DAL
                     us.MonthlyExtraHours = us1.MonthlyExtraHours;
                     User us2 = CountShift(us.Userid);
                     us.NumOfPref = us2.NumOfPref;
-
                     U.Add(us);
                 }
                 return U;
@@ -637,11 +635,8 @@ namespace Tar1.Models.DAL
                 selectSTR += " FROM BlockShift_2020 left join Shift_2020 on BlockShift_2020.ShiftDate = Shift_2020.ShiftDate and BlockShift_2020.ShiftType = Shift_2020.ShiftType";
                 selectSTR += " WHERE Shift_2020.StartPeriod > '" + today + "' and BlockShift_2020.UserId = '" + Userid + "' and BlockShift_2020.isApply = '1'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
-                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-                while (dr.Read())
-                {
-                    CS.NumOfPref = Convert.ToInt32(dr[""]);
-                }
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); 
+               CS.NumOfPref = Convert.ToInt32(dr.Read());
                 return CS;
             }
             catch (Exception ex)
@@ -883,16 +878,13 @@ namespace Tar1.Models.DAL
         }
         public List<ApplyShift> GetApplyShift(int id)
         {
-
             List<ApplyShift> AS = new List<ApplyShift>();
             SqlConnection con = null;
             string today = DateTime.Today.ToString("yyyy-MM-dd");
-            string unitId = id.ToString();
+
             try
             {
                 con = connect("DBConnectionString");
-
-
                 String selectSTR = "select BlockShift_2020.ShiftType,BlockShift_2020.UserId, BlockShift_2020.ShiftDate, BlockShift_2020.UserId,BlockShift_2020.isApply, BlockShift_2020.Comments,  User_2020.FirstName,  User_2020.LastName";
                 selectSTR += " from BlockShift_2020 left join Shift_2020 on BlockShift_2020.ShiftDate = Shift_2020.ShiftDate and BlockShift_2020.ShiftType = Shift_2020.ShiftType left join User_2020 on BlockShift_2020.UserId = User_2020.UserId";
                 selectSTR += " where BlockShift_2020.UnitId = " + id + " AND Shift_2020.StartPeriod >'" + today + "'";
@@ -999,8 +991,6 @@ namespace Tar1.Models.DAL
             String prefix = "UPDATE ConstraintManagement_2020 SET [ConstraintName] = '" + c.ConstraintName + "', [ConstraintValue] =  '" + value + "' WHERE [ConstraintID] = " + id + "";
             return prefix;
         }
-
-
 
     }
 
