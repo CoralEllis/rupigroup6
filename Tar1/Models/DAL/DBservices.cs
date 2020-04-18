@@ -667,7 +667,7 @@ namespace Tar1.Models.DAL
             cmd = CreateCommand(cStr, con);
             try
             {
-                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                cmd.ExecuteNonQuery(); // execute the command
             }
             catch (Exception ex)
             {

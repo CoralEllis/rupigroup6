@@ -37,11 +37,11 @@ namespace Tar1.Models
             DBservices dbs = new DBservices();
             if (this.Id == 0)
             {
-                dbs.updateTLTable(this, id);
+                dbs.updateTLTable(this, id);//id of TL
             }
             else
             {
-                dbs.UpdateGuide(this, id);
+                dbs.UpdateGuide(this, id);// id of guide
 
             }
 
