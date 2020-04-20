@@ -7,6 +7,9 @@
 body {
     background-color: aliceblue;
 }
+p{
+    text-align:center;
+}
 
 #icons, #ExtraHours {
     border: 2px ridge cadetblue;

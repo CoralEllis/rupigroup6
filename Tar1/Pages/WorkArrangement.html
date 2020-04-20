@@ -467,6 +467,30 @@
                             if (Guides[i].ShiftsSorted[f].ShiftDate == dateShift && Guides[i].ShiftsSorted[f].ShiftType == type)
                                 Guides[i].ShiftsSorted.splice(f, 1);
                         }
+                        if (Preperness == true && type == "לילה") {
+                            if (ShiftDuration > SNightShiftHours) {
+                                Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours - SNightShiftHours;
+                                Guides[i].MonthlyExtraHours = Guides[i].MonthlyExtraHours - ShiftDuration + SNightShiftHours;
+                                Guides[i].WeeklyHours = Guides[i].WeeklyHours - ShiftDuration;
+                                UpdateExtra(Guides[i].Username, Guides[i].MonthlyExtraHours, Guides[i].UserId);
+                            }
+                            else {
+                                Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours - ShiftDuration;
+                                Guides[i].WeeklyHours = Guides[i].WeeklyHours - ShiftDuration;
+                            }
+                        }
+                        else {
+                            if (ShiftDuration > Regularshifthours) {
+                                Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours - Regularshifthours;
+                                Guides[i].MonthlyExtraHours = Guides[i].MonthlyExtraHours - ShiftDuration + Regularshifthours;
+                                Guides[i].WeeklyHours = Guides[i].WeeklyHours - ShiftDuration;
+                                UpdateExtra(Guides[i].Username, Guides[i].MonthlyExtraHours, Guides[i].UserId);
+                            }
+                            else {
+                                Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours - ShiftDuration;
+                                Guides[i].WeeklyHours = Guides[i].WeeklyHours - ShiftDuration;
+                            }
+                        }
                     }
                     else if (Command == 'שבץ מדריך') {
                         shiftdatetime = dateShift + " " + StratH;
@@ -480,6 +504,8 @@
                             "EndHour": sium
                         }
                         Guides[i].ShiftsSorted.push(GuideShiftR);
+                        rf = $(x).parent().parent().prop('className');
+                        document.getElementById(rf).childNodes[0].innerHTML += "<span id='embed" + Guides[i].UserId + "' class='row' style='margin:auto'>" + Guides[i].Username + "</span>";
                         if (Preperness == true && type == "לילה") {
                             if (ShiftDuration > SNightShiftHours) {
                                 Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours + SNightShiftHours;
