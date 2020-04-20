@@ -416,11 +416,7 @@
                 endHour = $("#" + id + "E").val();
                 $("#" + id + "S").prop("disabled", true);
                 $("#" + id + "E").prop("disabled", true);
-                embedA = HowManyEmbed(num, mispar);
-                if (embedA == mispar) {
-                    rf = $(x).parent().parent().prop('className');
-                    $("#" + rf).css("background-color,honeydew");
-                }
+
                 for (var i = 0; i < mispar; i++) {
                     if (OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid.toString().length == 1 && ShiftsArray[num].NuminOfficialShift[i].Occupied == false) {
                         OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid = id;
@@ -429,7 +425,11 @@
                         ShiftsArray[num].NuminOfficialShift[i].Occupied = true;
                         break;
                     }
-
+                }
+                embedA = HowManyEmbed(num, mispar);
+                if (embedA == mispar) {
+                    rf = $(x).parent().parent().prop('className');
+                    document.getElementById(rf).style.backgroundColor = "#CCFFCC";
                 }
                 Mstart = moment(StratH, 'HH:mm A');
                 Mend = moment(endHour, 'HH:mm A');
@@ -458,7 +458,13 @@
                         break;
                     }
                 }
+                embedA = HowManyEmbed(num, mispar);
+                if (embedA != mispar) {
+                    rf = $(x).parent().parent().prop('className');
+                    document.getElementById(rf).style.backgroundColor = "aliceblue";
+                }
             }
+
             dateShift = OfficialShifts[ShiftsArray[num].NuminOfficialShift[0].NumInArray].Shiftdate;
             type = OfficialShifts[ShiftsArray[num].NuminOfficialShift[0].NumInArray].Shifttype;
             for (var i = 0; i < Guides.length; i++) {
