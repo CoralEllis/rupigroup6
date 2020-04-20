@@ -248,10 +248,7 @@
                 r = ShiftsArray[numinarrshift - 1].StartShift.format('DD/MM/YYYY');//get date of shift before
                 mispar = ShiftsArray[numinarrshift - 1].NuminOfficialShift.length;
                 embed = 0;
-                for (var i = 0; i < mispar; i++) {
-                    if (ShiftsArray[numinarrshift - 1].NuminOfficialShift[i].Occupied == true)
-                        embed++;
-                }
+                embed = HowManyEmbed(numinarrshift - 1, mispar);
                 st = yom + " " + ShiftsArray[numinarrshift - 1].Type + " " + r + " <br /> משובצים: " + embed + "/" + ShiftsArray[numinarrshift - 1].Guidenum;
                 $("#before").html(st);
                 ShiftA = moment(ShiftsArray[numinarrshift + 1].StartShift.format("YYYY-MM-DD"));//shift after
@@ -260,10 +257,7 @@
                 ShiftA = ShiftsArray[numinarrshift + 1].StartShift.format('DD/MM/YYYY');//get date of shift after
                 mispar = ShiftsArray[numinarrshift + 1].NuminOfficialShift.length;
                 embedA = 0;
-                for (var i = 0; i < mispar; i++) {
-                    if (ShiftsArray[numinarrshift + 1].NuminOfficialShift[i].Occupied == true)
-                        embedA++;
-                }
+                embedA = HowManyEmbed(numinarrshift + 1, mispar);
                 stA = yomA + " " + ShiftsArray[numinarrshift + 1].Type + " " + ShiftA + " <br /> משובצים: " + embedA + "/" + ShiftsArray[numinarrshift + 1].Guidenum;
                 $("#after").html(stA);
             }
@@ -276,10 +270,7 @@
                     ShiftA = ShiftsArray[numinarrshift + 1].StartShift.format('DD/MM/YYYY');//get date of shift after
                     mispar = ShiftsArray[numinarrshift + 1].NuminOfficialShift.length;
                     embedA = 0;
-                    for (var i = 0; i < mispar; i++) {
-                        if (ShiftsArray[numinarrshift + 1].NuminOfficialShift[i].Occupied == true)
-                            embedA++;
-                    }
+                    embedA = HowManyEmbed(numinarrshift + 1, mispar);
                     stA = yomA + " " + ShiftsArray[numinarrshift + 1].Type + " " + ShiftA + " <br /> משובצים: " + embedA + "/" + ShiftsArray[numinarrshift + 1].Guidenum;
                     $("#after").html(stA);
                 }
@@ -289,11 +280,7 @@
                     yom = TellMeTheDay(YomBa);//get day of shift before
                     r = ShiftsArray[numinarrshift - 1].StartShift.format('DD/MM/YYYY');//get date of shift before
                     mispar = ShiftsArray[numinarrshift - 1].NuminOfficialShift.length;
-                    embed = 0;
-                    for (var i = 0; i < mispar; i++) {
-                        if (ShiftsArray[numinarrshift - 1].NuminOfficialShift[i].Occupied == true)
-                            embed++;
-                    }
+                    embed = HowManyEmbed(numinarrshift - 1, mispar);
                     st = yom + " " + ShiftsArray[numinarrshift - 1].Type + " " + r + " <br /> משובצים: " + embed + "/" + ShiftsArray[numinarrshift - 1].Guidenum;
                     $("#before").html(st);
                 }
@@ -409,6 +396,14 @@
             classstr = $(select).parent().parent().prop('className');
             document.getElementsByClassName(classstr)[0].innerHTML += resultStr;
         }
+        function HowManyEmbed(NuminArr, len) {
+            embed = 0;
+            for (var i = 0; i < len; i++) {
+                if (ShiftsArray[NuminArr].NuminOfficialShift[i].Occupied == true)
+                    embed++;
+            }
+            return embed;
+        }
         function SaveUpdateshift(x, id, num) {
             Command = x.textContent;
             mispar = ShiftsArray[num].NuminOfficialShift.length;
@@ -421,6 +416,11 @@
                 endHour = $("#" + id + "E").val();
                 $("#" + id + "S").prop("disabled", true);
                 $("#" + id + "E").prop("disabled", true);
+                embedA = HowManyEmbed(num, mispar);
+                if (embedA == mispar) {
+                    rf = $(x).parent().parent().prop('className');
+                    $("#" + rf).css("background-color,honeydew");
+                }
                 for (var i = 0; i < mispar; i++) {
                     if (OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid.toString().length == 1 && ShiftsArray[num].NuminOfficialShift[i].Occupied == false) {
                         OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid = id;
@@ -429,6 +429,7 @@
                         ShiftsArray[num].NuminOfficialShift[i].Occupied = true;
                         break;
                     }
+
                 }
                 Mstart = moment(StratH, 'HH:mm A');
                 Mend = moment(endHour, 'HH:mm A');
@@ -467,6 +468,7 @@
                             if (Guides[i].ShiftsSorted[f].ShiftDate == dateShift && Guides[i].ShiftsSorted[f].ShiftType == type)
                                 Guides[i].ShiftsSorted.splice(f, 1);
                         }
+                        $("#embed" + Guides[i].UserId).remove();
                         if (Preperness == true && type == "לילה") {
                             if (ShiftDuration > SNightShiftHours) {
                                 Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours - SNightShiftHours;
