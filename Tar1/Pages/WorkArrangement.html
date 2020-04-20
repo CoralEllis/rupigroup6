@@ -18,9 +18,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="../Scripts/moment.js"></script>
     <style>
-        select {
+        select,div {
             font-family: fontAwesome
         }
+       
     </style>
     <script>
         //user='';
@@ -430,7 +431,8 @@
                 if (embedA == mispar) {
                     rf = $(x).parent().parent().prop('className');
                     document.getElementById(rf).style.backgroundColor = "#CCFFCC";
-                }
+                    document.getElementById(rf).innerHTML += "<i class='fa fa-thumbs-up' style='font-size:36px; margin:auto'></i>";
+                    }
                 Mstart = moment(StratH, 'HH:mm A');
                 Mend = moment(endHour, 'HH:mm A');
                 milisecond = moment.duration(Mend.diff(Mstart));
@@ -462,6 +464,7 @@
                 if (embedA != mispar) {
                     rf = $(x).parent().parent().prop('className');
                     document.getElementById(rf).style.backgroundColor = "aliceblue";
+                    document.getElementById(rf).childNodes[1].remove()
                 }
             }
 
