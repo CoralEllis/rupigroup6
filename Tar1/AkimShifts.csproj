@@ -189,6 +189,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Pages\AddSpecialLevel.html" />
     <Content Include="Pages\ConstraintManagement.html" />
     <Content Include="Pages\WorkArrangement.html" />
     <Content Include="Pages\SubmitShifts.html" />
@@ -200,7 +201,6 @@
     <Content Include="Pages\AddPeriod.html" />
     <Content Include="Pages\AddUnit.html" />
     <Content Include="Pages\AddManager.html" />
-    <Content Include="Pages\AddSpecialLevel.html" />
     <Content Include="Pages\AddGuide.html" />
     <Content Include="Photos\-classic-living-room.jpg" />
     <Content Include="Photos\-looking-calendar.jpg" />
