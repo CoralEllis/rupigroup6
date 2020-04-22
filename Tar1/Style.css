@@ -202,6 +202,9 @@ h1, h2 {
     text-align: center;
     color: #66CCFF;
 }
+#badGuids, #goodGuids{
+    font-size:30px;
+}
 
 input, select {
     border: none;

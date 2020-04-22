@@ -432,6 +432,7 @@
                     rf = $(x).parent().parent().prop('className');
                     document.getElementById(rf).style.backgroundColor = "#CCFFCC";
                     document.getElementById(rf).innerHTML += "<i class='fa fa-thumbs-up' style='font-size:36px; margin:auto'></i>";
+                    $("." + rf).html(" ");
                     }
                 Mstart = moment(StratH, 'HH:mm A');
                 Mend = moment(endHour, 'HH:mm A');
