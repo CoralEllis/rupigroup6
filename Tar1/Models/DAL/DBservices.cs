@@ -635,8 +635,8 @@ namespace Tar1.Models.DAL
                 selectSTR += " FROM BlockShift_2020 left join Shift_2020 on BlockShift_2020.ShiftDate = Shift_2020.ShiftDate and BlockShift_2020.ShiftType = Shift_2020.ShiftType";
                 selectSTR += " WHERE Shift_2020.StartPeriod > '" + today + "' and BlockShift_2020.UserId = '" + Userid + "' and BlockShift_2020.isApply = '1'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
-                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); 
-               CS.NumOfPref = Convert.ToInt32(dr.Read());
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                CS.NumOfPref = Convert.ToInt32(dr.Read());
                 return CS;
             }
             catch (Exception ex)
@@ -881,27 +881,41 @@ namespace Tar1.Models.DAL
             List<ApplyShift> AS = new List<ApplyShift>();
             SqlConnection con = null;
             string today = DateTime.Today.ToString("yyyy-MM-dd");
+            int Coun = 0;
+
 
             try
             {
                 con = connect("DBConnectionString");
-                String selectSTR = "select BlockShift_2020.ShiftType,BlockShift_2020.UserId, BlockShift_2020.ShiftDate, BlockShift_2020.UserId,BlockShift_2020.isApply, BlockShift_2020.Comments,  User_2020.FirstName,  User_2020.LastName";
-                selectSTR += " from BlockShift_2020 left join Shift_2020 on BlockShift_2020.ShiftDate = Shift_2020.ShiftDate and BlockShift_2020.ShiftType = Shift_2020.ShiftType left join User_2020 on BlockShift_2020.UserId = User_2020.UserId";
-                selectSTR += " where BlockShift_2020.UnitId = " + id + " AND Shift_2020.StartPeriod >'" + today + "'";
-                SqlCommand cmd = new SqlCommand(selectSTR, con);
-                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-                while (dr.Read())
+                String optionSTR = "SELECT COUNT(isApply)";
+                optionSTR += " FROM BlockShift_2020 left join Shift_2020 on BlockShift_2020.ShiftDate = Shift_2020.ShiftDate and BlockShift_2020.ShiftType = Shift_2020.ShiftType";
+                optionSTR += " WHERE Shift_2020.StartPeriod > '" + today + "' and BlockShift_2020.UserId = '9438' and BlockShift_2020.isApply = '1'";
+                SqlCommand cmdo = new SqlCommand(optionSTR, con);
+                SqlDataReader dro = cmdo.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dro.Read())
                 {
-                    ApplyShift Applyshift = new ApplyShift();
-                    Applyshift.Userid = Convert.ToString(dr["UserId"]);
-                    Applyshift.Name = Convert.ToString(dr["FirstName"]) + " " + Convert.ToString(dr["LastName"]);
-                    Applyshift.Shiftdate = Convert.ToDateTime(dr["ShiftDate"]).Date;
-                    Applyshift.Shifttype = Convert.ToString(dr["ShiftType"]);
-                    Applyshift.Isaplly1 = Convert.ToBoolean(dr["isApply"]);
-                    Applyshift.Comment = Convert.ToString(dr["Comments"]);
-                    AS.Add(Applyshift);
+                    Coun = Convert.ToInt32(dro.Read());
+                    if (Coun == 0)
+                    {
+                        String selectSTR = "select BlockShift_2020.ShiftType, BlockShift_2020.ShiftDate, BlockShift_2020.UserId,BlockShift_2020.isApply, BlockShift_2020.Comments,  User_2020.FirstName,  User_2020.LastName";
+                        selectSTR += " from BlockShift_2020 left join Shift_2020 on BlockShift_2020.ShiftDate = Shift_2020.ShiftDate and BlockShift_2020.ShiftType = Shift_2020.ShiftType left join User_2020 on BlockShift_2020.UserId = User_2020.UserId";
+                        selectSTR += " where BlockShift_2020.UnitId = " + id + " AND Shift_2020.StartPeriod >'" + today + "' AND BlockShift_2020.UserId ='9438'";
+                        SqlCommand cmd = new SqlCommand(selectSTR, con);
+                        SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                        while (dr.Read())
+                        {
+                            ApplyShift Applyshift = new ApplyShift();
+                            Applyshift.Userid = Convert.ToString(dr["UserId"]);
+                            Applyshift.Name = Convert.ToString(dr["FirstName"]) + " " + Convert.ToString(dr["LastName"]);
+                            Applyshift.Shiftdate = Convert.ToDateTime(dr["ShiftDate"]).Date;
+                            Applyshift.Shifttype = Convert.ToString(dr["ShiftType"]);
+                            Applyshift.Isaplly1 = Convert.ToBoolean(dr["isApply"]);
+                            Applyshift.Comment = Convert.ToString(dr["Comments"]);
+                            AS.Add(Applyshift);
+                        }
+                    }
+                    return AS;
                 }
-                return AS;
             }
             catch (Exception ex)
             {
