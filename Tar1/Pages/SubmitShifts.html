@@ -120,28 +120,33 @@
         function PostBlockShifts() {
             unitid = 2;
             userid = 9438;
-            
-            for (var i = 0; i < ShiftsArray.length; i++) {
-                datestr = ShiftsArray[i].StartShift.format("YYYY-MM-DD");
-                IdShift = datestr + "|" + ShiftsArray[i].Type;
-                IdComment = datestr + "||" + ShiftsArray[i].Type;
-                comment = document.getElementById(IdComment).value;
-                AplShift = {
-                    "Userid": userid,
-                    "Unitid": unitid,
-                    "Shifttype": ShiftsArray[i].Type,
-                    "Comment": comment,
-                    "Shiftdate": datestr,
-                    "Isaplly1": true
-                }
-                for (var j = 0; j < BlockShifts.length; j++) {
-                    if (BlockShifts[j] == IdShift) {
-                        AplShift.Isaplly1 = false;
-                    }
-                }
-                ApplyShift.push(AplShift);
+            if (again == true) {
+                ajaxCall("PUT", "../api/ApplyShift", JSON.stringify(ApplyShift), PostAShiftS, PostAShiftE);
+
             }
-            ajaxCall("POST", "../api/ApplyShift", JSON.stringify(ApplyShift), PostAShiftS, PostAShiftE);
+            else if (again == false) {
+                for (var i = 0; i < ShiftsArray.length; i++) {
+                    datestr = ShiftsArray[i].StartShift.format("YYYY-MM-DD");
+                    IdShift = datestr + "|" + ShiftsArray[i].Type;
+                    IdComment = datestr + "||" + ShiftsArray[i].Type;
+                    comment = document.getElementById(IdComment).value;
+                    AplShift = {
+                        "Userid": userid,
+                        "Unitid": unitid,
+                        "Shifttype": ShiftsArray[i].Type,
+                        "Comment": comment,
+                        "Shiftdate": datestr,
+                        "Isaplly1": true
+                    }
+                    for (var j = 0; j < BlockShifts.length; j++) {
+                        if (BlockShifts[j] == IdShift) {
+                            AplShift.Isaplly1 = false;
+                        }
+                    }
+                    ApplyShift.push(AplShift);
+                }
+                ajaxCall("POST", "../api/ApplyShift", JSON.stringify(ApplyShift), PostAShiftS, PostAShiftE);
+            }
         }
         function PostAShiftS(data) {
             Swal.fire('המשמרות הוגשו בהצלחה!', '', 'success')
