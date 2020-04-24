@@ -16,10 +16,11 @@ namespace AkimShifts.Controllers
             return new string[] { "value1", "value2" };
         }
         // GET api/<controller>/5
-        public List<ApplyShift> Get(int id)
+        public List<ApplyShift> Get(string id)
         {
+            string[] infor = id.Split(',');
             ApplyShift appS = new ApplyShift();
-            return appS.GetApplyShift(id);
+            return appS.GetApplyShift(infor[0], infor[1]);
              
         }
         // POST api/<controller>
@@ -29,9 +30,9 @@ namespace AkimShifts.Controllers
             appS.InsertApplyShift(AS);
         }
         // PUT api/<controller>/5
-        public void Put(int id, [FromBody]ApplyShift AS)
+        public void Put([FromBody]ApplyShift AS)
         {
-            AS.UpdateApplyShift(id);
+            AS.UpdateApplyShift();
         }
 
         // DELETE api/<controller>/5

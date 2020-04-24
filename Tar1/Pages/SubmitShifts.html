@@ -57,8 +57,8 @@
                         break;
                 }
             }
-            Unitid = 2;
-            ajaxCall("GET", "../api/ApplyShift/" + Unitid, "", GetAgainS, GetAgainE);
+            UserInfo = "2,9438";
+            ajaxCall("GET", "../api/ApplyShift/" +  UserInfo, "", GetAgainS, GetAgainE);
         }
         function GETShiftE(error) {
             alert("BASSA");
@@ -139,7 +139,7 @@
                     }
                 }
                 if (again == true) {
-                    ajaxCall("PUT", "../api/ApplyShift/" + userid, JSON.stringify(AplShift), PutShiftS, PutShiftE);
+                    ajaxCall("PUT", "../api/ApplyShift", JSON.stringify(AplShift), PutShiftS, PutShiftE);
                 }
                 ApplyShift.push(AplShift);
             }
