@@ -442,36 +442,35 @@ namespace Tar1.Models.DAL
         }
         public void updateTLTable(TrainingLevel tl, int id)
         {
+            SqlConnection con;
+            SqlCommand cmd;
+            try
             {
-                SqlConnection con;
-                SqlCommand cmd;
-                try
-                {
-                    con = connect("DBConnectionString"); // create the connection
-                }
-                catch (Exception ex)
-                {
-                    throw (ex);
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
 
-                }
-                String cStr = BuildInsertCommand1(tl, id);
-                cmd = CreateCommand(cStr, con);
-                try
+            }
+            String cStr = BuildInsertCommand1(tl, id);
+            cmd = CreateCommand(cStr, con);
+            try
+            {
+                cmd.ExecuteNonQuery(); // execute the command
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
                 {
-                    int numEffected = cmd.ExecuteNonQuery(); // execute the command
-                }
-                catch (Exception ex)
-                {
-                    throw (ex);
-                }
-                finally
-                {
-                    if (con != null)
-                    {
-                        con.Close();
-                    }
+                    con.Close();
                 }
             }
+
         }
         private String BuildInsertCommand1(TrainingLevel tl, int id)
         {
@@ -1004,6 +1003,48 @@ namespace Tar1.Models.DAL
             return prefix;
         }
 
+        public void updateAS(ApplyShift AS)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            String cStr = BuildUpdateCommand(AS);
+            cmd = CreateCommand(cStr, con);
+            try
+            {
+                cmd.ExecuteNonQuery(); // execute the command
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+        private String BuildUpdateCommand(ApplyShift AS)
+        {
+            string u = AS.Userid.ToString();
+            string unit = AS.Unitid.ToString();
+            string t = AS.Shifttype;
+            string d = AS.Shiftdate.ToString();
+            string comment = AS.Comment;
+            string isApl = AS.Isaplly1.ToString();
+            string str = "UPDATE BlockShift_2020 SET Comments ='" + comment + "' WHERE UserId =" + u + " and UnitId = " + unit + " and ShiftType = '" + t + "' and ShiftDate = '" + d + "'";
+            str += " UPDATE BlockShift_2020 SET isApply ='" + isApl + "' WHERE UserId =" + u + " and UnitId = " + unit + " and ShiftType = '" + t + "' and ShiftDate = '" + d + "'";
+            return str;
+        }
     }
 
 

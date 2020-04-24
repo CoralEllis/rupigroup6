@@ -45,6 +45,11 @@ namespace Tar1.Models
             DBservices dbs = new DBservices();
              return dbs.GetApplyShift(id);
         }
-
+        
+            public void UpdateApplyShift(int id)
+        {
+            DBservices dbs = new DBservices();
+            dbs.updateAS(this);
+        }
     }
 }

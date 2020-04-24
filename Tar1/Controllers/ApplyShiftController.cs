@@ -29,8 +29,9 @@ namespace AkimShifts.Controllers
             appS.InsertApplyShift(AS);
         }
         // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody]ApplyShift AS)
         {
+            AS.UpdateApplyShift(id);
         }
 
         // DELETE api/<controller>/5
