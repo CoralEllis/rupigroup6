@@ -245,6 +245,7 @@
                     final = OfficialShifts[ShiftsArray[numinarrshift].NuminOfficialShift[i].NumInArray].Endshifthour;
                     name = document.getElementById(identity + "embed" + div.id).innerText;
                     parag += "<div id='div" + identity + " style='font-family: fontAwesome'><br>" + name + "<input type='time' value='" + final + "' id='" + identity + "E' disabled=''>  -  <input type='time' value='" + begin + "' id='" + identity + "S' disabled=''><button id='deleteguidebutton' onclick='SaveUpdateshift(this," + identity + "," + numinarrshift + ")'>מחק מדריך</button></div>";
+
                 }
             }
             parag += "</div>"
@@ -483,7 +484,8 @@
                 if (embedA != mispar) {
 
                     document.getElementById(rf).style.backgroundColor = "aliceblue";
-                    document.getElementById(rf).childNodes[1].remove()
+                    if (document.getElementById(rf).childNodes.length > 1)
+                        document.getElementById(rf).childNodes[1].remove()
                 }
             }
             dateShift = OfficialShifts[ShiftsArray[num].NuminOfficialShift[0].NumInArray].Shiftdate;
@@ -492,10 +494,12 @@
                 if (Guides[i].UserId == id) {
                     if (Command == 'מחק מדריך') {
                         for (var f = 0; f < Guides[i].ShiftsSorted.length; f++) {
-                            if (Guides[i].ShiftsSorted[f].ShiftDate == dateShift && Guides[i].ShiftsSorted[f].ShiftType == type)
+                            if (Guides[i].ShiftsSorted[f].ShiftDate == dateShift && Guides[i].ShiftsSorted[f].ShiftType == type) {
                                 Guides[i].ShiftsSorted.splice(f, 1);
+                                break;
+                            }
                         }
-                        document.getElementById(id + "embed" + rf).remove();
+                        document.getElementById(Guides[i].UserId + "embed" + rf).remove();
                         if (Preperness == true && type == "לילה") {
                             if (ShiftDuration > SNightShiftHours) {
                                 Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours - SNightShiftHours;
@@ -533,6 +537,7 @@
                             "EndHour": sium
                         }
                         Guides[i].ShiftsSorted.push(GuideShiftR);
+
                         document.getElementById(rf).childNodes[0].innerHTML += "<span id='" + Guides[i].UserId + "embed" + rf + "' class='row' style='margin:auto'>" + Guides[i].Username + "</span>";
                         if (Preperness == true && type == "לילה") {
                             if (ShiftDuration > SNightShiftHours) {
@@ -568,6 +573,7 @@
                         }
                         break;
                     }
+
                 }
             }
         }
