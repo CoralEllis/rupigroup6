@@ -24,12 +24,12 @@
         ShiftsArray = [];
         BlockShifts = [];
         ApplyShift = [];
+        again = false;
         function GetSHifts() {
             Unitid = 2;//in the future get it from localstorage
             ajaxCall("GET", "../api/Shifts/" + Unitid, "", GETShiftS, GETShiftE);
         }
         function GETShiftS(data) {
-    
             for (var i = 0; i < data.length; i++) {
                 d = data[i].Shiftdate.split("T");
                 x = data[i].Start.split("T");
@@ -47,7 +47,7 @@
             str = "";
             for (var i = 0; i < ShiftsArray.length; i++) {
                 datestr = ShiftsArray[i].StartShift.format('DD/MM/YYYY');
-                str = "<div class='row shiftsShow' id='" + ShiftsArray[i].StartShift.format("YYYY-MM-DD") + "|" + ShiftsArray[i].Type + "'><p>" + ShiftsArray[i].Type + "<br />" + datestr + "<br />" + ShiftsArray[i].EndShift.format('HH:mm') + " - " + ShiftsArray[i].StartShift.format('HH:mm') + "<br /> הערות:</p> <br /><textarea id='" + ShiftsArray[i].StartShift.format("YYYY-MM-DD") + "||" + ShiftsArray[i].Type + "'  ></textarea><br /><input type='button' value='לחץ לחסימה'  onclick='ChangeShiftPref(this.parentNode.id,this)' /></div><br />";
+                str = "<div class='row shiftsShow' id='" + ShiftsArray[i].StartShift.format("YYYY-MM-DD") + "|" + ShiftsArray[i].Type + "'><p>" + ShiftsArray[i].Type + "<br />" + datestr + "<br />" + ShiftsArray[i].EndShift.format('HH:mm') + " - " + ShiftsArray[i].StartShift.format('HH:mm') + "<br /> הערות:</p> <br /><textarea id='" + ShiftsArray[i].StartShift.format("YYYY-MM-DD") + "||" + ShiftsArray[i].Type + "'  ></textarea><br /><input type='button' id='" + ShiftsArray[i].StartShift.format("YYYY-MM-DD") + "|||" + ShiftsArray[i].Type + "' value='לחץ לחסימה'  onclick='ChangeShiftPref(this.parentNode.id,this)' /></div><br />";
                 shiftd = ShiftsArray[i].StartShift.day();
                 switch (shiftd) {
                     case shiftd:
@@ -57,9 +57,43 @@
                         break;
                 }
             }
+            UserInfo = "2,9438";
+            ajaxCall("GET", "../api/ApplyShift/" +  UserInfo, "", GetAgainS, GetAgainE);
         }
         function GETShiftE(error) {
             alert("BASSA");
+            console.log(error);
+        }
+        function GetAgainS(data) {
+            console.log(data);
+            alert("Hi");
+            for (var j = 0; j < data.length; j++) {
+                if (data[j].Isaplly1 == false) {
+                    again = true;
+                    for (var i = 0; i < ShiftsArray.length; i++) {
+                        res = ShiftsArray[i].StartShift._i.split(" ")
+                        resdate = res[0];
+                        console.log(resdate);
+                        res1 = data[j].Shiftdate.split("T");
+                        res1date = res1[0];
+                        console.log(res1date);
+                        if (ShiftsArray[i].Type == data[j].Shifttype && resdate == res1date) {
+                            id = ShiftsArray[i].StartShift.format("YYYY-MM-DD") + "|" + ShiftsArray[i].Type;
+                            x = ShiftsArray[i].StartShift.format("YYYY-MM-DD") + "|||" + ShiftsArray[i].Type;
+                            document.getElementById(x).value = 'לחץ להגשה';
+                            document.getElementById(id).style.backgroundColor = "#FF0000";
+                            document.getElementById(id).style.color = "#FCF1F1";
+                            document.getElementById(x).style.backgroundColor = "#FCF1F1";
+                            document.getElementById(x).style.color = "#FF0000";
+                            com = ShiftsArray[i].StartShift.format("YYYY-MM-DD") + "||" + ShiftsArray[i].Type;;
+                            document.getElementById(com).value = data[j].Comment;
+                            BlockShifts.push(id);
+                        }
+                    }
+                }
+            }
+        }
+        function GetAgainE(error) {
             console.log(error);
         }
         function ChangeShiftPref(id, x) {
@@ -104,16 +138,27 @@
                         AplShift.Isaplly1 = false;
                     }
                 }
-
+                if (again == true) {
+                    ajaxCall("PUT", "../api/ApplyShift", JSON.stringify(AplShift), PutShiftS, PutShiftE);
+                }
                 ApplyShift.push(AplShift);
-
             }
-            ajaxCall("POST", "../api/ApplyShift", JSON.stringify(ApplyShift), PostAShiftS, PostAShiftE);
+
+            if (again == false) {
+                ajaxCall("POST", "../api/ApplyShift", JSON.stringify(ApplyShift), PostAShiftS, PostAShiftE);
+            }
         }
         function PostAShiftS(data) {
-                Swal.fire('המשמרות הוגשו בהצלחה!', '', 'success')
+            Swal.fire('המשמרות הוגשו בהצלחה!', '', 'success')
         }
         function PostAShiftE(error) {
+            alert("BASSA");
+            console.log(error);
+        }
+        function PutShiftS(data) {
+            Swal.fire('המשמרות עודכנו בהצלחה!', '', 'success')
+        }
+        function PutShiftE(error) {
             alert("BASSA");
             console.log(error);
         }

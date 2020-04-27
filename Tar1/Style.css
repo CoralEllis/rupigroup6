@@ -1,38 +1,40 @@
-﻿select, div {
-    font-family: fontAwesome
-}
-
-
+﻿
 form {
     margin-right: 50px;
     color: #005473;
     text-align: right;
 }
-th,td{
-    width:auto;
-    background-color:aliceblue;
+
+th, td {
+    width: auto;
+    background-color: aliceblue;
 }
 
 body {
     background-color: aliceblue;
 }
-p{
-    text-align:center;
+
+p {
+    text-align: center;
 }
+
 #editDiv {
     text-align: right;
     font-size: 20px;
     color: #005473;
-    direction:rtl;
+    direction: rtl;
 }
-     .expl {
-        font-size: 25px;
-    }
+
+.expl {
+    font-size: 25px;
+}
+
 .Traininglevel {
     text-align: center;
     font-size: 20px;
     color: #005473;
 }
+
 #icons, #ExtraHours {
     border: 2px ridge cadetblue;
     /*margin-right: 500px;*/
@@ -41,12 +43,12 @@ p{
     text-align: right;
     height: auto;
 }
+
 .inputTL {
     width: 50%;
-    text-align:center;
-    
- 
+    text-align: center;
 }
+
 #icons {
     height: 210px;
 }
@@ -70,32 +72,41 @@ button, input[type=submit], button[type=button], #cancelSaveBTN, #saveBTN {
     color: white;
     font-family: Calibri;
 }
+
     button[type=button], #cancelSaveBTN, #saveBTN {
         font-size: 20px;
     }
-    #submitshift {
-        color: cadetblue;
-        font-family: Calibri;
-        text-align: center;
-        font-size: 50px;
-    }
 
-    #submitshift > div>.shiftsShow {
+#submitshift {
+    color: cadetblue;
+    font-family: Calibri;
+    text-align: center;
+    font-size: 50px;
+}
+
+    #submitshift > div > .shiftsShow {
         background-color: #CCFFCC;
     }
 
-    .shiftsShow {
-        color: cadetblue;
-        font-family: Calibri;
-        text-align: center;
-        font-size: 20px;
-        height: auto;
-        border-color: aquamarine;
-        border-style: ridge;
-        /*background-color: #CCFFCC;*/
-        height:auto;
-        width:auto;
-    }
+
+
+#deleteguidebutton {
+    background-color: #FF0000 !important;
+    color: #FCF1F1 !important;
+    border-color: #FCF1F1 !important;
+}
+
+.shiftsShow {
+    color: cadetblue;
+    font-family: Calibri;
+    text-align: center;
+    font-size: 20px;
+    height: auto;
+    border-color: aquamarine;
+    border-style: ridge;
+    height: 250px;
+    width: 200px;
+}
 
 #SubmShift {
     color: cadetblue;
@@ -116,8 +127,6 @@ button, input[type=submit], button[type=button], #cancelSaveBTN, #saveBTN {
         color: mintcream;
         margin-left: auto;
         margin-right: auto;
-        /*height: 50px;
-        width: 200px;*/
         font-weight: bold;
         text-align: center;
     }
@@ -232,10 +241,11 @@ img {
 h1, h2 {
     text-align: center;
     color: #66CCFF;
-    font-size:200px;
+    font-size: 200px;
 }
-#badGuids, #goodGuids{
-    font-size:30px;
+
+#badGuids, #goodGuids {
+    font-size: 30px;
 }
 
 input, select {
