@@ -1028,7 +1028,6 @@ namespace Tar1.Models.DAL
             String prefix = "UPDATE ConstraintManagement_2020 SET [ConstraintName] = '" + c.ConstraintName + "', [ConstraintValue] =  '" + value + "' WHERE [ConstraintID] = " + id + "";
             return prefix;
         }
-
         public void updateAS(ApplyShift AS)
         {
             SqlConnection con;
@@ -1073,6 +1072,84 @@ namespace Tar1.Models.DAL
             string str = "UPDATE BlockShift_2020 SET Comments ='" + comment + "' WHERE UserId =" + u + " and UnitId = " + unit + " and ShiftType = '" + t + "' and ShiftDate = '" + d + "'";
             str += " UPDATE BlockShift_2020 SET isApply ='" + isApl + "' WHERE UserId =" + u + " and UnitId = " + unit + " and ShiftType = '" + t + "' and ShiftDate = '" + d + "'";
             return str;
+        }
+        public void InsertExceptionsList(List<Exceptions> ExceptionsArr)
+        {
+            SqlConnection con = null;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString");
+                foreach (var item in ExceptionsArr)
+                {
+                    String cStr = BuildInsertCommand(item);
+                    cmd = CreateCommand(cStr, con);
+                    try
+                    {
+                        cmd.ExecuteNonQuery(); // execute the command
+                    }
+                    catch (Exception ex)
+                    {
+                        throw (ex);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+
+        }
+        private String BuildInsertCommand(Exceptions Excpt)
+        {
+            String command;
+            StringBuilder sb = new StringBuilder();
+
+            string UsId = Excpt.User.ToString();
+            string Unid = Excpt.Unit.ToString();
+            int day = Excpt.ShiftDate.Day;
+            int month = Excpt.ShiftDate.Month;
+            int year = Excpt.ShiftDate.Year;
+            string ShiftDate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
+            string index = GetExceptionType(Excpt.Index);
+
+            sb.AppendFormat("Values('{0}', '{1}', '{2}', '{3}', '{4}')", index, UsId, Unid, Excpt.ShiftType, ShiftDate);
+            String prefix = "INSERT INTO Exception_2020 " + "(TypeofExceptionId,UserId,UnitId,ShiftType,ShiftDate)";
+            command = prefix + sb.ToString();
+            return command;
+        }
+        public string GetExceptionType(string str)
+        {
+            SqlConnection con = null;
+            string ind;
+            try
+            {
+                con = connect("DBConnectionString");
+                String checkSTR = "select TypeofException_2020.TypeofExceptionId from TypeofException_2020 where TypeofException = '" + str + "'";
+                SqlCommand cmd = new SqlCommand(checkSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                ind = dr.Read().ToString();
+                return ind;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
         }
     }
 }
