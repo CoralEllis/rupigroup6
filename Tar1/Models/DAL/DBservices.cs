@@ -184,6 +184,9 @@ namespace Tar1.Models.DAL
         {
 
             List<OrganizeUnit> OU = new List<OrganizeUnit>();
+            List<Apartment> A = new List<Apartment>();
+            A = GetAP();
+
             SqlConnection con = null;
 
             try
@@ -197,9 +200,66 @@ namespace Tar1.Models.DAL
                     OrganizeUnit Unit = new OrganizeUnit();
                     Unit.Id = Convert.ToInt32(dr["UnitId"]);
                     Unit.Unitname = (string)dr["UnitName"];
+                    Unit.City = (string)dr["City"];
+                    Unit.Street_hnumber = (string)dr["Street_HNumber"];
+                    Unit.Numofguides = Convert.ToInt32(dr["NumOfGuides"]);
+                    Unit.Numofresidents = Convert.ToInt32(dr["NumOfResidents"]);
+                    Unit.Unittype = (string)dr["UnitType"];
+                    if (Unit.Unittype == "דירה")
+                    {
+                        foreach (var item in A)
+                        {
+                            if(item.UnitId == Unit.Id)
+                            {
+                                Unit.ApartmentType1 = item.ApartmenttypeId;
+                                A.Remove(item);
+                                break;
+                            }
+                        }
+                    }
+                    
                     OU.Add(Unit);
                 }
                 return OU;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+
+
+        }
+
+        public List<Apartment> GetAP()
+        {
+
+            List<Apartment> A = new List<Apartment>();
+
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = "SELECT * FROM Apartment_2020";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    Apartment ap = new Apartment();
+
+                    ap.UnitId = Convert.ToInt32(dr["UnitId"]);
+                    ap.ApartmenttypeId = Convert.ToInt32(dr["ApartmentTypeId"]);
+
+                    A.Add(ap);
+                }
+                return A;
             }
             catch (Exception ex)
             {
