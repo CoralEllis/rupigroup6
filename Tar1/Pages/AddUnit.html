@@ -1,22 +1,108 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <title>צפייה/הוספה יחידות ארגוניות</title>
+
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
+
     <link href="../Style.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <meta charset="utf-8" />
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script type="text/javascript"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+
     <script>
-        ApartmentTypeA=[];
-        id=1;
+        var myData;
+        // will run when the document is ready
+        $(document).ready(function () {
+            $("#cancelSaveBTN").on("click", function () {
+                $("#editDiv").hide();
+            });
+            ajaxCall("GET", "../api/OrganizeUnit", "", getSuccess, error);
+            $("#editDiv").hide();
+        });
+
+        // mark the selected row
+        function markSelected(btn) {
+            $("#UnitTable tr").removeClass("selected"); // remove seleced class from rows that were selected before
+            row = (btn.parentNode).parentNode; // button is in TD which is in Row
+            row.className = 'selected'; // mark as selected
+        }
+
+         
+
+        function getSuccess(data) {
+            
+            myData = data; // keep the cars array in a global variable;
+            try {
+                tbl = $('#UnitTable').DataTable({
+                    data: data,
+                    columns: [
+                        { data: "Unitname" },
+                        { data: "City" },
+                        { data: "Street_hnumber" },
+                        { data: "Numofguides" },
+                        { data: "Numofresidents" },
+                        { data: "Unittype" },
+                        {
+                            data: "ApartmentType1",
+                            render: function (data, type, row, meta) {
+                                switch (data) {
+                                    case 0: return "-";
+                                        break;
+                                    case 1: return "טיפולית";
+                                        break;
+                                    case 2: return "חצי עצמאית";
+                                        break;
+                                    case 3: return "עצמאית";
+                                        break;
+                               } 
+                            }
+                        },
+                    ],
+                });
+            }
+
+            catch (err) {
+                alert(err);
+            }
+        }
+        // this function is activated in case of a failure
+        function error(err) {
+            swal("Error: " + err);
+        }
+
+
+        ApartmentTypeA = [];
+        id = 1;
         function InsertUnit() {
             name = $("#name").val();
+            for (var i = 0; i < myData.length; i++) {
+                if (myData[i].Unitname == name) {
+                    //Swal('כבר קיימת יחידה ארגונית במערכת בשם זה', '', 'error');
+                    alert("כבר קיימת יחידה ארגונית במערכת בשם זה");
+                    return;
+                }
+            }
             Numofresidents = $("#numofresidents").val();
             Numofguides = $("#numofguides").val();
             City = $("#city").val();
@@ -29,7 +115,7 @@
                 }
             }
 
-
+            alert("dfhdfhdh");
 
             Unit = {
                 "Unitname": name,
@@ -38,10 +124,10 @@
                 "City": City,
                 "Street_hnumber": Street_hnumber,
                 "Unittype": Unittype,
-                "ApartmentType1":id,
+                "ApartmentType1": id,
             }
 
-           
+
             ajaxCall("POST", "../api/OrganizeUnit", JSON.stringify(Unit), PostUnitS, PostUnitE);
 
 
@@ -79,27 +165,46 @@
 
         }
 
-
-
-
-
     </script>
 
-
-
-
-
-    <title></title>
 </head>
 <body dir="rtl" style="background-color:aliceblue">
     <img src="../Photos/LOGO.PNG" />
     <div class="container">
 
+        <br />
+        <br />
+        <h1>צפייה ביחידות ארגוניות </h1>
+        <br />
+        <br />
+        <form id="pForm">
+            <p class="expl">בטבלה שלהלן מוצגות כל היחידות הארגוניות.</p>
+            <br />
+            <table id="UnitTable" class="display nowrap" style="width:50%">
+                <thead>
+                    <tr>
+                        <th>שם היחידה</th>
+                        <th>עיר</th>
+                        <th>רחוב ומספר</th>
+                        <th>מספר מדריכים</th>
+                        <th>מספר דיירים</th>
+                        <th>סוג יחידה</th>
+                        <th>סוג דירה</th>
+                    </tr>
+                </thead>
+            </table>
+        </form>
+        <br />
+        <br />
+
+
         <h1>  הוספת יחידה ארגונית חדשה</h1><br />
+        <p class="expl">על מנת להוסיף יחידה ארגונית חדשה, יש למלא את פרטיה ולבסוף ללחוץ על כפתור "שמור".</p>
+
         <div class="row">
 
             <form dir="rtl">
-                <div class="col">
+                <div class="col" id="insertUnit">
 
                     <span>שם היחידה: </span><input type="text" id="name" value="הגלריה" /><br />
                     <span>עיר: </span><input type="text" id="city" value="חיפה" /><br />

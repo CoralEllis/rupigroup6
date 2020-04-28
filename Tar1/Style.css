@@ -27,6 +27,7 @@ p {
 
 .expl {
     font-size: 25px;
+    color: #005473;
 }
 
 .Traininglevel {
@@ -146,7 +147,9 @@ button, input[type=submit], button[type=button], #cancelSaveBTN, #saveBTN {
     margin-right: auto;
     margin-left: auto;
 }
-
+#insertUnit{
+    font-size:20px;
+}
 .shiftsShow > input[type=button] {
     border: 1px solid cadetblue;
     background-color: cadetblue;
@@ -241,7 +244,7 @@ img {
 h1, h2 {
     text-align: center;
     color: #66CCFF;
-    font-size: 200px;
+    font-size: 70px !important;
 }
 
 #badGuids, #goodGuids {
