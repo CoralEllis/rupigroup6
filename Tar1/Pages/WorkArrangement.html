@@ -17,7 +17,11 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="../Scripts/moment.js"></script>
-
+    <style>
+        select, div {
+            font-family: fontAwesome
+        }
+    </style>
     <script>
         //user='';
         //function GetUser() {
@@ -230,8 +234,20 @@
             strshift = $(div).html();
             arrshift = strshift.split("<br>");
             parag = "<div class='" + div.id + "'>משמרת נוכחית<br />" + yom + " " + arrshift[0] + "<br />" + arrshift[1] + "<br />" + arrshift[2] + "<br />" + arrshift[3] + "<br /> <i class='fas fa-circle' style='color:darkseagreen'></i>";
-            parag += "מומלצים לשיבוץ<span>      </span><i class='fas fa-circle' style='color:orangered'></i>לא מומלצים לשיבוץ<span>   </span><br /> ";
-            parag += "<select class='selectguides' id='goodGuids' onchange='InsertGuide(this," + numinarrshift + ")'><option value=''>בחר מדריך</option></select><span id='lists'></span><select class='selectguides' id='badGuids' onchange='InsertGuide(this," + numinarrshift + ")'><option value=''>בחר מדריך</option></select>  </div>";
+            parag += "מומלצים לשיבוץ<span>     </span><i class='fas fa-circle' style='color:orangered'></i>לא מומלצים לשיבוץ<span>   </span><br /> ";
+            parag += "<select class='selectguides' id='goodGuids' onchange='InsertGuide(this," + numinarrshift + ")'><option value=''>בחר מדריך</option></select><span id='lists'></span><select class='selectguides' id='badGuids' onchange='InsertGuide(this," + numinarrshift + ")'><option value=''>בחר מדריך</option></select>";
+            mispar = ShiftsArray[numinarrshift].NuminOfficialShift.length;
+            for (var i = 0; i < mispar; i++) {
+                if (ShiftsArray[numinarrshift].NuminOfficialShift[i].Occupied == true) {
+                    identity = OfficialShifts[ShiftsArray[numinarrshift].NuminOfficialShift[i].NumInArray].Userid;
+                    begin = OfficialShifts[ShiftsArray[numinarrshift].NuminOfficialShift[i].NumInArray].Startshifthour;
+                    final = OfficialShifts[ShiftsArray[numinarrshift].NuminOfficialShift[i].NumInArray].Endshifthour;
+                    name = document.getElementById(identity + "embed" + div.id).innerText;
+                    parag += "<div id='div" + identity + " style='font-family: fontAwesome'><br>" + name + "<input type='time' value='" + final + "' id='" + identity + "E' disabled=''>  -  <input type='time' value='" + begin + "' id='" + identity + "S' disabled=''><button id='deleteguidebutton' onclick='SaveUpdateshift(this," + identity + "," + numinarrshift + ")'>מחק מדריך</button></div>";
+
+                }
+            }
+            parag += "</div>"
             $("#ChoosenShift").html(parag);
             PutGuides(div, numinarrshift);
             $("#before").html(" ");
@@ -280,7 +296,6 @@
                     st = yom + " " + ShiftsArray[numinarrshift - 1].Type + " " + r + " <br /> משובצים: " + embed + "/" + ShiftsArray[numinarrshift - 1].Guidenum;
                     $("#before").html(st);
                 }
-
             }
         }
         function PutGuides(div, numinarrshift) {
@@ -403,47 +418,55 @@
         function SaveUpdateshift(x, id, num) {
             Command = x.textContent;
             mispar = ShiftsArray[num].NuminOfficialShift.length;
+            rf = $(x).parent().parent().prop('className');
+            ShiftDuration = 0;
+            RealShiboz = false;
+            endHour, StratH = "";
             if (x.textContent == 'שבץ מדריך') {
-                x.textContent = 'מחק מדריך';
-                x.style.backgroundColor = "#FF0000";
-                x.style.color = "#FCF1F1";
-                $("#" + id).remove();
-                StratH = $("#" + id + "S").val();
-                endHour = $("#" + id + "E").val();
-                $("#" + id + "S").prop("disabled", true);
-                $("#" + id + "E").prop("disabled", true);
-
                 for (var i = 0; i < mispar; i++) {
                     if (OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid.toString().length == 1 && ShiftsArray[num].NuminOfficialShift[i].Occupied == false) {
+                        StratH = $("#" + id + "S").val();
+                        endHour = $("#" + id + "E").val();
+                        RealShiboz = true;
                         OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid = id;
                         OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Startshifthour = StratH;
                         OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Endshifthour = endHour;
                         ShiftsArray[num].NuminOfficialShift[i].Occupied = true;
+                        x.textContent = 'מחק מדריך';
+                        x.id = "deleteguidebutton";
+                        $("#" + id).remove();
+                        StratH = $("#" + id + "S").val();
+                        endHour = $("#" + id + "E").val();
+                        $("#" + id + "S").prop("disabled", true);
+                        $("#" + id + "E").prop("disabled", true);
+                        embedA = HowManyEmbed(num, mispar);
+                        if (embedA == mispar && RealShiboz == true) {
+                            document.getElementById(rf).style.backgroundColor = "#CCFFCC";
+                            document.getElementById(rf).innerHTML += "<i class='fa fa-thumbs-up' style='font-size:36px; margin:auto'></i>";
+                            $("#ChoosenShift").html(" ");
+                        }
+                        Mstart = moment(StratH, 'HH:mm A');
+                        Mend = moment(endHour, 'HH:mm A');
+                        milisecond = moment.duration(Mend.diff(Mstart));
+                        ShiftDuration = milisecond.asHours();
+                        if (ShiftDuration < 0) {
+                            ShiftDuration = 24 + ShiftDuration;
+                        }
+                        if (ShiftDuration > LongerShift) {
+                            swal("שים לב משך המשמרת גדול מ-12 שעות!");
+                        }
                         break;
                     }
                 }
-                embedA = HowManyEmbed(num, mispar);
-                if (embedA == mispar) {
-                    rf = $(x).parent().parent().prop('className');
-                    document.getElementById(rf).style.backgroundColor = "#CCFFCC";
-                    document.getElementById(rf).innerHTML += "<i class='fa fa-thumbs-up' style='font-size:36px; margin:auto'></i>";
-                    $("." + rf).html(" ");
-                    }
-                Mstart = moment(StratH, 'HH:mm A');
-                Mend = moment(endHour, 'HH:mm A');
-                milisecond = moment.duration(Mend.diff(Mstart));
-                ShiftDuration = milisecond.asHours();
-                if (ShiftDuration < 0) {
-                    ShiftDuration = 24 + ShiftDuration;
+                if (RealShiboz == false) {
+                    alert("שים לב, המשמרת מאויישת במלואה, במידה והנך רוצה לשנות שיבוץ יש למחוק קודם את מדריך מאוייש ולאחר מכן לשבץ שוב!");
+                    //swal("שים לב, המשמרת מאויישת במלואה, במידה והנך רוצה לשנות שיבוץ יש למחוק קודם את מדריך מאוייש ולאחר מכן לשבץ שוב");
                 }
-                if (ShiftDuration > LongerShift) {
-                    swal("שים לב משך המשמרת גדול מ-12 שעות!");
-                }
+
             }
             else if (x.textContent == 'מחק מדריך') {
                 x.textContent = 'שבץ מדריך';
-                x.style.backgroundColor = "cadetblue";
-                x.style.color = "honeydew";
+                x.id = " ";
                 $("#div" + id).prepend("<i class='fas fa-times' id='" + id + "' onclick='DeleteDiv(" + id + ")'></i>");
                 $("#" + id + "S").prop("disabled", false);
                 $("#" + id + "E").prop("disabled", false);
@@ -458,22 +481,24 @@
                 }
                 embedA = HowManyEmbed(num, mispar);
                 if (embedA != mispar) {
-                    rf = $(x).parent().parent().prop('className');
+
                     document.getElementById(rf).style.backgroundColor = "aliceblue";
-                    document.getElementById(rf).childNodes[1].remove()
+                    if (document.getElementById(rf).childNodes.length > 1)
+                        document.getElementById(rf).childNodes[1].remove()
                 }
             }
-
             dateShift = OfficialShifts[ShiftsArray[num].NuminOfficialShift[0].NumInArray].Shiftdate;
             type = OfficialShifts[ShiftsArray[num].NuminOfficialShift[0].NumInArray].Shifttype;
             for (var i = 0; i < Guides.length; i++) {
                 if (Guides[i].UserId == id) {
                     if (Command == 'מחק מדריך') {
                         for (var f = 0; f < Guides[i].ShiftsSorted.length; f++) {
-                            if (Guides[i].ShiftsSorted[f].ShiftDate == dateShift && Guides[i].ShiftsSorted[f].ShiftType == type)
+                            if (Guides[i].ShiftsSorted[f].ShiftDate == dateShift && Guides[i].ShiftsSorted[f].ShiftType == type) {
                                 Guides[i].ShiftsSorted.splice(f, 1);
+                                break;
+                            }
                         }
-                        $("#embed" + Guides[i].UserId).remove();
+                        document.getElementById(Guides[i].UserId + "embed" + rf).remove();
                         if (Preperness == true && type == "לילה") {
                             if (ShiftDuration > SNightShiftHours) {
                                 Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours - SNightShiftHours;
@@ -499,7 +524,7 @@
                             }
                         }
                     }
-                    else if (Command == 'שבץ מדריך') {
+                    else if (Command == 'שבץ מדריך' && RealShiboz == true) {
                         shiftdatetime = dateShift + " " + StratH;
                         Hathala = moment(shiftdatetime);
                         shiftend = dateShift + " " + endHour;
@@ -511,8 +536,8 @@
                             "EndHour": sium
                         }
                         Guides[i].ShiftsSorted.push(GuideShiftR);
-                        rf = $(x).parent().parent().prop('className');
-                        document.getElementById(rf).childNodes[0].innerHTML += "<span id='embed" + Guides[i].UserId + "' class='row' style='margin:auto'>" + Guides[i].Username + "</span>";
+
+                        document.getElementById(rf).childNodes[0].innerHTML += "<span id='" + Guides[i].UserId + "embed" + rf + "' class='row' style='margin:auto'>" + Guides[i].Username + "</span>";
                         if (Preperness == true && type == "לילה") {
                             if (ShiftDuration > SNightShiftHours) {
                                 Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours + SNightShiftHours;
@@ -547,6 +572,7 @@
                         }
                         break;
                     }
+
                 }
             }
         }

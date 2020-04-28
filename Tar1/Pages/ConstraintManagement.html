@@ -1,105 +1,153 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+
+
+    <title>צפייה/ עדכון אילוצים</title>
+
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
+
     <link href="../Style.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <meta charset="utf-8" />
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-            crossorigin="anonymous"></script>
-    <script src="../Scripts/ajaxCalls.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script type="text/javascript"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-    <script src="../Scripts/moment.js"></script>
+    <script src="../Scripts/ajaxCalls.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-    <meta charset="utf-8" />
-    <title></title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+
     <script>
         var myData;
-        function getConstraints() {
-            ajaxCall("GET", "../api/Constraint", "", GETConstraintSuccess, GETConstraintError);
+        // will run when the document is ready
+        $(document).ready(function () {
+            $("#cancelSaveBTN").on("click", function () {
+                $("#editDiv").hide();
+            });
+            ajaxCall("GET", "../api/Constraint", "", getSuccess, error);
+            $("#editDiv").hide();
+        });
+        // wire all the buttons to their functions
+        function buttonEvents() {
+            $(document).on("click", ".editBtn", function () {
+                markSelected(this);
+                str = "<span>עדכן שם אילוץ:</span><input type='text' class='inputTL' id='cons" + this.id + "' value='" + this.name + "' ><br />";
+                str += "<span>עדכן ערך אילוץ:</span><input type='number' class='inputTL' value='" + this.value + "' >";
+                $("#editCons").html(str);
+                $("#editDiv").show();
+                $("#editDiv :input").prop("disabled", false); // edit mode: enable all controls in the form
+            });
         }
+        // mark the selected row
+        function markSelected(btn) {
+            $("#ConsTable tr").removeClass("selected"); // remove seleced class from rows that were selected before
+            row = (btn.parentNode).parentNode; // button is in TD which is in Row
+            row.className = 'selected'; // mark as selected
+        }
+        // this function is activated in case of a success
+        function getSuccess(data) {
+            myData = data; // keep the cars array in a global variable;
+            try {
+                tbl = $('#ConsTable').DataTable({
+                    data: data,
+                    columns: [
+                        {
+                            render: function (data, type, row, meta) {
+                                let dataC = "data-ConsId='" + row.ConstraintID + "'";
 
-        function GETConstraintSuccess(data) {
-            console.log(data);
-            myData = data;
-            str = "";
-            for (var i = 0; i < data.length; i++) {
-                str += "<option value='" + data[i].ConstraintValue + "' id='" + data[i].ConstraintID + "' >" + data[i].ConstraintName + "</option>";
+                                editBtn = "<button type='button' value='" + row.ConstraintValue + "' name='" + row.ConstraintName + "' id='" + row.ConstraintID + "' class = 'editBtn btn btn-success' " + dataC + "> ערוך אילוץ </button>";
+                                return editBtn;
+                            }
+                        },
+                        { data: "ConstraintValue"},
+                        { data: "ConstraintName" },
+                        { data: "ConstraintID" },
+                    ],
+                });
+                buttonEvents();
             }
-            document.getElementById("cons").innerHTML += str;
+
+            catch (err) {
+                alert(err);
+            }
         }
-
-        function GETConstraintError(error) {
-            console.log(error);
-            alert("bassa");
+        // this function is activated in case of a failure
+        function error(err) {
+            swal("Error: " + err);
         }
-
-
-
-        function choose(x) {
-            var result = x.options[x.selectedIndex].value;
-            console.log(result);
-
-            document.getElementById("name").value = x.options[x.selectedIndex].text;
-            document.getElementById("number").value = result;
-
-        }
-        function updateCons() {
-            x = document.getElementById("cons").options[document.getElementById("cons").selectedIndex].id;
-            console.log(x);
+   
+        function save() {
+            x = document.getElementById("editCons").childNodes[1].id;
+            y = document.getElementById("editCons").childNodes[1].value;
+            z = document.getElementById("editCons").childNodes[4].value;
+            res = x.split("s");
+            x = res[1];
+            console.log(x,y,z);
             constraint = {
                 "ConstraintID": x,
-                "ConstraintName": $("#name").val(),
-                "ConstraintValue": $("#number").val(),
+                "ConstraintName": y,
+                "ConstraintValue": z,
             }
-
-            ajaxCall("PUT", "../api/Constraint/" + x, JSON.stringify(constraint), PutupdateConsSuccess, PutupdateConsError);
+            ajaxCall("PUT", "../api/Constraint/" + x, JSON.stringify(constraint), PutSuccess, PutError);
         }
-
-
-        function PutupdateConsSuccess(data) {
-            alert("sababa");
-            console.log(data);
+        function PutSuccess(data) {
+            alert("great");
         }
-
-        function PutupdateConsError(error) {
-            alert("basa");
+        function PutError(error) {
+            alert("bad");
             console.log(error);
+            
         }
-
     </script>
 </head>
-<body dir="rtl" onload="getConstraints()" style="background-color:aliceblue">
+<body style="background-color:aliceblue">
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid">
-        <form id="consManagement">
+        <br />
+        <br />
+        <h1>צפייה/עריכה אילוצים </h1>
+        <br />
+        <br />
+        <form id="pForm">
+            <p class="expl">.בטבלה מוצגים כל האילוצים. על מנת לערוך שם וערך אילוץ , יש ללחוץ על הכפתור "ערוך אילוץ" ולבסוף ללחוץ על כפתור עדכן</p>
             <br />
-            <br />
-            <h2>ניהול אילוצים</h2>
-            <br />
-            <label>בחר סוג אילוץ</label>
-            <span></span>
-            <select id="cons" onchange="choose(this)">
-                <option value="select">בחר סוג אילוץ</option>
-            </select>
-            <span></span>
-            <label>שם האילוץ</label><input type="text" id="name" required />
-            <span></span>
-            <label>ערך</label><input type="number" id="number" />
-            <br />
-            <br />
-            <p style="font-weight:bold">ניתן לערוך את שם וערך האילוץ על ידי שינוי הערך הנוכחי של כל אחד ולחיצה על כפתור "שמור שינויים"</p>
-            <br />
-            <br />
-            <input type="submit" onclick="updateCons()" value="שמור שינויים" />
-
+            <table id="ConsTable" class="display nowrap" style="width:50%">
+                <thead>
+                    <tr>
+                        <th>עריכה</th>
+                        <th>(שעות)ערך האילוץ</th>
+                        <th>שם האילוץ</th>
+                        <th>מספר</th>
+                    </tr>
+                </thead>
+            </table>
         </form>
+        <br />
+        <br />
+        <div id="editDiv" class="row">
+            <div id="editCons">
+            </div>
 
+            <button type="submit" class="btn btn-primary btn-lg" id="saveBTN" onclick="save()">עדכן</button>
+            <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
 
+        </div>
+        <br />
     </div>
 </body>
 </html>
