@@ -875,36 +875,6 @@ namespace Tar1.Models.DAL
             command = prefix + sb.ToString();
             return command;
         }
-        //public int CheckApplyShift(string IdUnit, string IdUser)
-        //{
-        //    SqlConnection con = null;
-        //    string today = DateTime.Today.ToString("yyyy-MM-dd");
-
-        //    try
-        //    {
-        //        con = connect("DBConnectionString");
-        //        String optionSTR = "SELECT COUNT(isApply)";
-        //        optionSTR += " FROM BlockShift_2020 left join Shift_2020 on BlockShift_2020.ShiftDate = Shift_2020.ShiftDate and BlockShift_2020.ShiftType = Shift_2020.ShiftType";
-        //        optionSTR += " WHERE Shift_2020.StartPeriod > '" + today + "' and BlockShift_2020.UserId = '" + IdUser+ "' and BlockShift_2020.isApply = '0'";
-        //        SqlCommand cmdo = new SqlCommand(optionSTR, con);
-        //        SqlDataReader dro = cmdo.ExecuteReader(CommandBehavior.CloseConnection);
-        //        dro.Read();
-        //        int Coun = Convert.ToInt32(dro.Read());
-        //        return Coun;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw (ex);
-        //    }
-        //    finally
-        //    {
-        //        if (con != null)
-        //        {
-        //            con.Close();
-        //        }
-        //    }
-        //}
-
         public List<ApplyShift> GetAS(int id)
         {
             List<ApplyShift> AS = new List<ApplyShift>();
