@@ -160,6 +160,7 @@
     <Compile Include="Controllers\ApartmentTypeController.cs" />
     <Compile Include="Controllers\ApplyShiftController.cs" />
     <Compile Include="Controllers\ConstraintController.cs" />
+    <Compile Include="Controllers\ExceptionController.cs" />
     <Compile Include="Controllers\OrganizeUnitController.cs" />
     <Compile Include="Controllers\ShiftsController.cs" />
     <Compile Include="Controllers\TrainingLevelController.cs" />
@@ -168,9 +169,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Apartment.cs" />
     <Compile Include="Models\ApartmentType.cs" />
     <Compile Include="Models\ApplyShift.cs" />
     <Compile Include="Models\Constraint.cs" />
+    <Compile Include="Models\Exceptions.cs" />
     <Compile Include="Models\OfficialShift.cs" />
     <Compile Include="Models\OrganizeUnit.cs" />
     <Compile Include="Models\DAL\DBservices.cs" />
@@ -190,6 +193,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Pages\AddSpecialLevel.html" />
+    <Content Include="Pages\AddUnit.html" />
     <Content Include="Pages\ConstraintManagement.html" />
     <Content Include="Pages\WorkArrangement.html" />
     <Content Include="Pages\SubmitShifts.html" />
@@ -199,7 +203,6 @@
     <Content Include="Pages\GuideHomePage.html" />
     <Content Include="Pages\LogIn.html" />
     <Content Include="Pages\AddPeriod.html" />
-    <Content Include="Pages\AddUnit.html" />
     <Content Include="Pages\AddManager.html" />
     <Content Include="Pages\AddGuide.html" />
     <Content Include="Photos\-classic-living-room.jpg" />
