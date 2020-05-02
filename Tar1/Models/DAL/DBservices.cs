@@ -471,11 +471,11 @@ namespace Tar1.Models.DAL
                 while (dr.Read())
                 {
                     User us = new User();
-                    us.Firstname = (string)dr["FirstName"];
-                    us.Lastname = (string)dr["LastName"];
-                    us.Password = (string)dr["UPassword"];
-                    us.Userid = (string)dr["UserId"];
-                    us.Role = (string)dr["UserRole"];
+                    us.Firstname = Convert.ToString(dr["FirstName"]);
+                    us.Lastname = Convert.ToString(dr["LastName"]);
+                    us.Password = Convert.ToString(dr["UPassword"]);
+                    us.Userid = Convert.ToString(dr["UserId"]);
+                    us.Role = Convert.ToString(dr["UserRole"]);
                     if (us.Role == "מנהל מערך הדיור")
                     {
                         us.Unitid = 0;
@@ -582,11 +582,14 @@ namespace Tar1.Models.DAL
                     us.Firstname = (string)dr["FirstName"];
                     us.Lastname = (string)dr["LastName"];
                     us.Userid = (string)dr["UserId"];
+                    us.Birthdate = Convert.ToDateTime(dr["Birthdate"]).Date;
                     User us1 = GuideInfo(us.Userid, preprdness);
                     us.MonthlyHours = us1.MonthlyHours;
                     us.MonthlyExtraHours = us1.MonthlyExtraHours;
                     User us2 = CountShift(us.Userid);
                     us.NumOfPref = us2.NumOfPref;
+                    
+                    us.TrainingLevelId = getTrainLevId(us.Userid);
                     U.Add(us);
                 }
                 return U;
@@ -603,6 +606,36 @@ namespace Tar1.Models.DAL
                 }
             }
         }
+
+        private int getTrainLevId(string user)
+        {
+            SqlConnection con = null;
+            List<Constraint> ConstList = getConstraintM();
+            int x = 0;
+            try
+            {
+                con = connect("DBConnectionString");
+
+                String selectSTR = "select TrainingLevelId from Guide_2020 where UserId = '" + user +"'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                return x = Convert.ToInt32(dr.Read());
+                 
+                
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
         public User GuideInfo(string Userid, bool preprdness)
         {
             User Os = new User();
@@ -1164,5 +1197,87 @@ namespace Tar1.Models.DAL
             str += " UPDATE BlockShift_2020 SET isApply ='" + isApl + "' WHERE UserId =" + u + " and UnitId = " + unit + " and ShiftType = '" + t + "' and ShiftDate = '" + d + "'";
             return str;
         }
+
+
+        public void updateATTable(ApartmentType AP, int id)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+
+            }
+            String cStr = BuildInsertCommand2(AP, id);
+            cmd = CreateCommand(cStr, con);
+            try
+            {
+                cmd.ExecuteNonQuery(); // execute the command
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+
+        }
+
+        private String BuildInsertCommand2(ApartmentType ap, int id)
+        {
+            string p = id.ToString();
+            return "UPDATE ApartmentType_2020 SET ApartmentType ='" + ap.Apartmenttype + "' WHERE ApartmentTypeId =" + p;
+        }
+
+        public void InsertApaType(ApartmentType apty)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            String cStr = BuildInsertCommand(apty);
+            cmd = CreateCommand(cStr, con);
+            try
+            {
+                cmd.ExecuteNonQuery(); // execute the command
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+        private String BuildInsertCommand(ApartmentType at)
+        {
+            String command;
+
+            String prefix = "INSERT INTO ApartmentType_2020 (ApartmentType)";
+            String str = "Values('" + at.Apartmenttype + "')";
+            command = prefix + str;
+            return command;
+        }
+
     }
 }

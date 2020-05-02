@@ -15,7 +15,7 @@ namespace Tar1.Models
         public int Id { get => id; set => id = value; }
 
         public ApartmentType() { }
-         public ApartmentType(int _id,string _apartmenttype)
+        public ApartmentType(int _id, string _apartmenttype)
         {
             Id = _id;
             Apartmenttype = _apartmenttype;
@@ -26,6 +26,20 @@ namespace Tar1.Models
             DBservices dbs = new DBservices();
             return dbs.GetApartmentType();
 
+        }
+
+
+        public void UpdateAT(int id)
+        {
+            DBservices dbs = new DBservices();
+            dbs.updateATTable(this, id);
+
+        }
+
+        public void InsertAPT()
+        {
+            DBservices dbs = new DBservices();
+            dbs.InsertApaType(this);
         }
 
     }

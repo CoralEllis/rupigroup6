@@ -21,6 +21,7 @@ namespace Tar1.Models
         double monthlyHours;
         double monthlyExtraHours;
         int numOfPref;
+        int trainingLevelId;
 
         public string Userid { get => userid; set => userid = value; }
         public string Password { get => password; set => password = value; }
@@ -35,9 +36,10 @@ namespace Tar1.Models
         public double MonthlyHours { get => monthlyHours; set => monthlyHours = value; }
         public double MonthlyExtraHours { get => monthlyExtraHours; set => monthlyExtraHours = value; }
         public int NumOfPref { get => numOfPref; set => numOfPref = value; }
+        public int TrainingLevelId { get => trainingLevelId; set => trainingLevelId = value; }
 
         public User() { }
-        public User(string id, string pass,string first, string last, DateTime bdate, string tel, string _role, bool um, bool bm, int Uid,double monthhour,double exmonthhour, int numofP)
+        public User(string id, string pass,string first, string last, DateTime bdate, string tel, string _role, bool um, bool bm, int Uid,double monthhour,double exmonthhour, int numofP, int _trainingLevelId)
         {
             Userid = id;
             Password = pass;
@@ -52,6 +54,7 @@ namespace Tar1.Models
             MonthlyHours = monthhour;
             MonthlyExtraHours = exmonthhour;
             NumOfPref = numofP;
+            TrainingLevelId = _trainingLevelId;
         }
         public void InsertUser()
         {

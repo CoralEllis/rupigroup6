@@ -32,12 +32,15 @@
 
     <script>
         var myData;
+        var ApartmentTypeA;
         // will run when the document is ready
         $(document).ready(function () {
             $("#cancelSaveBTN").on("click", function () {
                 $("#editDiv").hide();
             });
             ajaxCall("GET", "../api/OrganizeUnit", "", getSuccess, error);
+            ajaxCall("GET", "../api/ApartmentType", "", GetTypeS, GetTypeE);
+
             $("#editDiv").hide();
         });
 
@@ -66,16 +69,14 @@
                         {
                             data: "ApartmentType1",
                             render: function (data, type, row, meta) {
-                                switch (data) {
-                                    case 0: return "-";
-                                        break;
-                                    case 1: return "טיפולית";
-                                        break;
-                                    case 2: return "חצי עצמאית";
-                                        break;
-                                    case 3: return "עצמאית";
-                                        break;
-                               } 
+                                if (data == 0) {
+                                    return "-";
+                                }
+                                for (var i = 0; i < ApartmentTypeA.length; i++) {
+                                    if (data == ApartmentTypeA[i].Id) {
+                                        return ApartmentTypeA[i].Apartmenttype;
+                                    }
+                                }
                             }
                         },
                     ],
@@ -146,7 +147,13 @@
         function GetApartmentType() {
             Unittype = $("#unittype").val();
             if (Unittype == "דירה") {
-                ajaxCall("GET", "../api/ApartmentType", "", GetTypeS, GetTypeE);
+                //ajaxCall("GET", "../api/ApartmentType", "", GetTypeS, GetTypeE);
+                str = "<select id='TypeOfApartment' ><option > בחר סוג דירה</option>"
+                for (var i = 0; i < ApartmentTypeA.length; i++) {
+                    str += "<option id='" + ApartmentTypeA[i].Id + "'> " + ApartmentTypeA[i].Apartmenttype + "</option >";
+                }
+                str += "</select > ";
+                $("#apartmenttype").html(str);
             }
             else $("#apartmenttype").html("");
 
@@ -154,15 +161,10 @@
         }
         function GetTypeS(data) {
             ApartmentTypeA = data;
-            str = "<select id='TypeOfApartment' ><option > בחר סוג דירה</option>"
-            for (var i = 0; i < data.length; i++) {
-                str += "<option id='" + data[i].Id + "'> " + data[i].Apartmenttype + "</option >";
-            }
-            str += "</select > ";
-            $("#apartmenttype").html(str);
+            
         }
         function GetTypeE(error) {
-
+            console.log(error);
         }
 
     </script>

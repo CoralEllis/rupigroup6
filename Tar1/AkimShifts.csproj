@@ -191,6 +191,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Pages\AddSpecialLevel.html" />
+    <Content Include="Pages\AddApartment.html" />
     <Content Include="Pages\AddUnit.html" />
     <Content Include="Pages\ConstraintManagement.html" />
     <Content Include="Pages\WorkArrangement.html" />

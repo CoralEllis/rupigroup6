@@ -30,6 +30,13 @@ p {
     color: #005473;
 }
 
+.expl1 {
+    font-size: 25px;
+    color: #005473;
+    text-align:center;
+    direction:rtl;
+}
+
 .Traininglevel {
     text-align: center;
     font-size: 20px;
@@ -74,9 +81,18 @@ button, input[type=submit], button[type=button], #cancelSaveBTN, #saveBTN {
     font-family: Calibri;
 }
 
-    button[type=button], #cancelSaveBTN, #saveBTN {
-        font-size: 20px;
-    }
+#insAPT {
+    background-color: #008CBA;
+    color: white;
+    font-family: Calibri;
+    font-size:20px;
+    position: absolute;
+    left: 1190px;
+}
+
+button[type=button], #cancelSaveBTN, #saveBTN {
+    font-size: 20px;
+}
 
 #submitshift {
     color: cadetblue;
@@ -150,6 +166,12 @@ button, input[type=submit], button[type=button], #cancelSaveBTN, #saveBTN {
 #insertUnit{
     font-size:20px;
 }
+#insertAPT {
+    font-size: 20px;
+    text-align: right;
+    margin-left:1000px;
+}
+
 .shiftsShow > input[type=button] {
     border: 1px solid cadetblue;
     background-color: cadetblue;

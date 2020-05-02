@@ -1,23 +1,100 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <title>צפייה/עדכון/הוספה מנהל יחידה ארגונית</title>
+
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
     <link href="../Style.css" rel="stylesheet" />
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <meta charset="utf-8" />
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script type="text/javascript"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
-    <title></title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+
     <script>
         UnitArray = [];
-        function GetUnits() {
+        var myData;
+         //will run when the document is ready
+        $(document).ready(function () {
+            $("#cancelSaveBTN").on("click", function () {
+                $("#editDiv").hide();
+            });
             ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, GetOrganizeUnitE);
+            ajaxCall("GET", "../api/User", "", getSuccess, error);
+            $("#editDiv").hide();
+        });
+        // wire all the buttons to their functions
+        function buttonEvents() {
+            $(document).on("click", ".editBtn", function () {
+                markSelected(this);
+                str = "<span>שנה רמת הכשרה:</span><input type='text' class='inputTL' id='" + this.id + "' value='" + this.name + "' required>";
+                $("#edittt").html(str);
+                $("#editDiv").show();
+                $("#editDiv :input").prop("disabled", false); // edit mode: enable all controls in the form
+            });
         }
+        // mark the selected row
+        function markSelected(btn) {
+            $("#managerTable tr").removeClass("selected"); // remove seleced class from rows that were selected before
+            row = (btn.parentNode).parentNode; // button is in TD which is in Row
+            row.className = 'selected'; // mark as selected
+        }
+        // this function is activated in case of a success
+        function getSuccess(data) {
+            myData = data; // keep the cars array in a global variable;
+            try {
+                tbl = $('#managerTable').DataTable({
+                    data: data,
+                    columns: [
+                        {
+                            render: function (data, type, row, meta) {
+                                let dataM = "data-SlevelId='" + row.Userid + "'";
+
+                                editBtn = "<button type='button' name='" + row.Firstname + "' id='" + row.Userid + "' class = 'editBtn btn btn-success' " + dataM + "> ערוך מנהל </button>";
+                                return editBtn;
+                            }
+                        },
+                        { data: "Unitmanager" },
+                        { data: "Role" },
+                        { data: "Telephone" },
+                        { data: "Birthdate" },
+                        { data: "Userid" },
+                        { data: "Lastname" },
+                        { data: "Firstname" },
+                    ],
+                });
+                buttonEvents();
+            }
+
+            catch (err) {
+                alert(err);
+            }
+        }
+        // this function is activated in case of a failure
+        function error(err) {
+            console.log(err);
+            //swal("Error: " + err);
+        }
+
         function GetOrganizeUnitS(data) {
             UnitArray = data;
             console.log(data);
@@ -76,27 +153,57 @@
     </script>
 
 </head>
-<body dir="rtl" style="background-color:aliceblue" onload="GetUnits()">
-    <img src="../Photos/LOGO.PNG" />
-    <div class="container">
-        <h1>  הוספת מנהל חדש</h1><br />
-        <div class="row">
-            <form dir="rtl">
-                <div class="col">
-                    <select id="SelectUnit">
-                    </select><br />
-                    <span>ת"ז: </span><input type="text" id="id" /><br />
-                    <span>שם פרטי: </span><input type="text" id="first" /><br />
-                    <span>שם משפחה: </span><input type="text" id="last" /><br />
-                    <span> תאריך לידה:</span><input type="date" id="bdate" /><br />
-                    <span> טלפון:</span><input type="tel" id="tel" /><br />
-                    <input type="radio" id="BigManager" name="Manager" /><label> מנהל מערך הדיור?</label><br />
-                    <input type="radio" id="SmallManager" name="Manager" /><label> מנהל יחידה ארגונית?</label><br />
-                    <span> סיסמא:</span><input type="text" id="pass" /><br />
-                </div>
+    <body dir="rtl" style="background-color:aliceblue" >
+
+        <img src="../Photos/LOGO.PNG" />
+        <div class="container">
+            <form id="pForm">
+                <h1> צפייה/עריכה מנהל</h1><br />
+
+                <p class="expl">בטבלה מוצגים פרטי מנהל. על מנת לערוך פרטי מנהל יש ללחוץ על כפתור "ערוך מנהל"</p>
+                <br />
+                <table id="managerTable" class="display nowrap" style="width:50%">
+                    <thead>
+                        <tr>
+                            <th>שם</th>
+                            <th>שם משפחה</th>
+                            <th>ת"ז</th>
+                            <th>תאריך לידה</th>
+                            <th>מס' טלפון</th>
+                            <th>תפקיד</th>
+                            <th>עריכת מנהל</th>
+                        </tr>
+                    </thead>
+                </table>
             </form>
-            <br /><input type="submit" value="שמור" onclick="InsertUser()" /><br />
+            <br />
+            <br />
+            <div id="editDiv" class="row">
+                <div id="edittt">
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg" id="saveBTN" onclick="save()">עדכן</button>
+                <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
+
+            </div>
+            <br />
+            <h1>  הוספת מנהל חדש</h1><br />
+            <div class="row">
+                <form dir="rtl">
+                    <div class="col">
+                        <select id="SelectUnit"></select><br />
+                        <span>ת"ז: </span><input type="text" id="id" /><br />
+                        <span>שם פרטי: </span><input type="text" id="first" /><br />
+                        <span>שם משפחה: </span><input type="text" id="last" /><br />
+                        <span> תאריך לידה:</span><input type="date" id="bdate" /><br />
+                        <span> טלפון:</span><input type="tel" id="tel" /><br />
+                        <input type="radio" id="BigManager" name="Manager" /><label> מנהל מערך הדיור?</label><br />
+                        <input type="radio" id="SmallManager" name="Manager" /><label> מנהל יחידה ארגונית?</label><br />
+                        <span> סיסמא:</span><input type="text" id="pass" /><br />
+                    </div>
+                </form>
+                <br /><input type="submit" value="שמור" onclick="InsertUser()" /><br />
+            </div>
         </div>
-    </div>
-</body>
+    </body>
 </html>

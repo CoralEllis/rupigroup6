@@ -1,23 +1,90 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
     <link href="../Style.css" rel="stylesheet" />
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <meta charset="utf-8" />
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script type="text/javascript"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
     <script>
         UnitArray = [];
         TLarray = [];
-        function GetTrainingLevel() {
+        function buttonEvents() {
+            $(document).on("click", ".editBtn", function () {
+                markSelected(this);
+                str = "<span>שנה רמת הכשרה:</span><input type='text' class='inputTL' id='" + this.id + "' value='" + this.name + "' required>";
+                $("#edittt").html(str);
+                $("#editDiv").show();
+                $("#editDiv :input").prop("disabled", false); // edit mode: enable all controls in the form
+            });
+        }
+        // mark the selected row
+        function markSelected(btn) {
+            $("#SlevelTable tr").removeClass("selected"); // remove seleced class from rows that were selected before
+            row = (btn.parentNode).parentNode; // button is in TD which is in Row
+            row.className = 'selected'; // mark as selected
+        }
+        function Gets() {
             ajaxCall("GET", "../api/TrainingLevel", "", GetTrianingS, GetTrianingE);
             ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, GetOrganizeUnitE);//Also get units
+       
+            Unitid = 2;//in the future get it from localstorage
+            ajaxCall("GET", "../api/User/" + Unitid, "", GETGuideS, GETGuideE);
+
+        }
+
+        function GETGuideS(data) {
+            myData = data; // keep the cars array in a global variable;
+            try {
+                tbl = $('#GuidesTable').DataTable({
+                    data: data,
+                    columns: [
+                        {
+                            render: function (data, type, row, meta) {
+                                let dataG = "data-SlevelId='" + row.Userid + "'";
+
+                                editBtn = "<button type='button' id='" + row.Userid + "' class = 'editBtn btn btn-success' " + dataG + "> ערוך מדריך </button>";
+                                return editBtn;
+                            }
+                        },
+                        { data:"TrainingLevelId"},
+                        { data: "Birthdate"},
+                        { data: "Lastname" },
+                        { data: "Firstname" },
+                        { data: "Userid" },
+                    ],
+                });
+                buttonEvents();
+            }
+
+            catch (err) {
+                alert(err);
+            }
+        }
+
+        function GETGuideE(error) {
+            alert(error);
         }
         function GetTrianingS(data) {
             TLarray = data;
@@ -33,7 +100,7 @@
 
         function GetOrganizeUnitS(data) {
             UnitArray = data;
-                     str = "<option>בחר יחידה ארגונית</option>";
+            str = "<option>בחר יחידה ארגונית</option>";
             for (var i = 0; i < data.length; i++) {
                 str += "<option>" + data[i].Unitname + "</option>"
             }
@@ -79,7 +146,7 @@
             }
 
             ajaxCall("POST", "../api/User", JSON.stringify(User), PostUserS, PostUserE);
-           
+
 
         }
         function PostUserS(data) {
@@ -96,7 +163,7 @@
                 "Id": TL,
             }
 
-              ajaxCall("PUT", "../api/TrainingLevel/" + id, JSON.stringify(SpicialLevel), PutTrianingS, PutTrianingE);
+            ajaxCall("PUT", "../api/TrainingLevel/" + id, JSON.stringify(SpicialLevel), PutTrianingS, PutTrianingE);
         }
         function PostUserE(error) {
             console.log(error);
@@ -113,23 +180,33 @@
     </script>
     <title></title>
 </head>
-<body dir="rtl" style="background-color:aliceblue" onload="GetTrainingLevel()">
+<body dir="rtl" style="background-color:aliceblue" onload="Gets()">
     <img src="../Photos/LOGO.PNG" />
     <div class="container">
         <h1>  הוספת מדריך חדש</h1><br />
         <div class="row">
             <form dir="rtl">
+                <table id="GuidesTable" class="display nowrap" style="width:50%">
+                    <thead>
+                        <tr>
+                            <th>עריכה</th>
+                            <th>רמת הכשרה</th>
+                            <th>תאריך לידה</th>
+                            <th>שם משפחה</th>
+                            <th>שם פרטי</th>
+                            <th>ת"ז</th>
+                        </tr>
+                    </thead>
+                </table>
                 <div class="col">
-                    <select id="SelectUnit">
-                    </select><br />
+                    <select id="SelectUnit"></select><br />
                     <span>ת"ז: </span><input type="text" id="id" /><br />
                     <span>שם פרטי: </span><input type="text" id="first" /><br />
                     <span>שם משפחה: </span><input type="text" id="last" /><br />
                     <span> תאריך לידה:</span><input type="date" id="bdate" /><br />
                     <span> טלפון:</span><input type="tel" id="tel" /><br />
                     <span>    רמת הכשרה:    </span>
-                    <select id="SelectTraining">
-                    </select><br />
+                    <select id="SelectTraining"></select><br />
                     <span> סיסמא:</span><input type="text" id="pass" /><br />
                 </div>
             </form>

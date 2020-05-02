@@ -1,0 +1,187 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+    <title>צפייה/ עדכון אילוצים</title>
+
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
+
+    <link href="../Style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <meta charset="utf-8" />
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script type="text/javascript"></script>
+    <script src="../Scripts/ajaxCalls.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+
+    <script>
+        var myData;
+        // will run when the document is ready
+        $(document).ready(function () {
+            $("#cancelSaveBTN").on("click", function () {
+                $("#editDiv").hide();
+            });
+            ajaxCall("GET", "../api/ApartmentType", "", getSuccess, error);
+            $("#editDiv").hide();
+        });
+        // wire all the buttons to their functions
+        function buttonEvents() {
+            $(document).on("click", ".editBtn", function () {
+                markSelected(this);
+                str = "<span>עדכן סוג דירה:</span><input type='text' class='inputTL' id='cons" + this.id + "' value='" + this.name + "' ><br />";
+                $("#editApType").html(str);
+                $("#editDiv").show();
+                $("#editDiv :input").prop("disabled", false); // edit mode: enable all controls in the form
+            });
+        }
+        // mark the selected row
+        function markSelected(btn) {
+            $("#ConsTable tr").removeClass("selected"); // remove seleced class from rows that were selected before
+            row = (btn.parentNode).parentNode; // button is in TD which is in Row
+            row.className = 'selected'; // mark as selected
+        }
+        // this function is activated in case of a success
+        function getSuccess(data) {
+            myData = data; // keep the cars array in a global variable;
+            try {
+                tbl = $('#AparTable').DataTable({
+                    data: data,
+                    columns: [
+                        {
+                            render: function (data, type, row, meta) {
+                                let dataA = "data-ConsId='" + row.ConstraintID + "'";
+
+                                editBtn = "<button type='button' value='" + row.Id + "' name='" + row.Apartmenttype + "' id='" + row.Id + "' class = 'editBtn btn btn-success' " + dataA + "> ערוך סוג דירה </button>";
+                                return editBtn;
+                            }
+                        },
+                        { data: "Apartmenttype" },
+                        { data: "Id" },
+                    ],
+                });
+                buttonEvents();
+            }
+
+            catch (err) {
+                alert(err);
+            }
+        }
+        // this function is activated in case of a failure
+        function error(err) {
+            swal("Error: " + err);
+        }
+
+        function save() {
+            x = document.getElementById("editApType").childNodes[1].id;
+            y = document.getElementById("editApType").childNodes[1].value;
+            res = x.split("s");
+            x = res[1];
+            console.log(x, y);
+            ApartmenTypeJ = {
+                "Id": x,
+                "Apartmenttype": y,
+            }
+            ajaxCall("PUT", "../api/ApartmentType/" + x, JSON.stringify(ApartmenTypeJ), PutSuccess, PutError);
+        }
+        function PutSuccess(data) {
+            alert("great");
+        }
+        function PutError(error) {
+            alert("bad");
+            console.log(error);
+
+        }
+
+        function InsertUnit() {
+            name = $("#name").val();
+            for (var i = 0; i < myData.length; i++) {
+                if (myData[i].Unitname == name) {
+                    //Swal('כבר קיימת יחידה ארגונית במערכת בשם זה', '', 'error');
+                    alert("כבר קיים סוג דירה במערכת בשם זה");
+                    return;
+                }
+            }
+            APNewType = {
+                "Apartmenttype": name,
+            }
+            ajaxCall("POST", "../api/ApartmentType", JSON.stringify(APNewType), PostAPNewTypeS, PostAPNewTypeE);
+        }
+
+        function PostAPNewTypeS(data) {
+            console.log(data);
+            alert("gooodddd");
+        }
+
+        function PostAPNewTypeE(error) {
+            console.log(error);
+            alert("badddd");
+        }
+    </script>
+</head>
+<body style="background-color:aliceblue">
+    <img src="../Photos/LOGO.PNG" />
+    <div class="container-fluid">
+        <br />
+        <br />
+        <h1>צפייה/עריכה סוגי דירות</h1>
+        <br />
+        <br />
+        <form id="pForm">
+            <p class="expl">.בטבלה מוצגות כל סוגי הדירות. על מנת לערוך סוג דירה, יש ללחוץ על הכפתור "ערוך סוג דירה" ולבסוף ללחוץ על כפתור עדכן</p>
+            <br />
+            <table id="AparTable" class="display nowrap" style="width:40%">
+                <thead>
+                    <tr>
+                        <th>עריכה</th>
+                        <th>סוג דירה</th>
+                        <th>מס' סוג דירה</th>
+                    </tr>
+                </thead>
+            </table>
+        </form>
+        <br />
+        <br />
+        <div id="editDiv" class="row">
+            <div id="editApType">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" id="saveBTN" onclick="save()">עדכן</button>
+            <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
+
+        </div>
+
+        <h1>הוספת סוג דירה</h1><br />
+        <p class="expl1">על מנת להוסיף סוג דירה, יש למלא את שם סוג הדירה ולבסוף ללחוץ על "שמור".</p>
+        <br />
+        <br />
+        <div class="row" dir="rtl">
+            <form>
+                <div class="col" id="insertAPT">
+                    <span>שם סוג דירה: </span><input type="text" id="name" value="הגלריה" /><br />
+                </div>
+            </form>
+            <br /><input type="submit" id="insAPT" value="שמור" onclick="InsertUnit()" /><br />
+        </div>
+        <br />
+        <br />
+    </div>
+</body>
+</html>
