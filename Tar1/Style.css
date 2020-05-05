@@ -36,7 +36,7 @@ p {
     color: #005473;
 }
 
-#icons, #ExtraHours {
+#icons, #ExtraHours, #commens {
     border: 2px ridge cadetblue;
     /*margin-right: 500px;*/
     font-size: 20px;
@@ -58,7 +58,7 @@ p {
     width: 100%;
 }
 
-#icons > p, #ExtraHours > p {
+#icons > p, #ExtraHours > p, #commens>p {
     text-align: center;
     text-decoration: underline;
     font-size: 40px;

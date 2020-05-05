@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Tar1.Models;
-
 namespace Tar1.Controllers
 {
     public class OfficialController : ApiController
@@ -17,7 +16,7 @@ namespace Tar1.Controllers
         }
 
         // GET api/<controller>/5
-
+     
         public List<OfficialShift> Get(int Unitid)
         {
             OfficialShift OS = new OfficialShift();

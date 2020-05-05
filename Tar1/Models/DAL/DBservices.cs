@@ -209,7 +209,7 @@ namespace Tar1.Models.DAL
                     {
                         foreach (var item in A)
                         {
-                            if (item.UnitId == Unit.Id)
+                            if(item.UnitId == Unit.Id)
                             {
                                 Unit.ApartmentType1 = item.ApartmenttypeId;
                                 A.Remove(item);
@@ -217,7 +217,7 @@ namespace Tar1.Models.DAL
                             }
                         }
                     }
-
+                    
                     OU.Add(Unit);
                 }
                 return OU;
@@ -236,7 +236,6 @@ namespace Tar1.Models.DAL
 
 
         }
-
         public List<Apartment> GetAP()
         {
 
@@ -1143,7 +1142,7 @@ namespace Tar1.Models.DAL
                 con = connect("DBConnectionString");
                 foreach (var item in ExceptionsArr)
                 {
-                    String cStr = BuildInsertCommand(item);
+                    String cStr = BuildInsertCommand1(item);
                     cmd = CreateCommand(cStr, con);
                     try
                     {
@@ -1167,7 +1166,7 @@ namespace Tar1.Models.DAL
                 }
             }
         }
-        private String BuildInsertCommand(Exceptions Excpt)
+        private String BuildInsertCommand1(Exceptions Excpt)
         {
             String command;
             StringBuilder sb = new StringBuilder();
@@ -1275,13 +1274,14 @@ namespace Tar1.Models.DAL
             int month = OShift.Shiftdate.Month;
             int year = OShift.Shiftdate.Year;
             string ShiftDate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
-            
+
 
             sb.AppendFormat("Values('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')", OShift.Userid, strH, endH, Unid, OShift.Shifttype, ShiftDate);
             String prefix = "INSERT INTO OfficialShift_2020 " + "(UserId,StartShift,EndShift,UnitId,ShiftType,ShiftDate)";
             command = prefix + sb.ToString();
             return command;
         }
+
         public List<OfficialShift> GetOS(int id)
         {
             List<OfficialShift> Shifts = new List<OfficialShift>();
@@ -1311,8 +1311,8 @@ namespace Tar1.Models.DAL
                     Shifts.Add(OffS);
                 }
                 return Shifts;
-
             }
+
             catch (Exception ex)
             {
                 throw (ex);
@@ -1325,6 +1325,19 @@ namespace Tar1.Models.DAL
                 }
             }
         }
-        
+
     }
+
+
+
+
+
+
+
+
+
+
+
+
 }
+    }

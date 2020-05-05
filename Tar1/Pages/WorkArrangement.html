@@ -17,6 +17,8 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="../Scripts/moment.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/moment@2.22.2/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment-range/4.0.1/moment-range.js"></script>
     <style>
         select, div {
             font-family: fontAwesome
@@ -33,6 +35,7 @@
         OfficialShifts = [];
         Guides = [];
         Exceptions = [];
+        calendar = [];
         CheckEightHours = false;
         MaxRestHours = 0;// the rest hours that worker need to get evry week
         LongerShift = 0;// max duration of shift
@@ -43,6 +46,7 @@
         Preperness = false;
         Regularshifthours = 0.0;
         SNightShiftHours = 0;
+        window['moment-range'].extendMoment(moment);
         function GetPreperness() {
             Unitid = 2;//in the future get it from localstorage
             ajaxCall("GET", "../api/Period/" + Unitid, "", GETPrepernessS, GETPrepernessE);
@@ -88,17 +92,11 @@
                         break;
                 }
             }
-            Unitid = 2;
-            ajaxCall("GET", "../api/Official/" + Unitid, "", GETOfficialS, GETOfficialE);
-
+            Unitid = 2;            ajaxCall("GET", "../api/Official/" + Unitid, "", GETOfficialS, GETOfficialE);
             ajaxCall("GET", "../api/ApplyShift/" + Unitid, "", GETGuidePrefS, GETGuidePrefE);
         }
-        function GETOfficialS(data) {
-            console.log(data);
-        }
-        function GETOfficialE(err) {
-            console.log(err);
-        }
+        function GETOfficialS(data) {            console.log(data);        }        function GETOfficialE(err) {            console.log(err);        }
+
         function GETShiftE(error) {
             alert("BASSA");
             console.log(error);
@@ -148,7 +146,6 @@
                 else if (CheckEightHours == false && ShiftsArray[i].Type == "ערב" && i + 1 < ShiftsArray.length) {
                     Mend = moment(ShiftsArray[i].End, 'HH:mm A');
                     Mstart = moment(ShiftsArray[i + 1].Start, 'HH:mm A');
-
                     milisecond = moment.duration(Mstart.diff(Mend));
                     temp = milisecond.asHours();
                     if (temp <= HoursBetweenShifts) {
@@ -157,34 +154,35 @@
                 }
 
             }
-            GetGuides();
+            SetWeeks();
         }
         function GETGuidePrefE(error) {
             alert("BASSA");
             console.log(error);
         }
-        function GetGuides() {
-            Unitid = 2;//in the future get it from localstorage
-            ajaxCall("GET", "../api/User/" + Unitid, "", GETGuideS, GETGuideE);
-        }
         function GETGuideS(data) {
             ExtraDiv = "<p> שעות נוספות</p>" + "<br /><br />";
+
             for (var i = 0; i < data.length; i++) {
+
                 Guide = {
                     "UserId": data[i].Userid,
                     "Username": data[i].Firstname + " " + data[i].Lastname,
                     "MonthlyNormalHours": data[i].MonthlyHours,
                     "MonthlyExtraHours": data[i].MonthlyExtraHours,
-                    "WeeklyHours": 0,
+                    "WeeklyHours": [],
                     "ShiftsSorted": [],
                     "CountPref": data[i].NumOfPref,
                 }
+
                 ExtraDiv += "<div id='Extra" + Guide.UserId + "'>";
                 if (Guide.MonthlyExtraHours != 0) {
                     ExtraDiv += Guide.Username + ": " + Guide.MonthlyExtraHours.toFixed(2);
                 }
                 ExtraDiv += "<br /></div>";
-
+                for (var j = 0; j < calendar.length; j++) {
+                    Guide.WeeklyHours.push(0);
+                }
                 Guides.push(Guide);
             }
             $("#ExtraHours").html(ExtraDiv);
@@ -200,6 +198,45 @@
             HoursBetweenShifts = data[5].ConstraintValue;
             Regularshifthours = data[6].ConstraintValue;
             SNightShiftHours = data[7].ConstraintValue;
+
+        }
+        function SetWeeks() {
+            year = ShiftsArray[0].StartShift.year();
+            month = ShiftsArray[ShiftsArray.length - 1].StartShift.month();
+            firstDay = moment(ShiftsArray[0].StartShift.format("YYYY-MM-DD"));
+            endDay = moment(ShiftsArray[ShiftsArray.length - 1].StartShift.format("YYYY-MM-DD"));
+            // Create a range for the month we can iterate through
+            monthRange = moment().range(firstDay, endDay);
+            // Get all the weeks during the current month
+            weeks = [];
+            for (let mday of monthRange.by('days')) {
+                if (weeks.indexOf(mday.week()) === -1) {
+                    weeks.push(mday.week());
+                }
+            }
+            // Create a range for each week
+            for (let index = 0; index < weeks.length; index++) {
+                var weeknumber = weeks[index];
+                firstWeekDay = moment().year(year).month(month).week(weeknumber).day(0);
+                lastWeekDay = moment().year(year).month(month).week(weeknumber).day(6);
+                if (month == 11 && (weeks.length - 1) == index) {
+                    firstWeekDay = moment().year(year).month(month).week(weeks[index - 1]).day(0);
+                    firstWeekDay.add(7, "day");
+                    lastWeekDay = moment().year(year).month(month).week(weeks[index - 1]).day(6);
+                    lastWeekDay.add(6, "day");
+                }
+                if (firstWeekDay.isBefore(firstDay)) {
+                    firstWeekDay = firstDay;
+                }
+
+                if (lastWeekDay.isAfter(endDay)) {
+                    lastWeekDay = endDay;
+                }
+                weekRange = moment.range(firstWeekDay, lastWeekDay);
+                calendar.push(weekRange);
+            }
+            Unitid = 2;//in the future get it from localstorage
+            ajaxCall("GET", "../api/User/" + Unitid, "", GETGuideS, GETGuideE);
         }
         function GETConstraintError(error) {
             console.log(error);
@@ -209,7 +246,6 @@
             alert("Bassa");
             console.log(error);
         }
-
         function TellMeTheDay(YomBa) {
             switch (YomBa) {
                 case 0:
@@ -331,14 +367,16 @@
                         }
                     }
                 }
-                if (Guides[j].WeeklyHours > HoursPerWeek)//60  job hours per week
-                {
-                    Res = {
-                        "Res": Guides[j].Username + "   עובד יותר מ- 60 שעות בשבוע העבודה",
-                        "Emoji": "&#xf017;"
+                for (var i = 0; i < calendar.length; i++) {
+                    if (Guides[j].WeeklyHours[i] > HoursPerWeek)//60  job hours per week
+                    {
+                        Res = {
+                            "Res": Guides[j].Username + "   עובד יותר מ- 60 שעות בשבוע העבודה",
+                            "Emoji": "&#xf017;"
+                        }
+                        ResonsArray.push(Res);
+                        Eligible = false;
                     }
-                    ResonsArray.push(Res);
-                    Eligible = false;
                 }
                 if (Guides[j].MonthlyNormalHours > MonthNormalHours)  //200 hours
                 {
@@ -409,6 +447,7 @@
         sortGreenGuides = function (a, b) { return a.CountPref - b.CountPref || a.ExtraHours - b.ExtraHours };
         sortRedGuides = function (a, b) { return b.IsApply - a.IsApply || a.ExtraHours - b.ExtraHours };
         function InsertGuide(select, numinarrshift) {
+            $("#realcomment").html(" ");
             var result = select.options[select.selectedIndex].text;
             userid = select.options[select.selectedIndex].value;
             resultStr = "<div id='div" + userid + "'  style='font-family: fontAwesome'><br />" + "<i class='fas fa-times' id='" + userid + "' onclick='DeleteDiv(" + userid + ")'></i>" + "  " + result + "   ";
@@ -417,6 +456,16 @@
             resultStr += "<input type='time' value='" + endHour + "'  id='" + userid + "E'/>" + "  -  " + "<input type='time' value='" + startHour + "' id='" + userid + "S'/>" + "    " + "<button onclick='SaveUpdateshift(this," + userid + "," + numinarrshift + ")'>שבץ מדריך</button></div>";
             classstr = $(select).parent().parent().prop('className');
             document.getElementsByClassName(classstr)[0].innerHTML += resultStr;
+            for (var i = 0; i < GuidesPref.length; i++) {
+                if (GuidesPref[i].Userid == userid && GuidesPref[i].Shifttype == ShiftsArray[numinarrshift].Type && GuidesPref[i].Comment != "") {
+                    dateinguidepref = GuidesPref[i].Shiftdate.split("T");
+                    console.log(dateinguidepref, ShiftsArray[numinarrshift].StartShift.format("YYYY-MM-DD"));
+                    if (dateinguidepref[0] == ShiftsArray[numinarrshift].StartShift.format("YYYY-MM-DD")) {
+                        $("#realcomment").html(result + " " + GuidesPref[i].Comment);
+                        break;
+                    }
+                }
+            }
         }
         function HowManyEmbed(NuminArr, len) {
             embed = 0;
@@ -432,12 +481,25 @@
             rf = $(x).parent().parent().prop('className');
             ShiftDuration = 0;
             RealShiboz = false;
-            endHour, StratH = "";
+            StratH = $("#" + id + "S").val();
+            endHour = $("#" + id + "E").val();
+            ShiftinWeeekNum = 0;
+            for (var i = 0; i < calendar.length; i++) {
+                range = moment().range(calendar[i].start.format("YYYY-MM-DD"), calendar[i].end.format("YYYY-MM-DD"));
+                date = moment(ShiftsArray[num].StartShift.format("YYYY-MM-DD"));
+                if (range.contains(date))
+                    ShiftinWeeekNum = i;
+            }
+            Mstart = moment(StratH, 'HH:mm A');
+            Mend = moment(endHour, 'HH:mm A');
+            milisecond = moment.duration(Mend.diff(Mstart));
+            ShiftDuration = milisecond.asHours();
+            if (ShiftDuration < 0) {
+                ShiftDuration = 24 + ShiftDuration;
+            }
             if (x.textContent == 'שבץ מדריך') {
                 for (var i = 0; i < mispar; i++) {
                     if (OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid.toString().length == 1 && ShiftsArray[num].NuminOfficialShift[i].Occupied == false) {
-                        StratH = $("#" + id + "S").val();
-                        endHour = $("#" + id + "E").val();
                         RealShiboz = true;
                         OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid = id;
                         OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Startshifthour = StratH;
@@ -463,6 +525,7 @@
                         if (ShiftDuration < 0) {
                             ShiftDuration = 24 + ShiftDuration;
                         }
+                        console.log(ShiftDuration);
                         if (ShiftDuration > LongerShift) {
                             swal("שים לב משך המשמרת גדול מ-12 שעות!");
                         }
@@ -473,7 +536,6 @@
                     alert("שים לב, המשמרת מאויישת במלואה, במידה והנך רוצה לשנות שיבוץ יש למחוק קודם את מדריך מאוייש ולאחר מכן לשבץ שוב!");
                     //swal("שים לב, המשמרת מאויישת במלואה, במידה והנך רוצה לשנות שיבוץ יש למחוק קודם את מדריך מאוייש ולאחר מכן לשבץ שוב");
                 }
-
             }
             else if (x.textContent == 'מחק מדריך') {
                 x.textContent = 'שבץ מדריך';
@@ -492,7 +554,6 @@
                 }
                 embedA = HowManyEmbed(num, mispar);
                 if (embedA != mispar) {
-
                     document.getElementById(rf).style.backgroundColor = "aliceblue";
                     if (document.getElementById(rf).childNodes.length > 1)
                         document.getElementById(rf).childNodes[1].remove()
@@ -514,24 +575,24 @@
                             if (ShiftDuration > SNightShiftHours) {
                                 Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours - SNightShiftHours;
                                 Guides[i].MonthlyExtraHours = Guides[i].MonthlyExtraHours - ShiftDuration + SNightShiftHours;
-                                Guides[i].WeeklyHours = Guides[i].WeeklyHours - ShiftDuration;
+                                Guides[i].WeeklyHours[ShiftinWeeekNum] = Guides[i].WeeklyHours[ShiftinWeeekNum] - ShiftDuration;
                                 UpdateExtra(Guides[i].Username, Guides[i].MonthlyExtraHours, Guides[i].UserId);
                             }
                             else {
                                 Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours - ShiftDuration;
-                                Guides[i].WeeklyHours = Guides[i].WeeklyHours - ShiftDuration;
+                                Guides[i].WeeklyHours[ShiftinWeeekNum] = Guides[i].WeeklyHours[ShiftinWeeekNum] - ShiftDuration;
                             }
                         }
                         else {
                             if (ShiftDuration > Regularshifthours) {
                                 Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours - Regularshifthours;
                                 Guides[i].MonthlyExtraHours = Guides[i].MonthlyExtraHours - ShiftDuration + Regularshifthours;
-                                Guides[i].WeeklyHours = Guides[i].WeeklyHours - ShiftDuration;
+                                Guides[i].WeeklyHours[ShiftinWeeekNum] = Guides[i].WeeklyHours[ShiftinWeeekNum] - ShiftDuration;
                                 UpdateExtra(Guides[i].Username, Guides[i].MonthlyExtraHours, Guides[i].UserId);
                             }
                             else {
                                 Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours - ShiftDuration;
-                                Guides[i].WeeklyHours = Guides[i].WeeklyHours - ShiftDuration;
+                                Guides[i].WeeklyHours[ShiftinWeeekNum] = Guides[i].WeeklyHours[ShiftinWeeekNum] - ShiftDuration;
                             }
                         }
                     }
@@ -547,30 +608,29 @@
                             "EndHour": sium
                         }
                         Guides[i].ShiftsSorted.push(GuideShiftR);
-
                         document.getElementById(rf).childNodes[0].innerHTML += "<span id='" + Guides[i].UserId + "embed" + rf + "' class='row' style='margin:auto'>" + Guides[i].Username + "</span>";
                         if (Preperness == true && type == "לילה") {
                             if (ShiftDuration > SNightShiftHours) {
                                 Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours + SNightShiftHours;
                                 Guides[i].MonthlyExtraHours = Guides[i].MonthlyExtraHours + ShiftDuration - SNightShiftHours;
-                                Guides[i].WeeklyHours = Guides[i].WeeklyHours + ShiftDuration;
+                                Guides[i].WeeklyHours[ShiftinWeeekNum] = Guides[i].WeeklyHours[ShiftinWeeekNum] + ShiftDuration;
                                 UpdateExtra(Guides[i].Username, Guides[i].MonthlyExtraHours, Guides[i].UserId);
                             }
                             else {
                                 Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours + ShiftDuration;
-                                Guides[i].WeeklyHours = Guides[i].WeeklyHours + ShiftDuration;
+                                Guides[i].WeeklyHours[ShiftinWeeekNum] = Guides[i].WeeklyHours[ShiftinWeeekNum] + ShiftDuration;
                             }
                         }
                         else {
                             if (ShiftDuration > Regularshifthours) {
                                 Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours + Regularshifthours;
                                 Guides[i].MonthlyExtraHours = Guides[i].MonthlyExtraHours + ShiftDuration - Regularshifthours;
-                                Guides[i].WeeklyHours = Guides[i].WeeklyHours + ShiftDuration;
+                                Guides[i].WeeklyHours[ShiftinWeeekNum] = Guides[i].WeeklyHours[ShiftinWeeekNum] + ShiftDuration;
                                 UpdateExtra(Guides[i].Username, Guides[i].MonthlyExtraHours, Guides[i].UserId);
                             }
                             else {
                                 Guides[i].MonthlyNormalHours = Guides[i].MonthlyNormalHours + ShiftDuration;
-                                Guides[i].WeeklyHours = Guides[i].WeeklyHours + ShiftDuration;
+                                Guides[i].WeeklyHours[ShiftinWeeekNum] = Guides[i].WeeklyHours[ShiftinWeeekNum] + ShiftDuration;
                             }
                         }
                         if (Guides[i].MonthlyNormalHours > MonthNormalHours)// 200 normal hours per month
@@ -585,12 +645,13 @@
                             }
                             Exceptions.push(Excpt);
                         }
+
                         if (Guides[i].MonthlyExtraHours > ExtraHours)//60 extra hours per month
                         {
                             //swal("שים לב! שעות העבודה הנוספות בחודש זה עולות על 60 שעות!");
                             Excpt = {
                                 "User": Guides[i].UserId,
-                                "Unit": 2,
+                                "Unit": Unitid,
                                 "Index": "עובד יותר מ- " + ExtraHours + " שעות נוספות החודש",
                                 "ShiftType": type,
                                 "ShiftDate": dateShift
@@ -601,13 +662,14 @@
                         {
                             Excpt = {
                                 "User": Guides[i].UserId,
-                                "Unit": 2,
+                                "Unit": Unitid,
                                 "Index": "עובד יותר מ- " + HoursPerWeek + " שעות בשבוע העבודה",
                                 "ShiftType": type,
                                 "ShiftDate": dateShift
                             }
                             Exceptions.push(Excpt);
                         }
+
                         break;
                     }
                 }
@@ -664,12 +726,13 @@
                                 if (BreakShift1 < HoursBetweenShifts) {
                                     Excpt = {
                                         "User": Guides[j].UserId,
-                                        "Unit": 2,
+                                        "Unit": Unitid,
                                         "Index": "ישנו הפרש של פחות מ-  " + HoursBetweenShifts + " שעות בין המשמרות",
                                         "ShiftType": Guides[j].ShiftsSorted[f].ShiftType,
                                         "ShiftDate": Guides[j].ShiftsSorted[f].ShiftDate
                                     }
                                     Exceptions.push(Excpt);
+
                                     Swal.fire({
                                         title: 'שים לב!',
                                         text: 'ישנו הפרש של פחות מ- 8 שעות עבור  ' + Guides[j].Username + '  בין המשמרות:  ' + Guides[j].ShiftsSorted[f].ShiftDate + ' ' + Guides[j].ShiftsSorted[f].ShiftType + ' ו' + Guides[j].ShiftsSorted[f + 1].ShiftDate + ' ' + Guides[j].ShiftsSorted[f + 1].ShiftType,
@@ -699,7 +762,7 @@
                     if (HasABreak == false) {
                         Excpt = {
                             "User": Guides[j].UserId,
-                            "Unit": 2,
+                            "Unit": Unitid,
                             "Index": "לא קיבל " + MaxRestHours + " שעות מנוחה ברציפות"
                             //"ShiftType": type,
                             //"ShiftDate": dateShift
@@ -732,16 +795,9 @@
             }
             //ajaxCall("POST", "../api/Official", JSON.stringify(OfficialShifts), PostShiftS, PostShiftE);
             ajaxCall("POST", "../api/Exception", JSON.stringify(Exceptions), PostExceptionS, PostExceptionE);
-        }
 
-        function PostExceptionS(data) {
-            alert("Hi");
-            console.log(data);
         }
-        function PostExceptionE(error) {
-            alert("Bi");
-            console.log(error);
-        }
+        function PostExceptionS(data) {            alert("Hi");            console.log(data);        }        function PostExceptionE(error) {            alert("Bi");            console.log(error);        }        function PostShiftS(data) {            alert("Hi");            console.log(data);        }        function PostShiftE(error) {            alert("Bi");            console.log(error);        }
         function PostShiftS(data) {
             alert("Hi");
             console.log(data);
@@ -761,7 +817,7 @@
         }
         sortByDateAsc = function (lhs, rhs) { return lhs.StartShift > rhs.StartShift ? 1 : lhs.StartShift < rhs.StartShift ? -1 : 0 }
     </script>
-    <title></title>
+    <title>בניית סידור עבודה</title>
 </head>
 <body dir="rtl" style="background-color:aliceblue" onload="GetSHifts()">
     <!--onload="GetUser()"-->
@@ -825,7 +881,11 @@
                 </div>
                 <br />
                 <div class="col">
-                    <div id="ExtraHours">
+                    <div class="row" id="ExtraHours">
+                    </div><br />
+                    <div class="row" id="commens">
+                        <p>  הערות המדריך למשמרת</p>
+                        <section id="realcomment"></section>
                     </div>
                 </div>
             </div>
