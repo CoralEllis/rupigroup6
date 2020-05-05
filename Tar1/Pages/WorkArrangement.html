@@ -92,8 +92,11 @@
                         break;
                 }
             }
+            Unitid = 2;            ajaxCall("GET", "../api/Official/" + Unitid, "", GETOfficialS, GETOfficialE);
             ajaxCall("GET", "../api/ApplyShift/" + Unitid, "", GETGuidePrefS, GETGuidePrefE);
         }
+        function GETOfficialS(data) {            console.log(data);        }        function GETOfficialE(err) {            console.log(err);        }
+
         function GETShiftE(error) {
             alert("BASSA");
             console.log(error);
@@ -243,7 +246,6 @@
             alert("Bassa");
             console.log(error);
         }
-
         function TellMeTheDay(YomBa) {
             switch (YomBa) {
                 case 0:
