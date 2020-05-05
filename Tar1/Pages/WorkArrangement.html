@@ -34,7 +34,7 @@
         GuidesPref = [];
         OfficialShifts = [];
         Guides = [];
-         
+        Exceptions = [];
         calendar = [];
         CheckEightHours = false;
         MaxRestHours = 0;// the rest hours that worker need to get evry week
@@ -445,6 +445,7 @@
         sortGreenGuides = function (a, b) { return a.CountPref - b.CountPref || a.ExtraHours - b.ExtraHours };
         sortRedGuides = function (a, b) { return b.IsApply - a.IsApply || a.ExtraHours - b.ExtraHours };
         function InsertGuide(select, numinarrshift) {
+            $("#realcomment").html(" ");
             var result = select.options[select.selectedIndex].text;
             userid = select.options[select.selectedIndex].value;
             resultStr = "<div id='div" + userid + "'  style='font-family: fontAwesome'><br />" + "<i class='fas fa-times' id='" + userid + "' onclick='DeleteDiv(" + userid + ")'></i>" + "  " + result + "   ";
@@ -453,6 +454,16 @@
             resultStr += "<input type='time' value='" + endHour + "'  id='" + userid + "E'/>" + "  -  " + "<input type='time' value='" + startHour + "' id='" + userid + "S'/>" + "    " + "<button onclick='SaveUpdateshift(this," + userid + "," + numinarrshift + ")'>שבץ מדריך</button></div>";
             classstr = $(select).parent().parent().prop('className');
             document.getElementsByClassName(classstr)[0].innerHTML += resultStr;
+            for (var i = 0; i < GuidesPref.length; i++) {
+                if (GuidesPref[i].Userid == userid && GuidesPref[i].Shifttype == ShiftsArray[numinarrshift].Type && GuidesPref[i].Comment != "") {
+                    dateinguidepref = GuidesPref[i].Shiftdate.split("T");
+                    console.log(dateinguidepref, ShiftsArray[numinarrshift].StartShift.format("YYYY-MM-DD"));
+                    if (dateinguidepref[0] == ShiftsArray[numinarrshift].StartShift.format("YYYY-MM-DD")) {
+                        $("#realcomment").html(result + " " + GuidesPref[i].Comment);
+                        break;
+                    }
+                }
+            }
         }
         function HowManyEmbed(NuminArr, len) {
             embed = 0;
@@ -620,26 +631,43 @@
                                 Guides[i].WeeklyHours[ShiftinWeeekNum] = Guides[i].WeeklyHours[ShiftinWeeekNum] + ShiftDuration;
                             }
                         }
-                        if (Guides[i].MonthlyHours > MonthNormalHours)// 200 normal hours per month
+                        if (Guides[i].MonthlyNormalHours > MonthNormalHours)// 200 normal hours per month
                         {
-                            swal("שים לב! שעות העבודה החודשיות עולות על 200 שעות!");
+                            //swal("שים לב! שעות העבודה החודשיות עולות על 200 שעות!");
                             Excpt = {
-                                "User": Guides[j].UserId,
-                                "Unit": 2,
-                                "index": "עובד יותר מ- " + MonthNormalHours + " שעות בחודש"
+                                "User": Guides[i].UserId,
+                                "Unit": Unitid,
+                                "Index": "עובד יותר מ- " + MonthNormalHours + " שעות בחודש",
+                                "ShiftType": type,
+                                "ShiftDate": dateShift
                             }
                             Exceptions.push(Excpt);
                         }
+
                         if (Guides[i].MonthlyExtraHours > ExtraHours)//60 extra hours per month
                         {
-                            swal("שים לב! שעות העבודה הנוספות בחודש זה עולות על 60 שעות!");
+                            //swal("שים לב! שעות העבודה הנוספות בחודש זה עולות על 60 שעות!");
                             Excpt = {
-                                "User": Guides[j].UserId,
-                                "Unit": 2,
-                                "index": "עובד יותר מ- " + ExtraHours + " שעות נוספות החודש"
+                                "User": Guides[i].UserId,
+                                "Unit": Unitid,
+                                "Index": "עובד יותר מ- " + ExtraHours + " שעות נוספות החודש",
+                                "ShiftType": type,
+                                "ShiftDate": dateShift
                             }
                             Exceptions.push(Excpt);
                         }
+                        if (Guides[i].WeeklyHours > HoursPerWeek)//60  job hours per week
+                        {
+                            Excpt = {
+                                "User": Guides[i].UserId,
+                                "Unit": Unitid,
+                                "Index": "עובד יותר מ- " + HoursPerWeek + " שעות בשבוע העבודה",
+                                "ShiftType": type,
+                                "ShiftDate": dateShift
+                            }
+                            Exceptions.push(Excpt);
+                        }
+
                         break;
                     }
                 }
@@ -694,6 +722,15 @@
                                 milisecond1 = moment.duration(Roshmish1.diff(Sofmish1));
                                 BreakShift1 = milisecond1.asHours();
                                 if (BreakShift1 < HoursBetweenShifts) {
+                                    Excpt = {
+                                        "User": Guides[j].UserId,
+                                        "Unit": Unitid,
+                                        "Index": "ישנו הפרש של פחות מ-  " + HoursBetweenShifts + " שעות בין המשמרות",
+                                        "ShiftType": Guides[j].ShiftsSorted[f].ShiftType,
+                                        "ShiftDate": Guides[j].ShiftsSorted[f].ShiftDate
+                                    }
+                                    Exceptions.push(Excpt);
+
                                     Swal.fire({
                                         title: 'שים לב!',
                                         text: 'ישנו הפרש של פחות מ- 8 שעות עבור  ' + Guides[j].Username + '  בין המשמרות:  ' + Guides[j].ShiftsSorted[f].ShiftDate + ' ' + Guides[j].ShiftsSorted[f].ShiftType + ' ו' + Guides[j].ShiftsSorted[f + 1].ShiftDate + ' ' + Guides[j].ShiftsSorted[f + 1].ShiftType,
@@ -721,6 +758,15 @@
                         }
                     }
                     if (HasABreak == false) {
+                        Excpt = {
+                            "User": Guides[j].UserId,
+                            "Unit": Unitid,
+                            "Index": "לא קיבל " + MaxRestHours + " שעות מנוחה ברציפות"
+                            //"ShiftType": type,
+                            //"ShiftDate": dateShift
+                        }
+                        Exceptions.push(Excpt);
+
                         Swal.fire({
                             title: 'שים לב!',
                             text: Guides[j].Username + " לא קיבל 36 שעות מנוחה ברציפות",
@@ -745,9 +791,11 @@
                     }
                 }
             }
-            ajaxCall("POST", "../api/Exception", JSON.stringify(Exceptions), PostShiftS, PostShiftE);
-        }
+            //ajaxCall("POST", "../api/Official", JSON.stringify(OfficialShifts), PostShiftS, PostShiftE);
+            ajaxCall("POST", "../api/Exception", JSON.stringify(Exceptions), PostExceptionS, PostExceptionE);
 
+        }
+        function PostExceptionS(data) {            alert("Hi");            console.log(data);        }        function PostExceptionE(error) {            alert("Bi");            console.log(error);        }        function PostShiftS(data) {            alert("Hi");            console.log(data);        }        function PostShiftE(error) {            alert("Bi");            console.log(error);        }
         function PostShiftS(data) {
             alert("Hi");
             console.log(data);
@@ -831,7 +879,11 @@
                 </div>
                 <br />
                 <div class="col">
-                    <div id="ExtraHours">
+                    <div class="row" id="ExtraHours">
+                    </div><br />
+                    <div class="row" id="commens">
+                        <p>  הערות המדריך למשמרת</p>
+                        <section id="realcomment"></section>
                     </div>
                 </div>
             </div>

@@ -236,7 +236,6 @@ namespace Tar1.Models.DAL
 
 
         }
-
         public List<Apartment> GetAP()
         {
 
@@ -1143,7 +1142,7 @@ namespace Tar1.Models.DAL
                 con = connect("DBConnectionString");
                 foreach (var item in ExceptionsArr)
                 {
-                    String cStr = BuildInsertCommand(item);
+                    String cStr = BuildInsertCommand1(item);
                     cmd = CreateCommand(cStr, con);
                     try
                     {
@@ -1166,37 +1165,47 @@ namespace Tar1.Models.DAL
                     con.Close();
                 }
             }
-
         }
-        private String BuildInsertCommand(Exceptions Excpt)
+        private String BuildInsertCommand1(Exceptions Excpt)
         {
             String command;
             StringBuilder sb = new StringBuilder();
 
             string UsId = Excpt.User.ToString();
             string Unid = Excpt.Unit.ToString();
-            int day = Excpt.ShiftDate.Day;
-            int month = Excpt.ShiftDate.Month;
-            int year = Excpt.ShiftDate.Year;
-            string ShiftDate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
-            string index = GetExceptionType(Excpt.Index);
+            int indx = GetExceptionType(Excpt.Index);
+            string index = indx.ToString();
+            if (Excpt.ShiftDate != null)
+            {
+                int day = Excpt.ShiftDate.Day;
+                int month = Excpt.ShiftDate.Month;
+                int year = Excpt.ShiftDate.Year;
+                string ShiftDate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
 
-            sb.AppendFormat("Values('{0}', '{1}', '{2}', '{3}', '{4}')", index, UsId, Unid, Excpt.ShiftType, ShiftDate);
-            String prefix = "INSERT INTO Exception_2020 " + "(TypeofExceptionId,UserId,UnitId,ShiftType,ShiftDate)";
-            command = prefix + sb.ToString();
-            return command;
+                sb.AppendFormat("Values('{0}', '{1}', '{2}', '{3}', '{4}')", index, UsId, Unid, Excpt.ShiftType, ShiftDate);
+                String prefix = "INSERT INTO Exception_2020 " + "(TypeofExceptionId,UserId,UnitId,ShiftType,ShiftDate)";
+                command = prefix + sb.ToString();
+                return command;
+            }
+            else
+            {
+                sb.AppendFormat("Values('{0}', '{1}', '{2}')", index, UsId, Unid);
+                String prefix = "INSERT INTO Exception_2020 " + "(TypeofExceptionId,UserId,UnitId)";
+                command = prefix + sb.ToString();
+                return command;
+            }
         }
-        public string GetExceptionType(string str)
+        public int GetExceptionType(string str)
         {
             SqlConnection con = null;
-            string ind;
+            int ind;
             try
             {
                 con = connect("DBConnectionString");
                 String checkSTR = "select TypeofException_2020.TypeofExceptionId from TypeofException_2020 where TypeofException = '" + str + "'";
                 SqlCommand cmd = new SqlCommand(checkSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-                ind = dr.Read().ToString();
+                ind = Convert.ToInt32(dr.Read());
                 return ind;
             }
             catch (Exception ex)
@@ -1211,5 +1220,6 @@ namespace Tar1.Models.DAL
                 }
             }
         }
+
     }
 }

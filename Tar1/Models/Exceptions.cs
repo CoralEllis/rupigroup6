@@ -29,11 +29,12 @@ namespace Tar1.Models
             ShiftType = _type;
             ShiftDate = date;
         }
-        
+
         public void InsertExceptions(List<Exceptions> ExcptArr)
         {
             DBservices dbs = new DBservices();
             dbs.InsertExceptionsList(ExcptArr);
         }
     }
+
 }
