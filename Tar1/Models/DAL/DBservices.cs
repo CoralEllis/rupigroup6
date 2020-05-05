@@ -209,7 +209,7 @@ namespace Tar1.Models.DAL
                     {
                         foreach (var item in A)
                         {
-                            if(item.UnitId == Unit.Id)
+                            if (item.UnitId == Unit.Id)
                             {
                                 Unit.ApartmentType1 = item.ApartmenttypeId;
                                 A.Remove(item);
@@ -217,7 +217,7 @@ namespace Tar1.Models.DAL
                             }
                         }
                     }
-                    
+
                     OU.Add(Unit);
                 }
                 return OU;
@@ -1166,7 +1166,6 @@ namespace Tar1.Models.DAL
                     con.Close();
                 }
             }
-
         }
         private String BuildInsertCommand(Exceptions Excpt)
         {
@@ -1175,28 +1174,39 @@ namespace Tar1.Models.DAL
 
             string UsId = Excpt.User.ToString();
             string Unid = Excpt.Unit.ToString();
-            int day = Excpt.ShiftDate.Day;
-            int month = Excpt.ShiftDate.Month;
-            int year = Excpt.ShiftDate.Year;
-            string ShiftDate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
-            string index = GetExceptionType(Excpt.Index);
+            int indx = GetExceptionType(Excpt.Index);
+            string index = indx.ToString();
+            if (Excpt.ShiftDate != null)
+            {
+                int day = Excpt.ShiftDate.Day;
+                int month = Excpt.ShiftDate.Month;
+                int year = Excpt.ShiftDate.Year;
+                string ShiftDate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
 
-            sb.AppendFormat("Values('{0}', '{1}', '{2}', '{3}', '{4}')", index, UsId, Unid, Excpt.ShiftType, ShiftDate);
-            String prefix = "INSERT INTO Exception_2020 " + "(TypeofExceptionId,UserId,UnitId,ShiftType,ShiftDate)";
-            command = prefix + sb.ToString();
-            return command;
+                sb.AppendFormat("Values('{0}', '{1}', '{2}', '{3}', '{4}')", index, UsId, Unid, Excpt.ShiftType, ShiftDate);
+                String prefix = "INSERT INTO Exception_2020 " + "(TypeofExceptionId,UserId,UnitId,ShiftType,ShiftDate)";
+                command = prefix + sb.ToString();
+                return command;
+            }
+            else
+            {
+                sb.AppendFormat("Values('{0}', '{1}', '{2}')", index, UsId, Unid);
+                String prefix = "INSERT INTO Exception_2020 " + "(TypeofExceptionId,UserId,UnitId)";
+                command = prefix + sb.ToString();
+                return command;
+            }
         }
-        public string GetExceptionType(string str)
+        public int GetExceptionType(string str)
         {
             SqlConnection con = null;
-            string ind;
+            int ind;
             try
             {
                 con = connect("DBConnectionString");
                 String checkSTR = "select TypeofException_2020.TypeofExceptionId from TypeofException_2020 where TypeofException = '" + str + "'";
                 SqlCommand cmd = new SqlCommand(checkSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-                ind = dr.Read().ToString();
+                ind = Convert.ToInt32(dr.Read());
                 return ind;
             }
             catch (Exception ex)
@@ -1211,5 +1221,110 @@ namespace Tar1.Models.DAL
                 }
             }
         }
+        public void InsertOSList(List<OfficialShift> OSArr)
+        {
+            SqlConnection con = null;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString");
+                foreach (var item in OSArr)
+                {
+                    String cStr = BuildInsertCommand(item);
+                    cmd = CreateCommand(cStr, con);
+                    try
+                    {
+                        cmd.ExecuteNonQuery(); // execute the command
+                    }
+                    catch (Exception ex)
+                    {
+                        throw (ex);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+
+        }
+        private String BuildInsertCommand(OfficialShift OShift)
+        {
+            String command;
+            StringBuilder sb = new StringBuilder();
+
+            //convert start hour of shift to string
+            string s = OShift.Startshifthour.ToString();
+            string[] DateTime = s.Split(' ');
+            string strH = DateTime[1];
+            //convert end hour of shift to string
+            string e = OShift.Endshifthour.ToString();
+            string[] DateTime1 = e.Split(' ');
+            string endH = DateTime1[1];
+
+            string Unid = OShift.Unitid.ToString();
+            int day = OShift.Shiftdate.Day;
+            int month = OShift.Shiftdate.Month;
+            int year = OShift.Shiftdate.Year;
+            string ShiftDate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
+            
+
+            sb.AppendFormat("Values('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')", OShift.Userid, strH, endH, Unid, OShift.Shifttype, ShiftDate);
+            String prefix = "INSERT INTO OfficialShift_2020 " + "(UserId,StartShift,EndShift,UnitId,ShiftType,ShiftDate)";
+            command = prefix + sb.ToString();
+            return command;
+        }
+        public List<OfficialShift> GetOS(int id)
+        {
+            List<OfficialShift> Shifts = new List<OfficialShift>();
+            SqlConnection con = null;
+            string today = DateTime.Today.ToString("yyyy-MM-dd");
+            string UnitId = id.ToString();
+
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = "select OfficialShift_2020.UserId, OfficialShift_2020.StartShift, OfficialShift_2020.EndShift, OfficialShift_2020.UnitId, OfficialShift_2020.ShiftType, OfficialShift_2020.ShiftDate";
+                selectSTR += " from OfficialShift_2020 left join Shift_2020 on OfficialShift_2020.ShiftDate = Shift_2020.ShiftDate and OfficialShift_2020.ShiftType = Shift_2020.ShiftType and OfficialShift_2020.UnitId = Shift_2020.UnitId";
+                selectSTR += " where Shift_2020.StartPeriod >'" + today + "' and Shift_2020.UnitId = " + UnitId;
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    OfficialShift OffS = new OfficialShift();
+                    OffS.Userid = Convert.ToString(dr["UserId"]);
+                    TimeSpan myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("StartShift")));
+                    OffS.Startshifthour = new DateTime(myTimeSpan.Ticks);
+                    TimeSpan myTimeSpan1 = ((dr).GetTimeSpan(dr.GetOrdinal("EndShift")));
+                    OffS.Endshifthour = new DateTime(myTimeSpan1.Ticks);
+                    OffS.Unitid = id;
+                    OffS.Shiftdate = Convert.ToDateTime(dr["ShiftDate"]).Date;
+                    OffS.Shifttype = Convert.ToString(dr["ShiftType"]);
+                    Shifts.Add(OffS);
+                }
+                return Shifts;
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+        
     }
 }
