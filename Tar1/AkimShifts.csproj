@@ -160,6 +160,7 @@
     <Compile Include="Controllers\ApartmentTypeController.cs" />
     <Compile Include="Controllers\ApplyShiftController.cs" />
     <Compile Include="Controllers\ConstraintController.cs" />
+    <Compile Include="Controllers\ExceptionController.cs" />
     <Compile Include="Controllers\OrganizeUnitController.cs" />
     <Compile Include="Controllers\ShiftsController.cs" />
     <Compile Include="Controllers\TrainingLevelController.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Models\ApartmentType.cs" />
     <Compile Include="Models\ApplyShift.cs" />
     <Compile Include="Models\Constraint.cs" />
+    <Compile Include="Models\Exceptions.cs" />
     <Compile Include="Models\OfficialShift.cs" />
     <Compile Include="Models\OrganizeUnit.cs" />
     <Compile Include="Models\DAL\DBservices.cs" />
