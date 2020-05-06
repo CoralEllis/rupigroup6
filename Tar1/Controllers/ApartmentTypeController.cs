@@ -20,14 +20,18 @@ namespace AkimShifts.Controllers
         }
 
         // POST api/<controller>
-        public void Post([FromBody]string value)
+        public void Post([FromBody]ApartmentType APT)
         {
+            APT.InsertAPT();
         }
 
+
         // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody]ApartmentType AT)
         {
+            AT.UpdateAT(id);
         }
+
 
         // DELETE api/<controller>/5
         public void Delete(int id)

@@ -209,7 +209,7 @@ namespace Tar1.Models.DAL
                     {
                         foreach (var item in A)
                         {
-                            if(item.UnitId == Unit.Id)
+                            if (item.UnitId == Unit.Id)
                             {
                                 Unit.ApartmentType1 = item.ApartmenttypeId;
                                 A.Remove(item);
@@ -217,7 +217,7 @@ namespace Tar1.Models.DAL
                             }
                         }
                     }
-                    
+
                     OU.Add(Unit);
                 }
                 return OU;
@@ -1326,18 +1326,85 @@ namespace Tar1.Models.DAL
             }
         }
 
+        public void updateATTable(ApartmentType AP, int id)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+
+            }
+            String cStr = BuildInsertCommand2(AP, id);
+            cmd = CreateCommand(cStr, con);
+            try
+            {
+          cmd.ExecuteNonQuery();
+              
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        private String BuildInsertCommand2(ApartmentType ap, int id)
+        {
+            string p = id.ToString();
+            return "UPDATE ApartmentType_2020 SET ApartmentType ='" + ap.Apartmenttype + "' WHERE ApartmentTypeId =" + p;
+        }
+        public void InsertApaType(ApartmentType apty)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            String cStr = BuildInsertCommand(apty);
+            cmd = CreateCommand(cStr, con);
+            try
+            {
+                cmd.ExecuteNonQuery(); // execute the command
+            }
+
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        private String BuildInsertCommand(ApartmentType at)
+        {
+            String command;
+
+            String prefix = "INSERT INTO ApartmentType_2020 (ApartmentType)";
+            String str = "Values('" + at.Apartmenttype + "')";
+            command = prefix + str;
+            return command;
+        }
     }
-
-
-
-
-
-
-
-
-
-
-
-
 }
-    }
