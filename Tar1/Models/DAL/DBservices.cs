@@ -586,6 +586,7 @@ namespace Tar1.Models.DAL
                     us.MonthlyExtraHours = us1.MonthlyExtraHours;
                     User us2 = CountShift(us.Userid);
                     us.NumOfPref = us2.NumOfPref;
+                    us.TrainingLevelId = GetGuideTrainLev(us.Userid);
                     U.Add(us);
                 }
                 return U;
@@ -1406,5 +1407,75 @@ namespace Tar1.Models.DAL
             command = prefix + str;
             return command;
         }
+
+        private int GetGuideTrainLev(string id)
+        {
+            SqlConnection con = null;
+            int trainLevId = 0;
+            try
+            {
+                con = connect("DBConnectionString");
+
+                String cStr = "select TrainingLevelId from Guide_2020 where UserId = '" + id + "'";
+                //String cStr = "select * from Guide_2020 where UserId = '" + id + "'";
+
+                SqlCommand cmd = new SqlCommand(cStr, con);
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                dr.Read();
+                return trainLevId = Convert.ToInt32(dr["TrainingLevelId"]);
+
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        public List<User> getListGiudesUsers(int id)
+        {
+            List<User> U = new List<User>();
+            SqlConnection con = null;
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = "select * from User_2020 where UnitId = " + id + " and UserRole = 'מדריך'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    User us = new User();
+                    us.Firstname = (string)dr["FirstName"];
+                    us.Lastname = (string)dr["LastName"];
+                    us.Userid = (string)dr["UserId"];
+                    us.Birthdate = Convert.ToDateTime(dr["Birthdate"]).Date;
+                    us.Password = (string)dr["UPassword"];
+                    us.Telephone = (string)dr["Telephone"];
+                    us.TrainingLevelId = GetGuideTrainLev(us.Userid);
+                    U.Add(us);
+                }
+                return U;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
     }
 }
