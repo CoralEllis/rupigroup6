@@ -76,6 +76,11 @@ namespace Tar1.Models
             return dbs.GetUnitUser(id);
         }
 
+        public List<User> getGuides(int id)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.getListGiudesUsers(id);
+        }
 
     }
 }

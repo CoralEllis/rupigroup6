@@ -18,9 +18,10 @@ namespace AkimShifts.Controllers
         }
 
         // GET api/<controller>/5
-        public string Get(int id)
+        public List<User> Get(int id)
         {
-            return "value";
+            User u = new User();
+            return u.getGuides(id);
         }
 
         // POST api/<controller>

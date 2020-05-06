@@ -21,6 +21,7 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="../Scripts/moment.js"></script>
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -28,30 +29,55 @@
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
     <script>
+        var myData;
         UnitArray = [];
         TLarray = [];
         function buttonEvents() {
             $(document).on("click", ".editBtn", function () {
+                console.log(this.id);
+
                 markSelected(this);
-                str = "<span>שנה רמת הכשרה:</span><input type='text' class='inputTL' id='" + this.id + "' value='" + this.name + "' required>";
-                $("#edittt").html(str);
                 $("#editDiv").show();
+                for (var i = 0; i < myData.length; i++) {
+                    if (myData[i].Userid == this.id) {
+                        $("#GuideId").val(myData[i].Userid);
+                        $("#GuideName").val(myData[i].Firstname);
+                        $("#GuideLastName").val(myData[i].Lastname);
+                        birthFormat = moment(myData[i].Birthdate);
+                        $("#GuideBirth").val(birthFormat.format('DD/MM/YYYY'));
+                        $("#GuideTelephone").val(myData[i].Telephone);
+                        $("#GuidePassword").val(myData[i].Password);
+                        //$("#" + myData[i].Traininglevel).prop("selected", "selected");
+                        $("#SelectGuideTL").val(myData[i].Traininglevel).prop("selected", "selected");
+
+                        //document.getElementById(myData[i].Traininglevel);
+                        //for (var j = 0; j < TLarray.length; j++) {
+                        //    if (myData[i].TrainingLevelId == TLarray[j].Id)
+                        //        $("#GuideTrLe").val(TLarray[j].Traininglevel);
+                        //}
+                        
+                    }
+                }
+               
                 $("#editDiv :input").prop("disabled", false); // edit mode: enable all controls in the form
             });
         }
         // mark the selected row
         function markSelected(btn) {
-            $("#SlevelTable tr").removeClass("selected"); // remove seleced class from rows that were selected before
+            $("#GuidesTable tr").removeClass("selected"); // remove seleced class from rows that were selected before
+
             row = (btn.parentNode).parentNode; // button is in TD which is in Row
             row.className = 'selected'; // mark as selected
         }
         function Gets() {
+            $("#editDiv").hide();
             ajaxCall("GET", "../api/TrainingLevel", "", GetTrianingS, GetTrianingE);
             ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, GetOrganizeUnitE);//Also get units
-       
             Unitid = 2;//in the future get it from localstorage
-            ajaxCall("GET", "../api/User/" + Unitid, "", GETGuideS, GETGuideE);
-
+            ajaxCall("GET", "../api/TrainingLevel/" + Unitid, "", GETGuideS, GETGuideE);
+            $("#cancelSaveBTN").on("click", function () {
+                $("#editDiv").hide();
+            });
         }
 
         function GETGuideS(data) {
@@ -60,19 +86,36 @@
                 tbl = $('#GuidesTable').DataTable({
                     data: data,
                     columns: [
+                        { data: "Userid" },
+                        { data: "Firstname" },
+                        { data: "Lastname" },
+                        {
+                            data: "Birthdate",
+                            render: function (data, type, row, meta) {
+                                dateOnly = moment(data);
+                                return dateOnly.format('DD/MM/YYYY');
+                            }
+                        },
+                        { data: "Telephone" },
+                        { data: "Password"},
+                        {
+                            data: "TrainingLevelId",
+                            render: function (data, type, row, meta) {
+                                for (var i = 0; i < TLarray.length; i++) {
+                                    if (data == TLarray[i].Id) {
+                                        return TLarray[i].Traininglevel;
+                                    }
+                                }
+                            }
+                        },
                         {
                             render: function (data, type, row, meta) {
-                                let dataG = "data-SlevelId='" + row.Userid + "'";
+                                let dataG = "data-GuideId='" + row.Userid + "'";
 
                                 editBtn = "<button type='button' id='" + row.Userid + "' class = 'editBtn btn btn-success' " + dataG + "> ערוך מדריך </button>";
                                 return editBtn;
                             }
                         },
-                        { data:"TrainingLevelId"},
-                        { data: "Birthdate"},
-                        { data: "Lastname" },
-                        { data: "Firstname" },
-                        { data: "Userid" },
                     ],
                 });
                 buttonEvents();
@@ -90,9 +133,10 @@
             TLarray = data;
             str = "<option>בחר רמת הכשרה</option>";
             for (var i = 0; i < data.length; i++) {
-                str += "<option>" + data[i].Traininglevel + "</option>"
+                str += "<option id='" + data[i].Id+"' value='" + data[i].Traininglevel+"'>" + data[i].Traininglevel + "</option>"
             }
             $("#SelectTraining").html(str);
+            $("#SelectGuideTL").html(str);
         }
         function GetTrianingE(error) {
             console.log(error);
@@ -102,9 +146,10 @@
             UnitArray = data;
             str = "<option>בחר יחידה ארגונית</option>";
             for (var i = 0; i < data.length; i++) {
-                str += "<option>" + data[i].Unitname + "</option>"
+                str += "<option >" + data[i].Unitname + "</option>"
             }
             $("#SelectUnit").html(str);
+           
         }
         function GetOrganizeUnitE(error) {
             console.log(error);
@@ -186,18 +231,72 @@
         <h1>  הוספת מדריך חדש</h1><br />
         <div class="row">
             <form dir="rtl">
-                <table id="GuidesTable" class="display nowrap" style="width:50%">
+                <table id="GuidesTable" class="display nowrap">
                     <thead>
                         <tr>
-                            <th>עריכה</th>
-                            <th>רמת הכשרה</th>
-                            <th>תאריך לידה</th>
-                            <th>שם משפחה</th>
-                            <th>שם פרטי</th>
                             <th>ת"ז</th>
+                            <th>שם פרטי</th>
+                            <th>שם משפחה</th>
+                            <th>תאריך לידה</th>
+                            <th>טלפון</th>
+                            <th>סיסמה</th>
+                            <th>רמת הכשרה</th>
+                            <th>עריכה</th>
                         </tr>
                     </thead>
                 </table>
+                <div id="editDiv">
+                    <div class="form-group row">
+                        <div class="form-group col-sm-3">
+                            <label class="editMyGuide" >ת"ז:</label>
+                            <input type="text"  id="GuideId" >
+                        </div>
+
+
+                        <div class="form-group col-sm-3" >
+                            <label class="editMyGuide">שם:</label>
+                            <input type="text"  id="GuideName" required>
+                        </div>
+
+
+                        <div class="form-group col-sm-3">
+                                <label class="editMyGuide">שם משפחה:</label>
+                                <input type="text" id="GuideLastName" required>
+                        </div>
+
+                        <div class="form-group col-sm-3">
+                            <label class="editMyGuide">תאריך לידה:</label>
+                            <input type="text"  id="GuideBirth" required />
+                        </div>
+
+
+                    </div>
+                    <div class="form-group row">
+                        <div class="form-group col-sm-4">
+                            <label class="editMyGuide">טלפון:</label>
+                            <input type="text"  id="GuideTelephone" required>
+                        </div>
+
+
+                        <div class="form-group col-sm-4">
+                            <label class="editMyGuide">סיסמה:</label>
+                            <input type="text"  id="GuidePassword" required>
+                        </div>
+
+
+                        <div class="form-group col-sm-4">
+                            <label class="editMyGuide">רמת הכשרה:</label>
+                            <select id="SelectGuideTL">
+
+                            </select>
+                        </div>
+
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg" id="saveBTN">שמור</button>
+                    <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
+                </div>
+                <br />
+
                 <div class="col">
                     <select id="SelectUnit"></select><br />
                     <span>ת"ז: </span><input type="text" id="id" /><br />

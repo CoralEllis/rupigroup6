@@ -13,9 +13,17 @@ th, td {
 body {
     background-color: aliceblue;
 }
-
+.editMyGuide{
+    text-align:right;
+    /*margin-left:30px;*/
+}
 p {
     text-align: center;
+}
+
+#GuidesTable{
+    width:50%;
+    margin-right:-200px;
 }
 
 #editDiv {
@@ -23,6 +31,7 @@ p {
     font-size: 20px;
     color: #005473;
     direction: rtl;
+    margin-left:30px;
 }
 
 .expl {
@@ -79,13 +88,17 @@ button, input[type=submit], button[type=button], #cancelSaveBTN, #saveBTN {
     background-color: #008CBA;
     color: white;
     font-family: Calibri;
+
 }
 
+#saveBTN {
+    margin-right: 500px;
+}
 #insAPT {
     background-color: #008CBA;
     color: white;
     font-family: Calibri;
-    font-size:20px;
+    font-size: 20px;
     position: absolute;
     left: 1190px;
 }
@@ -154,7 +167,7 @@ button[type=button], #cancelSaveBTN, #saveBTN {
     }
 
 .shiftsShow > input[type=text], textarea {
-    width: 150px;
+    width: 100px;
     height: 70px;
     border: 1px solid cadetblue;
     background-color: aliceblue;

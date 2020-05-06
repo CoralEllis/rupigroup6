@@ -39,7 +39,5 @@ namespace Tar1.Models
             DBservices dbs = new DBservices();
             dbs.InsertApaType(this);
         }
-
-
     }
 }
