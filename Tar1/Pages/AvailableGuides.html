@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link href="../Style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <meta charset="utf-8" />
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script type="text/javascript"></script>
+    <script src="../Scripts/ajaxCalls.js"></script>
+    <script src="../Scripts/moment.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="../Scripts/moment.js"></script>
+    <title>רשימת מדריכים פנויים לאיוש משמרות</title>
+    <script>
+        function gets() {
+            ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, error);
+
+        }
+        function GetOrganizeUnitS(data) {
+            console.log(data);
+            str = "<option>בחר יחידה ארגונית</option>";
+            for (var i = 0; i < data.length; i++) {
+                str += "<option value='"+data[i].Id+"'>" + data[i].Unitname + "</option>"
+            }
+            $("#SelectUnit").html(str);
+        }
+        function error(err) {
+            console.log(err);
+        
+        }
+       function GetWorkSchedule(select){
+           id = select.options[select.selectedIndex].value;
+            ajaxCall("GET", "../api/Official/" + id, "", GETOfficialS, GETOfficialE);
+        }
+
+
+    </script>
+</head>
+<body dir="rtl" style="background-color:aliceblue" onload="gets()">
+
+    <img src="../Photos/LOGO.PNG" />
+    <div class="container-fluid" id="SubmShift">
+
+        <h1> איוש מדריכים למשמרות</h1><br />
+        <div class="row">
+            <h3> בחר יחידה ארגונית שברצונך לאייש עבורה משמרת  </h3>
+            <select id="SelectUnit" onchange="GetWorkSchedule(this)"></select>
+        </div>
+
+        <div class="row" id="submitshift" dir="rtl">
+            <div class="col" id="0">
+                <label> א'</label>
+            </div>
+            <div class="col" id="1">
+                <label> ב'</label>
+            </div>
+            <div class="col" id="2">
+                <label> ג'</label>
+            </div>
+            <div class="col" id="3">
+                <label> ד'</label>
+            </div>
+            <div class="col" id="4">
+                <label> ה'</label>
+            </div>
+            <div class="col" id="5">
+                <label> ו'</label>
+            </div>
+            <div class="col" id="6">
+                <label> ש'</label>
+            </div>
+        </div><br /><br />
+
+
+    </div>
+</body>
+</html>
