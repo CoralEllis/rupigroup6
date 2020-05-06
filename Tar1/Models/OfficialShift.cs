@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Tar1.Models.DAL;
+
 
 namespace Tar1.Models
 {
@@ -31,8 +33,18 @@ namespace Tar1.Models
             Shifttype = type;
             Shiftdate = date;
         }
+        public void InsertOffShift(List<OfficialShift> OSArr)
+        {
+            DBservices dbs = new DBservices();
+            dbs.InsertOSList(OSArr);
+        }
+        public List<OfficialShift> GetOS(int id)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetOS(id);
+        }
 
-    
-    
+
+
     }
 }

@@ -161,6 +161,7 @@
     <Compile Include="Controllers\ApplyShiftController.cs" />
     <Compile Include="Controllers\ConstraintController.cs" />
     <Compile Include="Controllers\ExceptionController.cs" />
+    <Compile Include="Controllers\OfficialController.cs" />
     <Compile Include="Controllers\OrganizeUnitController.cs" />
     <Compile Include="Controllers\ShiftsController.cs" />
     <Compile Include="Controllers\TrainingLevelController.cs" />
