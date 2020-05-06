@@ -27,6 +27,19 @@ namespace Tar1.Models
             return dbs.GetApartmentType();
 
         }
+        public void UpdateAT(int id)
+        {
+            DBservices dbs = new DBservices();
+            dbs.updateATTable(this, id);
+
+        }
+
+        public void InsertAPT()
+        {
+            DBservices dbs = new DBservices();
+            dbs.InsertApaType(this);
+        }
+
 
 
         public void UpdateAT(int id)

@@ -25,12 +25,13 @@ namespace AkimShifts.Controllers
             APT.InsertAPT();
         }
 
+
         // PUT api/<controller>/5
         public void Put(int id, [FromBody]ApartmentType AT)
         {
             AT.UpdateAT(id);
-
         }
+
 
         // DELETE api/<controller>/5
         public void Delete(int id)
