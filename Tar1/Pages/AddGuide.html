@@ -48,7 +48,14 @@
                         $("#GuideTelephone").val(myData[i].Telephone);
                         $("#GuidePassword").val(myData[i].Password);
                         $("#SelectGuideTL").val(myData[i].TrainingLevelId);
-
+                        if (myData[i].IsActive == true) {
+                            $("#SelectGuideStatus").val(1);
+                        }
+                        else {
+                            $("#SelectGuideStatus").val(0);
+                        }
+                        
+                        break;
                     }
                 }
                 $("#editDiv :input").prop("disabled", false); 
@@ -98,6 +105,14 @@
                             }
                         },
                         {
+                            data: "IsActive",
+                            render: function (data, type, row, meta) {
+                                if (data == true)
+                                    return "פעיל";
+                                else return "לא פעיל";
+                            }   
+                        },
+                        {
                             render: function (data, type, row, meta) {
                                 let dataG = "data-GuideId='" + row.Userid + "'";
 
@@ -133,7 +148,7 @@
             UnitArray = data;
             str = "<option>בחר יחידה ארגונית</option>";
             for (var i = 0; i < data.length; i++) {
-                str += "<option >" + data[i].Unitname + "</option>"
+                str += "<option value='"+data[i].Id+"'>" + data[i].Unitname + "</option>"
             }
             $("#SelectUnit").html(str);
            
@@ -150,11 +165,7 @@
             pass = $("#pass").val();
             unit = $("#SelectUnit").val();
             role = "מדריך";
-            unitid = 0;
-            for (var i = 0; i < UnitArray.length; i++) {
-                if (unit == UnitArray[i].Unitname)
-                    unitid = UnitArray[i].Id;
-            }
+          
             User = {
                 "Userid": id,
                 "Password": pass,
@@ -163,9 +174,11 @@
                 "Birthdate": bdate,
                 "Telephone": tel,
                 "Role": role,
-                "Unitid": unitid,
+                "Unitid": unit,
+                "IsActive": 1,
             }
-            
+            console.log(User);
+     
             ajaxCall("POST", "../api/User", JSON.stringify(User), PostUserS, PostUserE);
 
 
@@ -206,6 +219,7 @@
                 GuideBirth: birth,
                 Telephone: $("#GuideTelephone").val(),
                 Password: $("#GuidePassword").val(),
+                IsActive: $("#SelectGuideStatus").val(),
             }
             ajaxCall("PUT", "../api/User/" + GuidetoSave.Userid, JSON.stringify(GuidetoSave), PutGuideS, PutGuideE);
 
@@ -244,6 +258,7 @@
                             <th>טלפון</th>
                             <th>סיסמה</th>
                             <th>רמת הכשרה</th>
+                            <th>סטטוס</th>
                             <th>עריכה</th>
                         </tr>
                     </thead>
@@ -275,22 +290,30 @@
 
                     </div>
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <label class="editMyGuide">טלפון:</label>
                             <input type="text" id="GuideTelephone" required>
                         </div>
 
 
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <label class="editMyGuide">סיסמה:</label>
                             <input type="text" id="GuidePassword" required>
                         </div>
 
 
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <label class="editMyGuide">רמת הכשרה:</label>
                             <select id="SelectGuideTL"></select>
                         </div>
+                        <div class="col-sm-3">
+                            <label class="editMyGuide">סטטוס:</label>
+                            <select id="SelectGuideStatus">
+                                <option value="0">לא פעיל</option>
+                                <option value="1">פעיל</option>
+                            </select>
+                        </div>
+
 
                     </div>
                     <button type="button" class="btn btn-primary btn-lg" id="saveBTN" onclick="SaveChanges()" >שמור</button>

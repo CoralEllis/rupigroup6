@@ -425,13 +425,14 @@ namespace Tar1.Models.DAL
             int month = user.Birthdate.Month;
             int year = user.Birthdate.Year;
             string bdate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
+            string active = user.IsActive.ToString();
             //Insert big manager
             if (user.Unitid == 0)
             {
                 string um = user.Unitmanager.ToString();
                 string bm = user.Bigmanager.ToString();
-                String prefix = "INSERT INTO User_2020 (UserId,UPassword,FirstName,LastName,Birthdate,Telephone,UserRole,IsUnitManager,BigManager)";
-                sb.AppendFormat("Values('{0}', '{1}','{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}')", user.Userid, user.Password, user.Firstname, user.Lastname, bdate, user.Telephone, user.Role, um, bm);
+                String prefix = "INSERT INTO User_2020 (UserId,UPassword,FirstName,LastName,Birthdate,Telephone,UserRole,IsUnitManager,BigManager,Active)";
+                sb.AppendFormat("Values('{0}', '{1}','{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}')", user.Userid, user.Password, user.Firstname, user.Lastname, bdate, user.Telephone, user.Role, um, bm, active);
                 command = prefix + sb;
                 return command;
             }
@@ -439,8 +440,8 @@ namespace Tar1.Models.DAL
             else if (user.Role == "מדריך")
             {
                 Uid = user.Unitid.ToString();
-                String prefix = "INSERT INTO User_2020 (UserId,UPassword,FirstName,LastName,Birthdate,Telephone,UserRole,UnitId)";
-                sb.AppendFormat("Values('{0}', '{1}','{2}', '{3}', '{4}', '{5}', '{6}', '{7}')", user.Userid, user.Password, user.Firstname, user.Lastname, bdate, user.Telephone, user.Role, Uid);
+                String prefix = "INSERT INTO User_2020 (UserId,UPassword,FirstName,LastName,Birthdate,Telephone,UserRole,UnitId,Active)";
+                sb.AppendFormat("Values('{0}', '{1}','{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}')", user.Userid, user.Password, user.Firstname, user.Lastname, bdate, user.Telephone, user.Role, Uid, active);
                 command = prefix + sb;
                 return command;
 
@@ -451,8 +452,8 @@ namespace Tar1.Models.DAL
                 string um = user.Unitmanager.ToString();
                 string bm = user.Bigmanager.ToString();
                 Uid = user.Unitid.ToString();
-                String prefix = "INSERT INTO User_2020 (UserId,UPassword,FirstName,LastName,Birthdate,Telephone,UserRole,IsUnitManager,BigManager,UnitId)";
-                sb.AppendFormat("Values('{0}', '{1}','{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}')", user.Userid, user.Password, user.Firstname, user.Lastname, bdate, user.Telephone, user.Role, um, bm, Uid);
+                String prefix = "INSERT INTO User_2020 (UserId,UPassword,FirstName,LastName,Birthdate,Telephone,UserRole,IsUnitManager,BigManager,UnitId,Active)";
+                sb.AppendFormat("Values('{0}', '{1}','{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}')", user.Userid, user.Password, user.Firstname, user.Lastname, bdate, user.Telephone, user.Role, um, bm, Uid, active);
                 command = prefix + sb;
                 return command;
             }
@@ -464,7 +465,7 @@ namespace Tar1.Models.DAL
             try
             {
                 con = connect("DBConnectionString");
-                String selectSTR = "SELECT * FROM User_2020";
+                String selectSTR = "SELECT * FROM User_2020 where Active ='1'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (dr.Read())
@@ -572,7 +573,7 @@ namespace Tar1.Models.DAL
             try
             {
                 con = connect("DBConnectionString");
-                String selectSTR = "select * from User_2020 where UnitId = " + id + " and UserRole = 'מדריך'";
+                String selectSTR = "select * from User_2020 where UnitId = " + id + " and UserRole = 'מדריך' and Active ='1'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (dr.Read())
@@ -947,7 +948,7 @@ namespace Tar1.Models.DAL
                 con = connect("DBConnectionString");
                 String selectSTR = "select BlockShift_2020.ShiftType, BlockShift_2020.ShiftDate, BlockShift_2020.UserId,BlockShift_2020.isApply, BlockShift_2020.Comments,  User_2020.FirstName,  User_2020.LastName";
                 selectSTR += " from BlockShift_2020 left join Shift_2020 on BlockShift_2020.ShiftDate = Shift_2020.ShiftDate and BlockShift_2020.ShiftType = Shift_2020.ShiftType left join User_2020 on BlockShift_2020.UserId = User_2020.UserId";
-                selectSTR += " where BlockShift_2020.UnitId = " + UnitId + " AND Shift_2020.StartPeriod >'" + today + "'";
+                selectSTR += " where BlockShift_2020.UnitId = " + UnitId + " AND Shift_2020.StartPeriod >'" + today + "' and User_2020.Active ='1'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (dr.Read())
@@ -987,7 +988,7 @@ namespace Tar1.Models.DAL
                 con = connect("DBConnectionString");
                 String selectSTR = "select BlockShift_2020.ShiftType, BlockShift_2020.ShiftDate, BlockShift_2020.UserId,BlockShift_2020.isApply, BlockShift_2020.Comments,  User_2020.FirstName,  User_2020.LastName";
                 selectSTR += " from BlockShift_2020 left join Shift_2020 on BlockShift_2020.ShiftDate = Shift_2020.ShiftDate and BlockShift_2020.ShiftType = Shift_2020.ShiftType left join User_2020 on BlockShift_2020.UserId = User_2020.UserId";
-                selectSTR += " where BlockShift_2020.UnitId = " + IdUnit + " AND Shift_2020.StartPeriod >'" + today + "' AND BlockShift_2020.UserId ='" + IdUser + "'";
+                selectSTR += " where BlockShift_2020.UnitId = " + IdUnit + " AND Shift_2020.StartPeriod >'" + today + "' AND BlockShift_2020.UserId ='" + IdUser + "' and User_2020.Active ='1'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (dr.Read())
@@ -1460,6 +1461,7 @@ namespace Tar1.Models.DAL
                     us.Password = (string)dr["UPassword"];
                     us.Telephone = (string)dr["Telephone"];
                     us.TrainingLevelId = GetGuideTrainLev(us.Userid);
+                    us.IsActive = Convert.ToBoolean(dr["Active"]);
                     U.Add(us);
                 }
                 return U;
@@ -1495,9 +1497,8 @@ namespace Tar1.Models.DAL
             int month = u.Birthdate.Month;
             int year = u.Birthdate.Year;
             string bdate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
-            //string b = u.Birthdate.ToString();
-
-            string cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' WHERE UserId =" + id;
+            string active = u.IsActive.ToString();
+            string cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '"+ active + "' WHERE UserId =" + id;
             
             cmd = CreateCommand(cStr, con);
             try
