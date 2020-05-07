@@ -23,6 +23,7 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="../Scripts/moment.js"></script>
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -33,38 +34,105 @@
     <script>
         UnitArray = [];
         var myData;
-         //will run when the document is ready
         $(document).ready(function () {
             $("#cancelSaveBTN").on("click", function () {
                 $("#editDiv").hide();
             });
             ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, GetOrganizeUnitE);
-            ajaxCall("GET", "../api/User", "", getSuccess, error);
+            ajaxCall("GET", "../api/User/" + 0, "", getSuccess, error);
             $("#editDiv").hide();
         });
-        // wire all the buttons to their functions
         function buttonEvents() {
             $(document).on("click", ".editBtn", function () {
+                for (var i = 0; i < myData.length; i++) {
+                    if (myData[i].Userid == this.id) {
+                        $("#ManagerId").val(myData[i].Userid);
+                        $("#ManagerName").val(myData[i].Firstname);
+                        $("#ManagerLastName").val(myData[i].Lastname);
+                        birthFormat = moment(myData[i].Birthdate);
+                        $("#ManagerBirth").val(birthFormat.format('DD/MM/YYYY'));
+                        $("#ManagerTelephone").val(myData[i].Telephone);
+                        $("#ManagerPassword").val(myData[i].Password);
+                        if (myData[i].IsActive == true) {
+                            $("#SelectManagerStatus").val(1);
+                        }
+                        else {
+                            $("#SelectManagerStatus").val(0);
+                        }
+                        switch (myData[i].Role) {
+                            case "מנהל יחידה ארגונית": 
+                                $("#ManagerRole").val(1);
+                                break;
+                            case "מנהל מערך הדיור":
+                                $("#ManagerRole").val(2);
+                                break;
+                            case 'סמנכל משאבי אנוש':
+                                $("#ManagerRole").val(3);
+                                break;
+                        }
+                        if (myData[i].Unitid != 0) {
+                            for (var j = 0; j < UnitArray.length; j++) {
+                                if (myData[i].Unitid == UnitArray[j].Id) {
+                                    $("#SelectEdit").val(myData[i].Unitid);
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+                $("#editDiv :input").prop("disabled", false); 
                 markSelected(this);
-                str = "<span>שנה רמת הכשרה:</span><input type='text' class='inputTL' id='" + this.id + "' value='" + this.name + "' required>";
-                $("#edittt").html(str);
                 $("#editDiv").show();
-                $("#editDiv :input").prop("disabled", false); // edit mode: enable all controls in the form
             });
         }
-        // mark the selected row
         function markSelected(btn) {
             $("#managerTable tr").removeClass("selected"); // remove seleced class from rows that were selected before
             row = (btn.parentNode).parentNode; // button is in TD which is in Row
             row.className = 'selected'; // mark as selected
         }
-        // this function is activated in case of a success
         function getSuccess(data) {
             myData = data; // keep the cars array in a global variable;
             try {
                 tbl = $('#managerTable').DataTable({
                     data: data,
                     columns: [
+                        { data: "Userid" },
+                        { data: "Firstname" },
+                        { data: "Lastname" },
+                        {
+                            data: "Birthdate",
+                            render: function (data, type, row, meta) {
+                                dateOnly = moment(data);
+                                return dateOnly.format('DD/MM/YYYY');
+                            }
+
+                        },
+                        { data: "Telephone" },
+                        { data: "Role" },
+                        { data: "Password" },
+                        {
+                            data: "IsActive",
+                            render: function (data, type, row, meta) {
+                                if (data == true)
+                                    return "פעיל";
+                                else return "לא פעיל";
+                            }
+                        },
+                        {
+                            data: "Unitid",
+                            render: function (data, type, row, meta) {
+                                if (data == 0) {
+                                    return "-";
+                                }
+                                else {
+                                    for (var i = 0; i < UnitArray.length; i++) {
+                                        if (UnitArray[i].Id == data) {
+                                            return UnitArray[i].Unitname;
+                                        }
+                                    }
+                                }
+                            }
+                        },
                         {
                             render: function (data, type, row, meta) {
                                 let dataM = "data-SlevelId='" + row.Userid + "'";
@@ -73,13 +141,6 @@
                                 return editBtn;
                             }
                         },
-                        { data: "Unitmanager" },
-                        { data: "Role" },
-                        { data: "Telephone" },
-                        { data: "Birthdate" },
-                        { data: "Userid" },
-                        { data: "Lastname" },
-                        { data: "Firstname" },
                     ],
                 });
                 buttonEvents();
@@ -89,26 +150,24 @@
                 alert(err);
             }
         }
-        // this function is activated in case of a failure
         function error(err) {
             console.log(err);
             //swal("Error: " + err);
         }
-
         function GetOrganizeUnitS(data) {
             UnitArray = data;
             console.log(data);
             str = "<option>בחר יחידה ארגונית</option>";
             for (var i = 0; i < data.length; i++) {
-                str += "<option>" + data[i].Unitname + "</option>"
+                str += "<option value='" + data[i].Id +"'>" + data[i].Unitname + "</option>"
             }
             $("#SelectUnit").html(str);
+            $("#SelectEdit").html(str);
         }
         function GetOrganizeUnitE(error) {
 
             console.log(error);
         }
-
         function InsertUser() {
             id = $("#id").val();
             first = $("#first").val();
@@ -151,6 +210,29 @@
             console.log(error);
             alert("BASA");
         }
+        function SaveChanges() {
+            birthFormat = moment($("#ManagerBirth").val());
+            birth = birthFormat.format('YYYY-DD-MM');
+            console.log(birth);
+            ManagertoSave = {
+                Userid: $("#ManagerId").val(),
+                Firstname: $("#ManagerName").val(),
+                Lastname: $("#ManagerLastName").val(),
+                GuideBirth: birth,
+                Telephone: $("#ManagerTelephone").val(),
+                Role: $("#ManagerRole").val(),
+                Password: $("#ManagerPassword").val(),
+                IsActive: $("#SelectManagerStatus").val(),
+                Unitid: $("SelectEdit").val(),
+            }
+            ajaxCall("PUT", "../api/User/" + "abc", JSON.stringify(ManagertoSave), PutManagerS, PutManagerE);        }
+
+        function PutManagerS(data) {
+            alert("good");
+        }
+        function PutManagerE(error) {
+            console.log(error);
+        }
     </script>
 
 </head>
@@ -166,12 +248,15 @@
                 <table id="managerTable" class="display nowrap" style="width:50%">
                     <thead>
                         <tr>
+                            <th>ת"ז</th>
                             <th>שם</th>
                             <th>שם משפחה</th>
-                            <th>ת"ז</th>
                             <th>תאריך לידה</th>
                             <th>מס' טלפון</th>
                             <th>תפקיד</th>
+                            <th>סיסמה</th>
+                            <th>סטטוס</th>
+                            <th>יחידה ארגונית</th>
                             <th>עריכת מנהל</th>
                         </tr>
                     </thead>
@@ -180,11 +265,72 @@
             <br />
             <br />
             <div id="editDiv" class="row">
-                <div id="edittt">
-                </div>
+                <div id="editDiv">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label class="editMyGuide">ת"ז:</label>
+                            <input type="text" id="ManagerId">
+                        </div>
 
-                <button type="submit" class="btn btn-primary btn-lg" id="saveBTN" onclick="save()">עדכן</button>
-                <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
+
+                        <div class="col-sm-3">
+                            <label class="editMyGuide">שם:</label>
+                            <input type="text" id="ManagerName" required>
+                        </div>
+
+
+                        <div class="col-sm-3">
+                            <label class="editMyGuide">שם משפחה:</label>
+                            <input type="text" id="ManagerLastName" required>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <label class="editMyGuide">תאריך לידה:</label>
+                            <input type="text" id="ManagerBirth" required />
+                        </div>
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label class="editMyGuide">טלפון:</label>
+                            <input type="text" id="ManagerTelephone" required>
+                        </div>
+
+
+                        <div class="col-sm-3">
+                            <label class="editMyGuide">סיסמה:</label>
+                            <input type="text" id="ManagerPassword" required>
+                        </div>
+
+
+                        <div class="col-sm-3">
+                            <label class="editMyGuide">תפקיד:</label>
+                            <select id="ManagerRole">
+                                <option value="1">מנהל יחידה ארגונית</option>
+                                <option value="2">מנהל מערך הדיור</option>
+                                <option value="3">סמנכל משאבי אנוש</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="editMyGuide">סטטוס:</label>
+                            <select id="SelectManagerStatus">
+                                <option value="0">לא פעיל</option>
+                                <option value="1">פעיל</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="editMyGuide">בחר יחידה ארגונית:</label>
+                            <select id="SelectEdit">
+
+                            </select>
+                        </div>
+
+                    </div>
+                    <button type="button" class="btn btn-primary btn-lg" id="saveBTN" onclick="SaveChanges()">שמור</button>
+                    <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
+                </div>
+                <br /><hr />
 
             </div>
             <br />

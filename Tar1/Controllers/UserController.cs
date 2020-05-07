@@ -22,6 +22,12 @@ namespace AkimShifts.Controllers
         public List<User> Get(int id)
         {
             User u = new User();
+
+            if (id == 0)
+            {
+                return u.getManager();
+            }
+            else
             return u.GetUnitUsers(id);
         }
 
@@ -34,7 +40,11 @@ namespace AkimShifts.Controllers
         // PUT api/<controller>/5
         public void Put(string id, [FromBody]User u)
         {
-            u.updateUser(id);
+            if(id == "abc")
+            {
+                u.updateManager();
+            }
+            else u.updateUser(id);
         }
 
         // DELETE api/<controller>/5

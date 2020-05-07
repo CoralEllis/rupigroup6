@@ -1519,8 +1519,107 @@ namespace Tar1.Models.DAL
             }
         }
 
+        public List<User> getListManager()
+        {
+            List<User> U = new List<User>();
+            SqlConnection con = null;
+            try
+            {
+                con = connect("DBConnectionString");
+                //in the future dont forget to add Libat!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                String selectSTR = "select * from User_2020 where UserRole = 'מנהל יחידה ארגונית' or UserRole = 'מנהל מערך הדיור' ";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    User us = new User();
+                    us.Firstname = (string)dr["FirstName"];
+                    us.Lastname = (string)dr["LastName"];
+                    us.Password = (string)dr["UPassword"];
+                    us.Userid = (string)dr["UserId"];
+                    us.Role = (string)dr["UserRole"];
+                    us.Telephone = (string)dr["Telephone"];
+                    us.IsActive = Convert.ToBoolean(dr["Active"]);
+                    us.Birthdate = Convert.ToDateTime(dr["Birthdate"]).Date;
+                    if (us.Role == "מנהל מערך הדיור")//in the future add libat!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    {
+                        us.Unitid = 0;
+                    }
+                    else
+                    {
+                        us.Unitid = Convert.ToInt32(dr["UnitId"]);
+                    }
+                    U.Add(us);
+                }
+                return U;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
 
-        
+        public void UpdateManagerDet(User u)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+
+            }
+            int day = u.Birthdate.Day;
+            int month = u.Birthdate.Month;
+            int year = u.Birthdate.Year;
+            string bdate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
+            string active = u.IsActive.ToString();
+            
+            string cStr = "";
+            if (u.Role == "מנהל יחידה ארגונית")
+            {
+                string unitID = u.Unitid.ToString();
+                 cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '" + active + "' UserRole = '"+u.Role+ "', IsUnitManager = '1' , BigManager = '0' , UnitId = '"+ unitID + "' WHERE UserId =" + u.Userid;
+
+            }
+            else if (u.Role == "מנהל מערך הדיור")
+            {
+                 cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '" + active + "' UserRole = '" + u.Role + "' , IsUnitManager = '0' , BigManager = '1' WHERE UserId =" + u.Userid;
+
+            }
+            else if(u.Role == "סמנכל משאבי אנוש")
+            {
+                 cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '" + active + "' UserRole = '" + u.Role + "' , IsUnitManager = '0' , BigManager = '0' WHERE UserId =" + u.Userid;
+
+            }
+            cmd = CreateCommand(cStr, con);
+            try
+            {
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
 
     }
 }

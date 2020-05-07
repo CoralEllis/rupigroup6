@@ -90,10 +90,17 @@ namespace Tar1.Models
         {
             DBservices dbs = new DBservices();
             dbs.UpdateUserDet(this, id);// id of guide
-
-            
-
         }
 
+        public List<User> getManager()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.getListManager();
+        }
+        public void updateManager()
+        {
+            DBservices dbs = new DBservices();
+            dbs.UpdateManagerDet(this);// id of guide
+        }
     }
 }
