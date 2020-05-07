@@ -82,5 +82,15 @@ namespace Tar1.Models
             return dbs.getListGiudesUsers(id);
         }
 
+
+        public void updateUser(string id)
+        {
+            DBservices dbs = new DBservices();
+            dbs.UpdateUserDet(this, id);// id of guide
+
+            
+
+        }
+
     }
 }

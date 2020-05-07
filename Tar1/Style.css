@@ -4,12 +4,21 @@ form {
     color: #005473;
     text-align: right;
 }
-
+#SaveB {
+    margin-right: 570PX;
+    background-color: #008CBA;
+    color: white;
+    font-family: Calibri;
+    font-size:20px;
+}
 th, td {
     width: auto;
     background-color: aliceblue;
 }
+.formDiv{
 
+    font-size:25px;
+}
 body {
     background-color: aliceblue;
 }
