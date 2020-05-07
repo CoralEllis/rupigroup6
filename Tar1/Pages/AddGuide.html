@@ -47,41 +47,30 @@
                         $("#GuideBirth").val(birthFormat.format('DD/MM/YYYY'));
                         $("#GuideTelephone").val(myData[i].Telephone);
                         $("#GuidePassword").val(myData[i].Password);
-                        //$("#" + myData[i].Traininglevel).prop("selected", "selected");
-                        $("#SelectGuideTL").val(myData[i].Traininglevel).prop("selected", "selected");
+                        $("#SelectGuideTL").val(myData[i].TrainingLevelId);
 
-                        //document.getElementById(myData[i].Traininglevel);
-                        //for (var j = 0; j < TLarray.length; j++) {
-                        //    if (myData[i].TrainingLevelId == TLarray[j].Id)
-                        //        $("#GuideTrLe").val(TLarray[j].Traininglevel);
-                        //}
-                        
                     }
                 }
-               
-                $("#editDiv :input").prop("disabled", false); // edit mode: enable all controls in the form
+                $("#editDiv :input").prop("disabled", false); 
             });
         }
-        // mark the selected row
         function markSelected(btn) {
-            $("#GuidesTable tr").removeClass("selected"); // remove seleced class from rows that were selected before
-
-            row = (btn.parentNode).parentNode; // button is in TD which is in Row
-            row.className = 'selected'; // mark as selected
+            $("#GuidesTable tr").removeClass("selected");
+            row = (btn.parentNode).parentNode; 
+            row.className = 'selected'; 
         }
         function Gets() {
             $("#editDiv").hide();
             ajaxCall("GET", "../api/TrainingLevel", "", GetTrianingS, GetTrianingE);
-            ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, GetOrganizeUnitE);//Also get units
+            ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, GetOrganizeUnitE);
             Unitid = 2;//in the future get it from localstorage
             ajaxCall("GET", "../api/TrainingLevel/" + Unitid, "", GETGuideS, GETGuideE);
             $("#cancelSaveBTN").on("click", function () {
                 $("#editDiv").hide();
             });
         }
-
         function GETGuideS(data) {
-            myData = data; // keep the cars array in a global variable;
+            myData = data; 
             try {
                 tbl = $('#GuidesTable').DataTable({
                     data: data,
@@ -125,7 +114,6 @@
                 alert(err);
             }
         }
-
         function GETGuideE(error) {
             alert(error);
         }
@@ -133,7 +121,7 @@
             TLarray = data;
             str = "<option>בחר רמת הכשרה</option>";
             for (var i = 0; i < data.length; i++) {
-                str += "<option id='" + data[i].Id+"' value='" + data[i].Traininglevel+"'>" + data[i].Traininglevel + "</option>"
+                str += "<option id='" + data[i].Id + "' value='" + data[i].Id+"'>" + data[i].Traininglevel + "</option>"
             }
             $("#SelectTraining").html(str);
             $("#SelectGuideTL").html(str);
@@ -141,7 +129,6 @@
         function GetTrianingE(error) {
             console.log(error);
         }
-
         function GetOrganizeUnitS(data) {
             UnitArray = data;
             str = "<option>בחר יחידה ארגונית</option>";
@@ -154,7 +141,6 @@
         function GetOrganizeUnitE(error) {
             console.log(error);
         }
-
         function InsertUser() {
             id = $("#id").val();
             first = $("#first").val();
@@ -179,17 +165,7 @@
                 "Role": role,
                 "Unitid": unitid,
             }
-            TL = 0;
-            trl = $("#SelectTraining").val();
-            for (var i = 0; i < TLarray.length; i++) {
-                if (trl == TLarray[i].Traininglevel)
-                    TL = TLarray[i].Id;
-            }
-
-            SpicialLevel = {
-                "Id": TL,
-            }
-
+            
             ajaxCall("POST", "../api/User", JSON.stringify(User), PostUserS, PostUserE);
 
 
@@ -197,16 +173,13 @@
         function PostUserS(data) {
             alert("SABABA");
             id = $("#id").val();
-            TL = 0;
+
             trl = $("#SelectTraining").val();
-            for (var i = 0; i < TLarray.length; i++) {
-                if (trl == TLarray[i].Traininglevel)
-                    TL = TLarray[i].Id;
-            }
 
             SpicialLevel = {
-                "Id": TL,
+                "Id": trl,
             }
+
 
             ajaxCall("PUT", "../api/TrainingLevel/" + id, JSON.stringify(SpicialLevel), PutTrianingS, PutTrianingE);
         }
@@ -214,13 +187,41 @@
             console.log(error);
             alert("BASA");
         }
-
         function PutTrianingS(data) {
-            alert("SABABA");
+            alert("good");
+          
         }
         function PutTrianingE(error) {
             console.log(error);
+          
+        }
+        function SaveChanges() {
+            birthFormat = moment($("#GuideBirth").val());
+            birth = birthFormat.format('YYYY-DD-MM');
+            console.log(birth);
+            GuidetoSave = {
+                Userid: $("#GuideId").val(),
+                Firstname: $("#GuideName").val(),
+                Lastname: $("#GuideLastName").val(),
+                GuideBirth: birth,
+                Telephone: $("#GuideTelephone").val(),
+                Password: $("#GuidePassword").val(),
+            }
+            ajaxCall("PUT", "../api/User/" + GuidetoSave.Userid, JSON.stringify(GuidetoSave), PutGuideS, PutGuideE);
+
+            id = GuidetoSave.Userid;
+            trl = $("#SelectGuideTL").val(); 
+            SpicialLevel = {                "Id": trl,            }            ajaxCall("PUT", "../api/TrainingLevel/" + id, JSON.stringify(SpicialLevel), PutTrianingS, PutTrianingE);
+        }
+        function PutGuideS(data) {
+            alert("SABABA");
+            return false;
+
+        }
+        function PutGuideE(error) {
+            console.log(error);
             alert("BASA");
+            return false;
         }
     </script>
     <title></title>
@@ -228,7 +229,9 @@
 <body dir="rtl" style="background-color:aliceblue" onload="Gets()">
     <img src="../Photos/LOGO.PNG" />
     <div class="container">
-        <h1>  הוספת מדריך חדש</h1><br />
+        <h1>צפייה/עריכה פרטי מדריכים</h1><br />
+        <p class="expl">בטבלה שלהלן מוצגים כל פרטי המדריכים. על מנת לערוך פרטי מדריך יש ללחוץ על כפתור "ערוך מדריך", לעדכן את פרטיו ולבסוף ללחוץ על שמור.</p>
+
         <div class="row">
             <form dir="rtl">
                 <table id="GuidesTable" class="display nowrap">
@@ -246,58 +249,57 @@
                     </thead>
                 </table>
                 <div id="editDiv">
-                    <div class="form-group row">
-                        <div class="form-group col-sm-3">
-                            <label class="editMyGuide" >ת"ז:</label>
-                            <input type="text"  id="GuideId" >
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label class="editMyGuide">ת"ז:</label>
+                            <input type="text" id="GuideId">
                         </div>
 
 
-                        <div class="form-group col-sm-3" >
+                        <div class="col-sm-3">
                             <label class="editMyGuide">שם:</label>
-                            <input type="text"  id="GuideName" required>
+                            <input type="text" id="GuideName" required>
                         </div>
 
 
-                        <div class="form-group col-sm-3">
-                                <label class="editMyGuide">שם משפחה:</label>
-                                <input type="text" id="GuideLastName" required>
+                        <div class="col-sm-3">
+                            <label class="editMyGuide">שם משפחה:</label>
+                            <input type="text" id="GuideLastName" required>
                         </div>
 
-                        <div class="form-group col-sm-3">
+                        <div class="col-sm-3">
                             <label class="editMyGuide">תאריך לידה:</label>
-                            <input type="text"  id="GuideBirth" required />
+                            <input type="text" id="GuideBirth" required />
                         </div>
 
 
                     </div>
-                    <div class="form-group row">
-                        <div class="form-group col-sm-4">
+                    <div class="row">
+                        <div class="col-sm-4">
                             <label class="editMyGuide">טלפון:</label>
-                            <input type="text"  id="GuideTelephone" required>
+                            <input type="text" id="GuideTelephone" required>
                         </div>
 
 
-                        <div class="form-group col-sm-4">
+                        <div class="col-sm-4">
                             <label class="editMyGuide">סיסמה:</label>
-                            <input type="text"  id="GuidePassword" required>
+                            <input type="text" id="GuidePassword" required>
                         </div>
 
 
-                        <div class="form-group col-sm-4">
+                        <div class="col-sm-4">
                             <label class="editMyGuide">רמת הכשרה:</label>
-                            <select id="SelectGuideTL">
-
-                            </select>
+                            <select id="SelectGuideTL"></select>
                         </div>
 
                     </div>
-                    <button type="submit" class="btn btn-primary btn-lg" id="saveBTN">שמור</button>
+                    <button type="button" class="btn btn-primary btn-lg" id="saveBTN" onclick="SaveChanges()" >שמור</button>
                     <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
                 </div>
-                <br />
-
-                <div class="col">
+                <br /><hr />
+                <h1>הוספת מדריך חדש</h1><br />
+                <p class="expl">על מנת להוסיף מדריך חדש, יש למלא את פרטיו ולבסוף ללחוץ על כפתור שמור.</p>
+                <div class="col formDiv" >
                     <select id="SelectUnit"></select><br />
                     <span>ת"ז: </span><input type="text" id="id" /><br />
                     <span>שם פרטי: </span><input type="text" id="first" /><br />
@@ -309,7 +311,7 @@
                     <span> סיסמא:</span><input type="text" id="pass" /><br />
                 </div>
             </form>
-            <br /><input type="submit" value="שמור" onclick="InsertUser()" /><br />
+            <br /><input type="submit" class="btn btn-warning btn-lg" id="SaveB" value="שמור" onclick="InsertUser()" /><br />
         </div>
     </div>
     <input type="text" />

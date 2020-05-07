@@ -1344,8 +1344,8 @@ namespace Tar1.Models.DAL
             cmd = CreateCommand(cStr, con);
             try
             {
-          cmd.ExecuteNonQuery();
-              
+                cmd.ExecuteNonQuery();
+
             }
             catch (Exception ex)
             {
@@ -1476,6 +1476,50 @@ namespace Tar1.Models.DAL
                 }
             }
         }
+
+
+        public void UpdateUserDet(User u, string id)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+
+            }
+            int day = u.Birthdate.Day;
+            int month = u.Birthdate.Month;
+            int year = u.Birthdate.Year;
+            string bdate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
+            //string b = u.Birthdate.ToString();
+
+            string cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' WHERE UserId =" + id;
+            
+            cmd = CreateCommand(cStr, con);
+            try
+            {
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+
+        
 
     }
 }
