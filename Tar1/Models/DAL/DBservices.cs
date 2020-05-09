@@ -1479,7 +1479,6 @@ namespace Tar1.Models.DAL
             }
         }
 
-
         public void UpdateUserDet(User u, string id)
         {
             SqlConnection con;
@@ -1620,6 +1619,7 @@ namespace Tar1.Models.DAL
                 }
             }
         }
+
 
     }
 }

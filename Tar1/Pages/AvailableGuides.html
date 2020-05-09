@@ -35,8 +35,13 @@
         }
        function GetWorkSchedule(select){
            id = select.options[select.selectedIndex].value;
-            ajaxCall("GET", "../api/Official/" + id, "", GETOfficialS, GETOfficialE);
-        }
+            //ajaxCall("GET", "../api/Official/" + id, "", GETOfficialS, GETOfficialE);
+
+//SELECT *
+//FROM Shift_2020 as sf inner join OfficialShift_2020 as os on sf.ShiftType=os.ShiftType and sf.ShiftDate=os.ShiftDate
+//WHERE ('2020-05-25' between sf.StartPeriod and sf.EndPeriod) or ('2020-04-25' between sf.StartPeriod and sf.EndPeriod) and UserId NULL
+
+      }
 
 
     </script>
@@ -50,6 +55,7 @@
         <div class="row">
             <h3> בחר יחידה ארגונית שברצונך לאייש עבורה משמרת  </h3>
             <select id="SelectUnit" onchange="GetWorkSchedule(this)"></select>
+            <select id="scheduelPeriod"> </select>
         </div>
 
         <div class="row" id="submitshift" dir="rtl">
