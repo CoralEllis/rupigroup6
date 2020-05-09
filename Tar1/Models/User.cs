@@ -100,7 +100,7 @@ namespace Tar1.Models
         public void updateManager()
         {
             DBservices dbs = new DBservices();
-            dbs.UpdateManagerDet(this);// id of guide
+            dbs.UpdateManagerDet(this);
         }
     }
 }

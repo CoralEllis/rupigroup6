@@ -75,7 +75,13 @@
                                 if (myData[i].Unitid == UnitArray[j].Id) {
                                     $("#SelectEdit").val(myData[i].Unitid);
                                 }
+
                             }
+                        }
+
+                        else {
+                            $("#SelectEdit").val(" ");
+
                         }
                         break;
                     }
@@ -157,7 +163,7 @@
         function GetOrganizeUnitS(data) {
             UnitArray = data;
             console.log(data);
-            str = "<option>בחר יחידה ארגונית</option>";
+            str = "<option value=' ' >בחר יחידה ארגונית</option>";
             for (var i = 0; i < data.length; i++) {
                 str += "<option value='" + data[i].Id +"'>" + data[i].Unitname + "</option>"
             }
@@ -218,15 +224,15 @@
                 Userid: $("#ManagerId").val(),
                 Firstname: $("#ManagerName").val(),
                 Lastname: $("#ManagerLastName").val(),
-                GuideBirth: birth,
+                Birthdate: birth,
                 Telephone: $("#ManagerTelephone").val(),
-                Role: $("#ManagerRole").val(),
+                Role: $("#ManagerRole option:selected").text(),
                 Password: $("#ManagerPassword").val(),
                 IsActive: $("#SelectManagerStatus").val(),
-                Unitid: $("SelectEdit").val(),
+                Unitid: $("#SelectEdit option:selected").val(),
             }
-            ajaxCall("PUT", "../api/User/" + "abc", JSON.stringify(ManagertoSave), PutManagerS, PutManagerE);        }
-
+            str = "abc";
+            ajaxCall("PUT", "../api/User/" + str, JSON.stringify(ManagertoSave), PutManagerS, PutManagerE);        }
         function PutManagerS(data) {
             alert("good");
         }
@@ -337,7 +343,7 @@
             <h1>  הוספת מנהל חדש</h1><br />
             <div class="row">
                 <form dir="rtl">
-                    <div class="col">
+                    <div class="col" id="formDiv">
                         <select id="SelectUnit"></select><br />
                         <span>ת"ז: </span><input type="text" id="id" /><br />
                         <span>שם פרטי: </span><input type="text" id="first" /><br />
