@@ -1270,13 +1270,11 @@ namespace Tar1.Models.DAL
             string e = OShift.Endshifthour.ToString();
             string[] DateTime1 = e.Split(' ');
             string endH = DateTime1[1];
-
             string Unid = OShift.Unitid.ToString();
             int day = OShift.Shiftdate.Day;
             int month = OShift.Shiftdate.Month;
             int year = OShift.Shiftdate.Year;
             string ShiftDate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
-
 
             sb.AppendFormat("Values('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')", OShift.Userid, strH, endH, Unid, OShift.Shifttype, ShiftDate);
             String prefix = "INSERT INTO OfficialShift_2020 " + "(UserId,StartShift,EndShift,UnitId,ShiftType,ShiftDate)";
@@ -1294,15 +1292,15 @@ namespace Tar1.Models.DAL
             try
             {
                 con = connect("DBConnectionString");
-                String selectSTR = "select OfficialShift_2020.UserId, OfficialShift_2020.StartShift, OfficialShift_2020.EndShift, OfficialShift_2020.UnitId, OfficialShift_2020.ShiftType, OfficialShift_2020.ShiftDate";
-                selectSTR += " from OfficialShift_2020 left join Shift_2020 on OfficialShift_2020.ShiftDate = Shift_2020.ShiftDate and OfficialShift_2020.ShiftType = Shift_2020.ShiftType and OfficialShift_2020.UnitId = Shift_2020.UnitId";
+                String selectSTR = "select OfficialShift_2020.UserId, OfficialShift_2020.StartShift, OfficialShift_2020.EndShift, OfficialShift_2020.UnitId, OfficialShift_2020.ShiftType, OfficialShift_2020.ShiftDate, User_2020.FirstName, User_2020.LastName";
+                selectSTR += " from OfficialShift_2020 left join Shift_2020 on OfficialShift_2020.ShiftDate = Shift_2020.ShiftDate and OfficialShift_2020.ShiftType = Shift_2020.ShiftType and OfficialShift_2020.UnitId = Shift_2020.UnitId left join User_2020 on OfficialShift_2020.UserId =  User_2020.UserId";
                 selectSTR += " where Shift_2020.StartPeriod >'" + today + "' and Shift_2020.UnitId = " + UnitId;
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (dr.Read())
                 {
                     OfficialShift OffS = new OfficialShift();
-                    OffS.Userid = Convert.ToString(dr["UserId"]);
+                    OffS.Userid = Convert.ToString(dr["UserId"]) + "," + Convert.ToString(dr["FirstName"]) + " " + Convert.ToString(dr["LastName"]);
                     TimeSpan myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("StartShift")));
                     OffS.Startshifthour = new DateTime(myTimeSpan.Ticks);
                     TimeSpan myTimeSpan1 = ((dr).GetTimeSpan(dr.GetOrdinal("EndShift")));
@@ -1310,6 +1308,7 @@ namespace Tar1.Models.DAL
                     OffS.Unitid = id;
                     OffS.Shiftdate = Convert.ToDateTime(dr["ShiftDate"]).Date;
                     OffS.Shifttype = Convert.ToString(dr["ShiftType"]);
+
                     Shifts.Add(OffS);
                 }
                 return Shifts;
@@ -1479,6 +1478,7 @@ namespace Tar1.Models.DAL
             }
         }
 
+
         public void UpdateUserDet(User u, string id)
         {
             SqlConnection con;
@@ -1620,6 +1620,58 @@ namespace Tar1.Models.DAL
             }
         }
 
+        public void updateOS(OfficialShift OS)
+        {
+            SqlConnection con = null;
+            SqlCommand cmd;
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            String cStr = BuildUpdateCommand(OS);
+            cmd = CreateCommand(cStr, con);
+            try
+            {
+                cmd.ExecuteNonQuery(); // execute the command
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+        private String BuildUpdateCommand(OfficialShift OS)
+        {
+            string u = OS.Userid.ToString();
+            //convert start hour of shift to string
+            string s = OS.Startshifthour.ToString();
+            string[] DateTime = s.Split(' ');
+            string strH = DateTime[1];
+            //convert end hour of shift to string
+            string e = OS.Endshifthour.ToString();
+            string[] DateTime1 = e.Split(' ');
+            string endH = DateTime1[1];
+            string unit = OS.Unitid.ToString();
+            int day = OS.Shiftdate.Day;
+            int month = OS.Shiftdate.Month;
+            int year = OS.Shiftdate.Year;
+            string d = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
+
+            string str = "UPDATE OfficialShift_2020 SET UserId =" + u + " WHERE UnitId = " + unit + " and ShiftType = '" + OS.Shifttype + "' and ShiftDate = '" + d + "'";
+            str += " UPDATE OfficialShift_2020 SET StartShift ='" + strH + "' WHERE UserId =" + u + " and UnitId = " + unit + " and ShiftType = '" + OS.Shifttype + "' and ShiftDate = '" + d + "'";
+            str += " UPDATE OfficialShift_2020 SET EndShift ='" + endH + "' WHERE UserId =" + u + " and UnitId = " + unit + " and ShiftType = '" + OS.Shifttype + "' and ShiftDate = '" + d + "'";
+            return str;
+        }
 
     }
 }

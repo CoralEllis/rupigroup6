@@ -43,8 +43,11 @@ namespace Tar1.Models
             DBservices dbs = new DBservices();
             return dbs.GetOS(id);
         }
-
-
+        public void UpdateOfficialShift()
+        {
+            DBservices dbs = new DBservices();
+            dbs.updateOS(this);
+        }
 
     }
 }
