@@ -16,7 +16,8 @@ namespace Tar1.Controllers
         }
 
         // GET api/<controller>/5
-     
+        [HttpGet]
+        [Route("api/Official/{Unitid:int}")]
         public List<OfficialShift> Get(int Unitid)
         {
             OfficialShift OS = new OfficialShift();
@@ -31,8 +32,9 @@ namespace Tar1.Controllers
         }
 
         // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        public void Put([FromBody] OfficialShift OS)
         {
+            OS.UpdateOfficialShift();
         }
 
         // DELETE api/<controller>/5
