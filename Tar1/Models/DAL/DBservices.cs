@@ -1589,17 +1589,17 @@ namespace Tar1.Models.DAL
             if (u.Role == "מנהל יחידה ארגונית")
             {
                 string unitID = u.Unitid.ToString();
-                 cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '" + active + "' UserRole = '"+u.Role+ "', IsUnitManager = '1' , BigManager = '0' , UnitId = '"+ unitID + "' WHERE UserId =" + u.Userid;
+                 cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '" + active + "' , UserRole = '"+u.Role+ "', IsUnitManager = '1' , BigManager = '0' , UnitId = '"+ unitID + "' WHERE UserId =" + u.Userid;
 
             }
             else if (u.Role == "מנהל מערך הדיור")
             {
-                 cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '" + active + "' UserRole = '" + u.Role + "' , IsUnitManager = '0' , BigManager = '1' WHERE UserId =" + u.Userid;
+                 cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '" + active + "' , UserRole = '" + u.Role + "' , IsUnitManager = '0' , BigManager = '1' WHERE UserId =" + u.Userid;
 
             }
             else if(u.Role == "סמנכל משאבי אנוש")
             {
-                 cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '" + active + "' UserRole = '" + u.Role + "' , IsUnitManager = '0' , BigManager = '0' WHERE UserId =" + u.Userid;
+                 cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '" + active + "' , UserRole = '" + u.Role + "' , IsUnitManager = '0' , BigManager = '0' WHERE UserId =" + u.Userid;
 
             }
             cmd = CreateCommand(cStr, con);
