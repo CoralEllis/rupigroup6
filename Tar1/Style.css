@@ -15,9 +15,9 @@ th, td {
     width: auto;
     background-color: aliceblue;
 }
-.formDiv{
+#formDiv{
 
-    font-size:25px;
+    font-size:35px;
 }
 body {
     background-color: aliceblue;
@@ -30,9 +30,13 @@ p {
     text-align: center;
 }
 
-#GuidesTable{
-    width:50%;
-    margin-right:-200px;
+#GuidesTable {
+    width: 50%;
+    margin-right: -200px;
+}
+
+#managerTable {
+    margin-right: -350px;
 }
 
 #editDiv {
@@ -40,7 +44,7 @@ p {
     font-size: 20px;
     color: #005473;
     direction: rtl;
-    margin-left:30px;
+    margin-left: 30px;
 }
 
 .expl {

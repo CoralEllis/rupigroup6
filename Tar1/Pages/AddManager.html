@@ -75,7 +75,13 @@
                                 if (myData[i].Unitid == UnitArray[j].Id) {
                                     $("#SelectEdit").val(myData[i].Unitid);
                                 }
+
                             }
+                        }
+
+                        else {
+                            $("#SelectEdit").val(" ");
+
                         }
                         break;
                     }
@@ -157,7 +163,7 @@
         function GetOrganizeUnitS(data) {
             UnitArray = data;
             console.log(data);
-            str = "<option>בחר יחידה ארגונית</option>";
+            str = "<option value=' ' >בחר יחידה ארגונית</option>";
             for (var i = 0; i < data.length; i++) {
                 str += "<option value='" + data[i].Id +"'>" + data[i].Unitname + "</option>"
             }
@@ -226,7 +232,6 @@
                 Unitid: $("SelectEdit").val(),
             }
             ajaxCall("PUT", "../api/User/" + "abc", JSON.stringify(ManagertoSave), PutManagerS, PutManagerE);        }
-
         function PutManagerS(data) {
             alert("good");
         }
