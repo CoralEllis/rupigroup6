@@ -1673,5 +1673,49 @@ namespace Tar1.Models.DAL
             return str;
         }
 
+        public List<OfficialShift> GetEmptyOfficial(int unitid)
+        {
+            List<OfficialShift> OS = new List<OfficialShift>();
+            SqlConnection con = null;
+            string today = DateTime.Today.ToString("yyyy-MM-dd");
+
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = "SELECT os.ShiftDate, sf.StartShift, sf.EndShift, os.ShiftType, sf.NumOfGuides";
+                selectSTR += " FROM Shift_2020 as sf inner join OfficialShift_2020 as os on sf.ShiftType = os.ShiftType and sf.ShiftDate = os.ShiftDate";
+                selectSTR += " WHERE('"+ today + "' < sf.StartPeriod or '"+ today + "' between sf.StartPeriod and sf.EndPeriod)";
+                selectSTR += " AND (os.UserId = '666666666' or os.UserId = '777777777' or os.UserId = '888888888' or os.UserId = '999999999') AND(sf.UnitId = '" + unitid + "')";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    OfficialShift realshift = new OfficialShift();                  
+                    realshift.Shiftdate = Convert.ToDateTime(dr["ShiftDate"]).Date;
+                    realshift.Shifttype = Convert.ToString(dr["ShiftType"]);
+                    TimeSpan myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("StartShift")));
+                    realshift.Startshifthour = new DateTime(myTimeSpan.Ticks);
+                    TimeSpan myTimeSpan2 = ((dr).GetTimeSpan(dr.GetOrdinal("EndShift")));
+                    realshift.Endshifthour = new DateTime(myTimeSpan2.Ticks);
+                    realshift.Numofguides = Convert.ToInt32(dr["NumOfGuides"]);
+                    OS.Add(realshift);
+                }
+                return OS;
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+
     }
 }

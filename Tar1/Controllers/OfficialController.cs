@@ -23,6 +23,14 @@ namespace Tar1.Controllers
             OfficialShift OS = new OfficialShift();
             return OS.GetOS(Unitid);
         }
+        [HttpGet]
+        [Route("api/Official/Unit")]
+        public List<OfficialShift> Get(string unit)
+        {
+          int Unitid = Convert.ToInt32(unit);
+           OfficialShift OS = new OfficialShift();
+          return  OS.GetEmptyOfficial(Unitid);
+        }
 
         // POST api/<controller>
         public void Post([FromBody]List<OfficialShift> OffShiftArr)

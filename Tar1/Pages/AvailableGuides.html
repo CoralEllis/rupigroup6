@@ -35,14 +35,13 @@
         }
        function GetWorkSchedule(select){
            id = select.options[select.selectedIndex].value;
-            //ajaxCall("GET", "../api/Official/" + id, "", GETOfficialS, GETOfficialE);
-
-//SELECT *
-//FROM Shift_2020 as sf inner join OfficialShift_2020 as os on sf.ShiftType=os.ShiftType and sf.ShiftDate=os.ShiftDate
-//WHERE ('2020-05-25' between sf.StartPeriod and sf.EndPeriod) or ('2020-04-25' between sf.StartPeriod and sf.EndPeriod) and UserId NULL
+           unit = id.toString();
+            ajaxCall("GET", "../api/Official/Unit?unit=" + unit, "", GETOfficialS, error);
 
       }
-
+        function GETOfficialS(data) {
+            console.log(data);
+        }
 
     </script>
 </head>
