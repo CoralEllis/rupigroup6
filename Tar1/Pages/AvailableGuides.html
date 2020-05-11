@@ -17,12 +17,12 @@
     <script src="../Scripts/moment.js"></script>
     <title>רשימת מדריכים פנויים לאיוש משמרות</title>
     <script>
+        unit = 0;
         function gets() {
             ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, error);
 
         }
         function GetOrganizeUnitS(data) {
-            console.log(data);
             str = "<option>בחר יחידה ארגונית</option>";
             for (var i = 0; i < data.length; i++) {
                 str += "<option value='"+data[i].Id+"'>" + data[i].Unitname + "</option>"
@@ -36,7 +36,8 @@
        function GetWorkSchedule(select){
            id = select.options[select.selectedIndex].value;
            unit = id.toString();
-            ajaxCall("GET", "../api/Official/Unit?unit=" + unit, "", GETOfficialS, error);
+           ajaxCall("GET", "../api/Period/Unit?unit=" + unit, "", GETOfficialS, error);
+            //ajaxCall("GET", "../api/Official/Unit?unit=" + unit, "", GETOfficialS, error);
 
       }
         function GETOfficialS(data) {

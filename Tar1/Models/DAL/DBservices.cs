@@ -1497,8 +1497,8 @@ namespace Tar1.Models.DAL
             int year = u.Birthdate.Year;
             string bdate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
             string active = u.IsActive.ToString();
-            string cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '"+ active + "' WHERE UserId =" + id;
-            
+            string cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '" + active + "' WHERE UserId =" + id;
+
             cmd = CreateCommand(cStr, con);
             try
             {
@@ -1583,22 +1583,22 @@ namespace Tar1.Models.DAL
             int year = u.Birthdate.Year;
             string bdate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
             string active = u.IsActive.ToString();
-            
+
             string cStr = "";
             if (u.Role == "מנהל יחידה ארגונית")
             {
                 string unitID = u.Unitid.ToString();
-                 cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '" + active + "' , UserRole = '"+u.Role+ "', IsUnitManager = '1' , BigManager = '0' , UnitId = '"+ unitID + "' WHERE UserId =" + u.Userid;
+                cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '" + active + "' , UserRole = '" + u.Role + "', IsUnitManager = '1' , BigManager = '0' , UnitId = '" + unitID + "' WHERE UserId =" + u.Userid;
 
             }
             else if (u.Role == "מנהל מערך הדיור")
             {
-                 cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '" + active + "' , UserRole = '" + u.Role + "' , IsUnitManager = '0' , BigManager = '1' WHERE UserId =" + u.Userid;
+                cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '" + active + "' , UserRole = '" + u.Role + "' , IsUnitManager = '0' , BigManager = '1' WHERE UserId =" + u.Userid;
 
             }
-            else if(u.Role == "סמנכל משאבי אנוש")
+            else if (u.Role == "סמנכל משאבי אנוש")
             {
-                 cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '" + active + "' , UserRole = '" + u.Role + "' , IsUnitManager = '0' , BigManager = '0' WHERE UserId =" + u.Userid;
+                cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '" + active + "' , UserRole = '" + u.Role + "' , IsUnitManager = '0' , BigManager = '0' WHERE UserId =" + u.Userid;
 
             }
             cmd = CreateCommand(cStr, con);
@@ -1684,13 +1684,13 @@ namespace Tar1.Models.DAL
                 con = connect("DBConnectionString");
                 String selectSTR = "SELECT os.ShiftDate, sf.StartShift, sf.EndShift, os.ShiftType, sf.NumOfGuides";
                 selectSTR += " FROM Shift_2020 as sf inner join OfficialShift_2020 as os on sf.ShiftType = os.ShiftType and sf.ShiftDate = os.ShiftDate";
-                selectSTR += " WHERE('"+ today + "' < sf.StartPeriod or '"+ today + "' between sf.StartPeriod and sf.EndPeriod)";
+                selectSTR += " WHERE('" + today + "' < sf.StartPeriod or '" + today + "' between sf.StartPeriod and sf.EndPeriod)";
                 selectSTR += " AND (os.UserId = '666666666' or os.UserId = '777777777' or os.UserId = '888888888' or os.UserId = '999999999') AND(sf.UnitId = '" + unitid + "')";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (dr.Read())
                 {
-                    OfficialShift realshift = new OfficialShift();                  
+                    OfficialShift realshift = new OfficialShift();
                     realshift.Shiftdate = Convert.ToDateTime(dr["ShiftDate"]).Date;
                     realshift.Shifttype = Convert.ToString(dr["ShiftType"]);
                     TimeSpan myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("StartShift")));
@@ -1716,6 +1716,44 @@ namespace Tar1.Models.DAL
             }
         }
 
+        public List<Period> GetAllRelavnt(int unit)
+        {
+            List<Period> P = new List<Period>();
+            SqlConnection con = null;
+            string today = DateTime.Today.ToString("yyyy-MM-dd");
+
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = "select StartPeriod, EndPeriod from SchedulingPeriod_2020";
+                selectSTR += " where ('"+ today+ "' between StartPeriod and EndPeriod OR '" + today + "' < StartPeriod )";
+                selectSTR += " AND UnitId = '"+ unit + "'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    Period period = new Period();
+                    period.Startdate = Convert.ToDateTime(dr["StartPeriod"]).Date;
+                    period.Enddate = Convert.ToDateTime(dr["EndPeriod"]).Date; 
+                    P.Add(period);
+                }
+                return P;
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+
+
+        }
 
     }
 }

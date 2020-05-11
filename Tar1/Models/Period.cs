@@ -41,5 +41,13 @@ namespace Tar1.Models
            
         }
 
+        public List<Period> GetAllRelavnt(int unit)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetAllRelavnt(unit);
+
+        }
+
+
     }
 }
