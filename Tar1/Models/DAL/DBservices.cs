@@ -2188,35 +2188,31 @@ namespace Tar1.Models.DAL
             return str;
         }
 
-       public List<Exceptions> GetSpecialExcep(DateTime start,DateTime end,int unitid)
+        public List<Exceptions> GetSpecialExcep(DateTime start, DateTime end, int unitid)
         {
             List<Exceptions> S = new List<Exceptions>();
             SqlConnection con = null;
-          
+
             string unit = unitid.ToString();
-            //int day = SPdate.Day;
-            //int month = SPdate.Month;
-            //int year = SPdate.Year;
-            //string startP = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
-            string startP=start.ToString("yyyy-MM-dd"); 
-            string endp= end.ToString("yyyy-MM-dd");
+            string startP = start.ToString("yyyy-MM-dd");
+            string endp = end.ToString("yyyy-MM-dd");
             try
             {
                 con = connect("DBConnectionString");
 
                 String selectSTR = "select Exception_2020.ShiftDate,Exception_2020.ShiftType,TypeofException_2020.TypeofException,User_2020.FirstName,User_2020.LastName from Exception_2020 right join TypeofException_2020 on Exception_2020.TypeofExceptionId = TypeofException_2020.TypeofExceptionId inner";
                 selectSTR += " join User_2020 on Exception_2020.UserId = User_2020.UserId";
-                selectSTR += " where Exception_2020.UnitId = '"+ unit+"' and Exception_2020.ShiftDate between '"+ startP + "' and '" + endp + "'";
+                selectSTR += " where Exception_2020.UnitId = '" + unit + "' and Exception_2020.ShiftDate between '" + startP + "' and '" + endp + "'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (dr.Read())
                 {
                     Exceptions EX = new Exceptions();
                     EX.Name = Convert.ToString(dr["FirstName"]) + " " + Convert.ToString(dr["LastName"]);
-                    EX.ShiftDate= Convert.ToDateTime(dr["ShiftDate"]).Date;
-                    EX.ShiftType= Convert.ToString(dr["ShiftType"]);
-                    EX.Index= Convert.ToString(dr["TypeofException"]);
-           
+                    EX.ShiftDate = Convert.ToDateTime(dr["ShiftDate"]).Date;
+                    EX.ShiftType = Convert.ToString(dr["ShiftType"]);
+                    EX.Index = Convert.ToString(dr["TypeofException"]);
+
                     S.Add(EX);
                 }
                 return S;
@@ -2234,6 +2230,177 @@ namespace Tar1.Models.DAL
             }
 
 
+        }
+
+        public List<Exceptions> GetExceptionsNum(DateTime start, DateTime end, int unitid)
+        {
+            List<Exceptions> S = new List<Exceptions>();
+            SqlConnection con = null;
+
+            string unit = unitid.ToString();
+            string startP = start.ToString("yyyy-MM-dd");
+            string endp = end.ToString("yyyy-MM-dd");
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = "Select count(Exception_2020.TypeofExceptionId)as NumOfEx, TypeofException_2020.TypeofException";
+                selectSTR += "  from Exception_2020 inner join TypeofException_2020 on Exception_2020.TypeofExceptionId = TypeofException_2020.TypeofExceptionId";
+                selectSTR += " where Exception_2020.UnitId = '" + unit + "' and Exception_2020.ShiftDate between '" + startP + "' and '" + endp + "'";
+                selectSTR += " GROUP BY TypeofException_2020.TypeofException";
+               SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    Exceptions EX = new Exceptions();
+                    EX.Unit = Convert.ToInt32(dr["NumOfEx"]);
+                    EX.Index = Convert.ToString(dr["TypeofException"]);
+
+                    S.Add(EX);
+                }
+                return S;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+
+
+        }
+
+        public List<User> GetGuidesHours(DateTime start, DateTime end, int unit)
+        {
+
+            List<User> G = new List<User>();
+            SqlConnection con = null;
+            string unitid = unit.ToString();
+  
+
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = "select * from User_2020 where UserRole = 'מדריך' and Active='1' and UnitId='"+unitid+"'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    User u = new User();
+                    u.Userid = Convert.ToString(dr["UserId"]);
+                    u.Firstname = Convert.ToString(dr["FirstName"]) + " " + Convert.ToString(dr["LastName"]);
+                    u.Telephone = Convert.ToString(dr["Telephone"]);
+                    u.Role = Convert.ToString(dr["TrainingLevel"]);
+                    bool p = GetPer(unit);
+                    User u1 = GuideInfoByDates(u.Userid, p,start,end);
+                    u.MonthlyHours = u1.MonthlyHours;
+                    u.MonthlyExtraHours = u1.MonthlyExtraHours;
+
+                    G.Add(u);
+                }
+
+                return G;
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+
+
+
+        }
+        public User GuideInfoByDates(string Userid, bool preprdness, DateTime start, DateTime end)
+        {
+            User Os = new User();
+            double extra = 0;
+            double normal = 0;
+            SqlConnection con = null;
+            List<Constraint> ConstList = getConstraintM();
+            float RegularShift = ConstList[6].ConstraintValue;
+            float SpeNightShift = ConstList[7].ConstraintValue;
+            string startP = start.ToString("yyyy-MM-dd");
+            string endp = end.ToString("yyyy-MM-dd");
+            try
+            {
+                string sMonth = DateTime.Now.ToString("MM");
+                string year = DateTime.Today.Year.ToString();
+
+                con = connect("DBConnectionString");
+
+                String selectSTR = "select * from OfficialShift_2020 where UserId = '"+Userid+"' and ShiftDate between '"+ startP + "' and '"+ endp + "';
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    OfficialShift OffiS = new OfficialShift();
+                    OffiS.Shifttype = (string)dr["ShiftType"];
+                    TimeSpan myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("StartShift")));
+                    OffiS.Startshifthour = new DateTime(myTimeSpan.Ticks);
+                    myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("EndShift")));
+                    OffiS.Endshifthour = new DateTime(myTimeSpan.Ticks);
+                    TimeSpan interval = OffiS.Endshifthour - OffiS.Startshifthour;
+                    double x = interval.TotalHours;
+                    if (preprdness == true && OffiS.Shifttype == "לילה")
+                    {
+                        double x1 = 0.0;
+                        if (x < 0)
+                        {
+                            x1 = x + 24.0;
+                        }
+                        else if (x > 0)
+                        {
+                            x1 = x;
+                        }
+                        if (x1 > SpeNightShift)
+                        {
+                            normal += SpeNightShift;
+                            extra += x1 - SpeNightShift;
+                        }
+                        else
+                        {
+                            normal += x1;
+                        }
+                    }
+                    else
+                    {
+                        if (x > RegularShift)
+                        {
+                            normal += RegularShift;
+                            extra += x - RegularShift;
+                        }
+                        else
+                        {
+                            normal += x;
+                        }
+                    }
+                    Os.MonthlyHours = normal;
+                    Os.MonthlyExtraHours = extra;
+                }
+                return Os;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
         }
     }
 }

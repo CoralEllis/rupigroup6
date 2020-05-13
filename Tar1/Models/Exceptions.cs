@@ -47,6 +47,14 @@ namespace Tar1.Models
 
         }
 
+            public List<Exceptions> GetExceptionsNum(DateTime start, DateTime end, int unitid)
+        {
+
+            DBservices dbs = new DBservices();
+            return dbs.GetExceptionsNum(start, end, unitid);
+        }
+
+
     }
 
 }

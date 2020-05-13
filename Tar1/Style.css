@@ -8,7 +8,7 @@ form {
     color: #005473;
     direction:rtl !important;
     font-family:Calibri;
-    font-size:30px;
+    font-size:25px;
 }
 
 
@@ -85,11 +85,20 @@ p {
     margin-top: 30px;
 }
 
-#GTable > thead>tr>th{
-    text-align:center;
+#GTable > thead > tr > th, #ExcepTable > thead > tr > th {
+    text-align: center;
+}
+.specialtd{
+    width:40% !important;
+}
+.smalltd{
+    width:20%;
+}
+#ExcepTable {
+    width: 100%;
 }
 #GTable > tbody > tr > td > button {
-    font-size:25px;
+    font-size: 25px;
 }
 
     #GuidesTable {

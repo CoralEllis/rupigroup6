@@ -43,14 +43,22 @@ namespace AkimShifts.Controllers
             User u = new User();
          return u.GetAvailableGuides(shift);
         }
+
+        [HttpGet]
+        [Route("api/User/Special")]
+        public List<User> Get(DateTime start, DateTime end, int unit)
+        {
+            User u = new User();
+            return u.GetGuidesHours(start, end, unit);
+        }
+
+
         [HttpGet]
         [Route("api/User/WorkUnit")]
         public List<User> Get(int unit,DateTime  Date)
         {
-            //string[] infor = unitDate.Split('|');
-            //int unit = Convert.ToInt32(infor[0]);
-            //DateTime date = Convert.ToDateTime(infor[1]);
-            User u = new User();
+          
+           User u = new User();
             return u.GetUnitUsers(unit, Date);
         }
 

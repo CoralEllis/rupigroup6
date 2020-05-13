@@ -28,6 +28,15 @@ namespace AkimShifts.Controllers
             Exceptions e = new Exceptions();
            return e.GetSpecialExcep(start,end,unitid);
         }
+
+        [HttpGet]
+        [Route("api/Exception/Number")]
+        public List<Exceptions> GetNumber(DateTime start, DateTime end, int unitid)
+        {
+            Exceptions e = new Exceptions();
+            return e.GetExceptionsNum(start, end, unitid);
+        }
+
         // POST api/<controller>
         public void Post([FromBody]List<Exceptions> ExcptArr)
         {

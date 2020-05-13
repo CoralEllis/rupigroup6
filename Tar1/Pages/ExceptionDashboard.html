@@ -22,30 +22,129 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
     <script>
+        XLabelsExcep = [];
+        YLableExcep = [];
         function gets() {
-               ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, error);
+            ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, error);
         }
         function GetOrganizeUnitS(data) {
-                 str = "<option>בחר יחידה ארגונית</option>";
+            str = "<option>בחר יחידה ארגונית</option>";
             for (var i = 0; i < data.length; i++) {
                 str += "<option value='" + data[i].Id + "'>" + data[i].Unitname + "</option>"
             }
             $("#SelectUnit").html(str);
+            $("#SelectUnitH").html(str);
             $("#excepdiv").show();
-        }
-        function error(err){
+            $("#divHours").show();
 
+        }
+        function error(err) {
+            console.log(err);
         }
         function GetExcep() {
-
             start = $("#start").val().toString();
             end = $("#end").val().toString();
             unit = $("#SelectUnit").val().toString();
-             ajaxCall("GET", "../api/Exception/Special?start=" + start+"&end="+end+"&unitid="+unit, "", GetExcepS, error)
+            ajaxCall("GET", "../api/Exception/Special?start=" + start + "&end=" + end + "&unitid=" + unit, "", GetExcepS, error)
+            ajaxCall("GET", "../api/Exception/Number?start=" + start + "&end=" + end + "&unitid=" + unit, "", GetNumOf, error)
 
         }
         function GetExcepS(data) {
+            try {
+                tbl = $('#ExcepTable').DataTable({
+                    data: data,
+                    columnDefs: [
+                        { className: "specialtd", targets: 3 },
+                        { className: "smalltd", targets: 0 },
+                        { className: "smalltd", targets: 1 },
+                        { className: "smalltd", targets: 2 }
+                    ],
+                    columns: [
+                        { data: "Name" },
+                        {
+                            data: "ShiftDate",
+                            render: function (data, type, row, meta) {
+                                dateOnly = moment(data);
+                                return dateOnly.format('DD/MM/YYYY');
+                            }
+                        },
+                        { data: "ShiftType" },
+                        { data: "Index" },
+
+                    ],
+                });
+            }
+
+            catch (err) {
+                alert(err);
+            }
+            $("#ExcepTable").show();
+        }
+        function GetNumOf(data) {
+            canvas = document.getElementById("excepPai");
+            context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            if (data.length == 0) {
+                alert(" אין חריגות בטווח התאריכים שהוכנס");
+                return null;
+            }
+            for (var i = 0; i < data.length; i++) {
+                XLabelsExcep.push(data[i].Index);
+                YLableExcep.push(data[i].Unit);
+            }
+            Chart.defaults.global.defaultFontColor = '#005473';
+            Chart.defaults.global.defaultFontFamily = 'Helvetica Neue';
+            Chart.defaults.global.defaultFontSize = 20;
+            var ctx = document.getElementById("excepPai").getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'doughnut',
+                animate: {
+                    animateRotate: true,
+                    duration: 1000,
+                    animateScale: true,
+                    animationSteps: 15
+                },
+                data: {
+                    labels: XLabelsExcep,
+                    datasets: [{
+                        data: YLableExcep,
+                        backgroundColor: [
+                            'rgba(255, 128, 171, 0.5)',
+                            'rgba(54, 162, 235, 0.5)',
+                            'rgba(255, 206, 86, 0.5)',
+                            'rgba(75, 192, 192, 0.5)',
+                            'rgba(153, 102, 255, 0.5)',
+                            'rgba(255, 159, 64, 0.5)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 2
+
+                    }]
+                },
+
+
+
+
+            });
+        }
+        function GetHOURS() {
+            start = $("#startH").val().toString();
+            end = $("#endH").val().toString();
+            unit = $("#SelectUnitH").val().toString();
+            console.log(start, end, unit);
+            ajaxCall("GET", "../api/User/Special?start=" + start + "&end=" + end + "&unit=" + unit, "", GetGuides, error)
+         
+        }
+        function GetGuides(data) {
             console.log(data);
         }
     </script>
@@ -59,16 +158,30 @@
             <span> יש לבחור יחידה ארגונית</span>
             <select id="SelectUnit"></select><br />
             <span> יש לבחור טווח תאריכים בהם תרצי לראות נתוני חריגות</span>
-            <input type="date" id="end" /> <span>   -   </span> <input type="date" id="start" /><br />
+            <span> תאריך התחלה:</span><input type="date" id="start" />
+            <span> תאריך סיום:</span> <input type="date" id="end" /><br />
             <button onclick="GetExcep()">הראה לי את החריגות</button>
         </div>
+        <canvas id="excepPai" style="width:30%;height:40%"></canvas>
+        <table id="ExcepTable" class="display nowrap" style="display:none">
+            <thead>
+                <tr>
+                    <th>שם המדריך</th>
+                    <th>תאריך המשמרת</th>
+                    <th>סוג המשמרת</th>
+                    <th>סוג החריגה</th>
+                </tr>
+            </thead>
+        </table>
         <h1> דשבורד שעות</h1>
-        <div class="datadiv" style="display:none">    
+        <div class="datadiv" id="divHours" style="display:none">
             <span> יש לבחור טווח תאריכים בהם תרצי לראות נתוני השעות עבור המדריכים</span>
-            <input type="date" id="endH" /> <span>   -   </span> <input type="date" id="startH" /><br />
+            <select id="SelectUnitH"></select><br />
+            <span> יש לבחור טווח תאריכים בהם תרצי לראות נתוני חריגות</span>
+            <span> תאריך התחלה:</span><input type="date" id="startH" />
+            <span> תאריך סיום:</span> <input type="date" id="endH" /><br />
             <button onclick="GetHOURS()">הראה לי את השעות</button>
         </div>
-
 
 
     </div>

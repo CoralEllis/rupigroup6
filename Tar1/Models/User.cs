@@ -112,6 +112,13 @@ namespace Tar1.Models
             
         }
 
+        public List<User> GetGuidesHours(DateTime start, DateTime end, int unit)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetGuidesHours(start, end, unit);
+
+        }
+
 
     }
 }
