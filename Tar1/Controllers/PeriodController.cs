@@ -18,20 +18,21 @@ namespace AkimShifts.Controllers
 
         // GET api/<controller>/5
         [HttpGet]
+        [Route("api/Official/Id")]
+        public List<Period> Get(string id)
+        {
+            int Unitid = Convert.ToInt32(id);
+            Period period = new Period();
+            return period.GetAllRelavnt(Unitid);
+        }
+        [HttpGet]
         [Route("api/Official/{id:int}")]
         public bool Get(int id)
         {
             Period p = new Period();
            return p.GetPer(id);
         }
-        [HttpGet]
-        [Route("api/Official/Unit")]
-        public List<Period> Get(string unit)
-        {
-            int Unitid = Convert.ToInt32(unit);
-            Period period = new Period();
-            return period.GetAllRelavnt(Unitid);
-        }
+    
 
         // POST api/<controller>
         public void Post([FromBody]Period p)
