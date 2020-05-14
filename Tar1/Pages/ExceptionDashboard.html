@@ -26,6 +26,9 @@
     <script>
         XLabelsExcep = [];
         YLableExcep = [];
+        Names = [];
+        NormalHours = [];
+        ExtraHours = [];
         function gets() {
             ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, error);
         }
@@ -140,13 +143,193 @@
             start1 = $("#startH").val().toString();
             end1 = $("#endH").val().toString();
             unit1 = $("#SelectUnitH").val().toString();
-            ajaxCall("GET", "../api/User/WorkUnit/" + start1 +"/"+ end1 + "/" + unit1, "", GetGuides, error)
-         //ajaxCall("GET", "../api/User/Special?start=" + start1 + "&end=" + end1 + "&unitid=" + unit1, "", GetGuides, error)
-        
+            ajaxCall("GET", "../api/User/Special/" + start1 +"/"+ end1 + "/" + unit1, "", GetGuides, error)        
         
         }
         function GetGuides(data) {
-            console.log(data);
+            for (var i = 0; i < data.length; i++) {
+                Names.push(data[i].Firstname);
+                NormalHours.push(data[i].MonthlyHours);
+                ExtraHours.push(data[i].MonthlyExtraHours);
+            }
+            Chart.defaults.global.defaultFontColor = '#005473';
+            Chart.defaults.global.defaultFontFamily = 'Helvetica Neue';
+            Chart.defaults.global.defaultFontSize = 20;
+            var ctx = document.getElementById("Normal").getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: {
+                    labels: Names,
+                    datasets: [{
+                        label: 'שעות עבודה',
+                        data: NormalHours,
+                        backgroundColor: [
+                            'rgba(255, 128, 171, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(255, 128, 171, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(255, 128, 171, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(255, 128, 171, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+            var ctx = document.getElementById("Extra").getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: {
+                    labels: Names,
+                    datasets: [{
+                        label: 'שעות עבודה נוספות',
+                        data: ExtraHours,
+                        backgroundColor: [
+                            'rgba(255, 128, 171, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(255, 128, 171, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(255, 128, 171, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(255, 128, 171, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+            try {
+                tbl = $('#TableHours').DataTable({
+                    data: data,
+                    columnDefs: [
+                        {
+                            className: "smalltd", targets: "_all" },
+                    ],
+                    columns: [
+                        { data: "Firstname" },
+                        {
+                            data: "MonthlyHours",
+                            render: function (data, type, row, meta) {
+                                return data.toFixed(2);
+                            }
+                        },
+                        {
+                            data: "MonthlyExtraHours",
+                            render: function (data, type, row, meta) {
+                                return data.toFixed(2);
+                            }
+                        },
+                    ],
+                });
+            }
+
+            catch (err) {
+                alert(err);
+            }
+            $("#TableHours").show();
         }
     </script>
     <title>דשבורד חריגות</title>
@@ -183,6 +366,19 @@
             <span> תאריך סיום:</span> <input type="date" id="endH" /><br />
             <button onclick="GetHOURS()">הראה לי את השעות</button>
         </div>
+        <canvas id="Normal" style="width:30%;height:40%"></canvas>
+        <br />
+        <canvas id="Extra" style="width:30%;height:40%"></canvas>
+        <br />
+        <table id="TableHours" class="display nowrap" style="display:none">
+            <thead>
+                <tr>
+                    <th>שם המדריך</th>
+                    <th>שעות עבודה</th>
+                    <th>שעות עבודה נוספות</th>
+                </tr>
+            </thead>
+        </table>
     </div>
 </body>
 </html>

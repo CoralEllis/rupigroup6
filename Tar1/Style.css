@@ -73,10 +73,13 @@ p {
         font-family: Calibri;
         direction: rtl;
     }
+#TableHours > thead > tr > th{
+    text-align:center;
+}
 
-    #putguides >div{
-        direction:rtl;
-    }
+#putguides > div {
+    direction: rtl;
+}
     #putguides > h1 {
      color:#66CCFF;
     }
