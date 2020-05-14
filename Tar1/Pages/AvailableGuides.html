@@ -37,10 +37,10 @@
            id = select.options[select.selectedIndex].value;
            unit = id.toString();
            ajaxCall("GET", "../api/Period/Unit?unit=" + unit, "", GETOfficialS, error);
-            //ajaxCall("GET", "../api/Official/Unit?unit=" + unit, "", GETOfficialS, error);
+           ajaxCall("GET", "../api/Official/Unit?unit=" + unit, "", GETOffS, error);
 
       }
-        function GETOfficialS(data) {
+        function GETOffS(data) {
             console.log(data);
         }
 
