@@ -119,9 +119,12 @@
                         {
                             data: "IsActive",
                             render: function (data, type, row, meta) {
-                                if (data == true)
+                                if (data == true) {
                                     return "פעיל";
-                                else return "לא פעיל";
+                                }
+                                else {
+                                    return "לא פעיל";
+                                }
                             }
                         },
                         {
