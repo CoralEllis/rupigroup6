@@ -17,7 +17,7 @@ th, td {
 }
 #formDiv{
 
-    font-size:25px;
+    font-size:20px;
 }
 body {
     background-color: aliceblue;
@@ -32,11 +32,15 @@ p {
 
 #GuidesTable {
     width: 50%;
-    margin-right: -200px;
+    margin-right: -270px;
 }
 
 #managerTable {
     margin-right: -350px;
+}
+
+#addNewGuide{
+    margin-left:250px;
 }
 
 #editDiv {
@@ -44,7 +48,8 @@ p {
     font-size: 20px;
     color: #005473;
     direction: rtl;
-    margin-left: 30px;
+    width:auto;
+    /*margin-left: 60px;*/
 }
 
 .expl {
@@ -55,8 +60,8 @@ p {
 .expl1 {
     font-size: 25px;
     color: #005473;
-    text-align:center;
-    direction:rtl;
+    text-align: center;
+    direction: rtl;
 }
 
 .Traininglevel {
