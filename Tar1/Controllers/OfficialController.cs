@@ -17,7 +17,7 @@ namespace Tar1.Controllers
 
         // GET api/<controller>/5
         [HttpGet]
-        [Route("api/Official/{Unitid:int}")]
+        [Route("api/Official/Unit/{Unitid:int}")]
         public List<OfficialShift> Get(int Unitid)
         {
             OfficialShift OS = new OfficialShift();

@@ -18,7 +18,7 @@ namespace AkimShifts.Controllers
 
         // GET api/<controller>/5
         [HttpGet]
-        [Route("api/Official/Id")]
+        [Route("api/Period/Id")]
         public List<Period> Get(string id)
         {
             int Unitid = Convert.ToInt32(id);
@@ -26,7 +26,7 @@ namespace AkimShifts.Controllers
             return period.GetAllRelavnt(Unitid);
         }
         [HttpGet]
-        [Route("api/Official/{id:int}")]
+        [Route("api/Period/{id:int}")]
         public bool Get(int id)
         {
             Period p = new Period();

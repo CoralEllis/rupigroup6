@@ -22,7 +22,6 @@
         ShiftsArray = [];
         function gets() {
             ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, error);
-
         }
         function GetOrganizeUnitS(data) {
             str = "<option>בחר יחידה ארגונית</option>";
@@ -41,7 +40,7 @@
             ajaxCall("GET", "../api/Official/Unit?unit=" + unit, "", GETOfficialS, error);
         }
         function GETOfficialS(data) {
-            console.log(data);
+
             for (var i = 0; i < data.length; i++) {
                 d = data[i].Shiftdate.split("T");
                 x = data[i].Startshifthour.split("T");
@@ -53,12 +52,68 @@
                     "StartShift": moment(shiftdatestart),
                     "EndShift": moment(shiftdateend),
                     //"Guidenum": data[i].Numofguides,
-                    "NuminOfficialShift": []
                 }
                 ShiftsArray.push(shift);
             }
             ShiftsArray.sort(sortByDateAsc);
-            $("#Emptyshifts").show();
+            str = "<option value=''> בחר משמרת</option>";
+            for (var i = 0; i < ShiftsArray.length; i++) {
+            YomBa =  ShiftsArray[i].StartShift.day();
+            yom = "";
+            yom = TellMeTheDay(YomBa);
+    
+                str += "<option value='"+ShiftsArray[i].StartShift.format("YYYY-MM-DD")+ "|" + ShiftsArray[i].Type+"'>"+ShiftsArray[i].StartShift.format('DD/MM/YYYY')+" "+yom+" "+ShiftsArray[i].Type+" </option>"
+            }
+            $("#shifts").html(str);
+            //str = "";
+            //for (var i = 0; i < ShiftsArray.length; i++) {
+            //    datestr = ShiftsArray[i].StartShift.format('DD/MM/YYYY');
+            //    str = "<div class='row shiftsShow' id='" + ShiftsArray[i].StartShift.format("YYYY-MM-DD") + "|" + ShiftsArray[i].Type + "'  onclick='showBigShift(this," + i + ")'><p>" + ShiftsArray[i].Type + "<br />" + datestr + "<br />" + ShiftsArray[i].EndShift.format('HH:mm') + " - " + ShiftsArray[i].StartShift.format('HH:mm') + "</div><br />";
+            //    shiftd = ShiftsArray[i].StartShift.day();
+            //    switch (shiftd) {
+            //        case shiftd:
+            //            document.getElementById(shiftd).innerHTML += str;
+            //            break;
+            //        default:
+            //            break;
+            //    }
+
+        $("#Emptyshifts").show();
+                 }
+        function checkGuides(select) {
+            shift = select.options[select.selectedIndex].value;
+             ajaxCall("GET", "../api/User/"+shift, "", SuccessUser, error);
+        }
+        function TellMeTheDay(YomBa) {
+            switch (YomBa) {
+                case 0:
+                    return 'יום ראשון';
+                    break;
+                case 1:
+                    return 'יום שני';
+                    break;
+                case 2:
+                    return 'יום שלישי';
+                    break;
+                case 3:
+                    return 'יום רביעי';
+                    break;
+                case 4:
+                    return 'יום חמישי';
+                    break;
+                case 5:
+                    return 'יום שישי ';
+                    break;
+                case 6:
+                    return 'יום שבת';
+                    break;
+                default:
+                    break;
+            }
+        }
+        function SuccessUser(data) {
+            alert("gooodd");
+            console.log(data);
         }
         sortByDateAsc = function (lhs, rhs) { return lhs.StartShift > rhs.StartShift ? 1 : lhs.StartShift < rhs.StartShift ? -1 : 0 }
 
@@ -73,38 +128,19 @@
         <div class="row">
             <h3> בחר יחידה ארגונית שברצונך לאייש עבורה משמרת  </h3>
             <select id="SelectUnit" onchange="GetWorkSchedule(this)"></select>
-            <select id="scheduelPeriod"> </select>
-            <div id="Emptyshifts" style="display:none">
-            <h3>להלן כל המשמרות הלא מאויישות בתקופת השיבוץ</h3>
-         
-            </div>
-
-
+           
         </div>
-        
-        <div class="row" id="submitshift" dir="rtl">
-            <div class="col" id="0">
-                <label> א'</label>
-            </div>
-            <div class="col" id="1">
-                <label> ב'</label>
-            </div>
-            <div class="col" id="2">
-                <label> ג'</label>
-            </div>
-            <div class="col" id="3">
-                <label> ד'</label>
-            </div>
-            <div class="col" id="4">
-                <label> ה'</label>
-            </div>
-            <div class="col" id="5">
-                <label> ו'</label>
-            </div>
-            <div class="col" id="6">
-                <label> ש'</label>
-            </div>
-        </div><br /><br />
+        <div id="Emptyshifts" style="display:none">
+            <span>בחר מהרשימה משמרת שברצונך לאייש עבורה מדריך</span>
+          
+                <select id="shifts" onchange="checkGuides(this)"> </select>
+                           
+        </div>
+
+
+
+
+        <br /><br />
 
 
     </div>
