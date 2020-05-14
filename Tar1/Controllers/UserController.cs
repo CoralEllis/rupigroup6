@@ -55,7 +55,7 @@ namespace AkimShifts.Controllers
         }
 
         [HttpGet]
-        [Route("api/User/Special/{start}/{end}/{unitid}")]
+        [Route("api/User/WorkUnit/{start}/{end}/{unitid}")]
         public List<User> Get(DateTime start, DateTime end, int unitid)
         {
             User u = new User();
