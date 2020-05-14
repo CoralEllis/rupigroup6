@@ -95,7 +95,7 @@
                 }
             }
             Unitid = 2;
-            ajaxCall("GET", "../api/Official/" + Unitid, "", GETOfficialS, GETOfficialE);
+            ajaxCall("GET", "../api/Official/Unit/" + Unitid, "", GETOfficialS, GETOfficialE);
             ajaxCall("GET", "../api/ApplyShift/" + Unitid, "", GETGuidePrefS, GETGuidePrefE);
         }
         function GETOfficialS(data) {

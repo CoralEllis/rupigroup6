@@ -102,5 +102,14 @@ namespace Tar1.Models
             DBservices dbs = new DBservices();
             dbs.UpdateManagerDet(this);
         }
+
+        public List<User> GetAvailableGuides(string shift)
+        {
+            DBservices dbs = new DBservices();
+          return dbs.GetAvailableGuides(shift);
+            
+        }
+
+
     }
 }

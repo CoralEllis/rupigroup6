@@ -119,9 +119,12 @@
                         {
                             data: "IsActive",
                             render: function (data, type, row, meta) {
-                                if (data == true)
+                                if (data == true) {
                                     return "פעיל";
-                                else return "לא פעיל";
+                                }
+                                else {
+                                    return "לא פעיל";
+                                }
                             }
                         },
                         {
@@ -163,9 +166,9 @@
         function GetOrganizeUnitS(data) {
             UnitArray = data;
             console.log(data);
-            str = "<option value=' ' >בחר יחידה ארגונית</option>";
+            str = "<option value=' '>בחר יחידה ארגונית</option>";
             for (var i = 0; i < data.length; i++) {
-                str += "<option value='" + data[i].Id +"'>" + data[i].Unitname + "</option>"
+                str += "<option value='" + data[i].Id + "'>" + data[i].Unitname + "</option>"
             }
             $("#SelectUnit").html(str);
             $("#SelectEdit").html(str);
@@ -270,47 +273,42 @@
             </form>
             <br />
             <br />
-            <div id="editDiv" class="row">
                 <div id="editDiv">
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div>
                             <label class="editMyGuide">ת"ז:</label>
                             <input type="text" id="ManagerId">
                         </div>
-
-
-                        <div class="col-sm-3">
+                        <span></span>
+                        <div>
                             <label class="editMyGuide">שם:</label>
                             <input type="text" id="ManagerName" required>
                         </div>
-
-
-                        <div class="col-sm-3">
+                        <span></span>
+                        <div>
                             <label class="editMyGuide">שם משפחה:</label>
                             <input type="text" id="ManagerLastName" required>
                         </div>
-
-                        <div class="col-sm-3">
+                        
+                    </div>
+                    <div class="row">
+                        <div>
                             <label class="editMyGuide">תאריך לידה:</label>
                             <input type="text" id="ManagerBirth" required />
                         </div>
-
-
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-3">
+                        <span></span>
+                        <div>
                             <label class="editMyGuide">טלפון:</label>
                             <input type="text" id="ManagerTelephone" required>
                         </div>
-
-
-                        <div class="col-sm-3">
+                        <span></span>
+                        <div>
                             <label class="editMyGuide">סיסמה:</label>
                             <input type="text" id="ManagerPassword" required>
-                        </div>
-
-
-                        <div class="col-sm-3">
+                        </div>                        
+                    </div>
+                    <div class="row">
+                        <div>
                             <label class="editMyGuide">תפקיד:</label>
                             <select id="ManagerRole">
                                 <option value="1">מנהל יחידה ארגונית</option>
@@ -318,27 +316,25 @@
                                 <option value="3">סמנכל משאבי אנוש</option>
                             </select>
                         </div>
-                        <div class="col-sm-3">
+                        <span></span>
+                        <div>
                             <label class="editMyGuide">סטטוס:</label>
                             <select id="SelectManagerStatus">
                                 <option value="0">לא פעיל</option>
                                 <option value="1">פעיל</option>
                             </select>
                         </div>
-                        <div class="col-sm-3">
+                        <span></span>
+                        <div>
                             <label class="editMyGuide">בחר יחידה ארגונית:</label>
-                            <select id="SelectEdit">
-
-                            </select>
+                            <select id="SelectEdit"></select>
                         </div>
-
                     </div>
+                    <br />
                     <button type="button" class="btn btn-primary btn-lg" id="saveBTN" onclick="SaveChanges()">שמור</button>
                     <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
                 </div>
                 <br /><hr />
-
-            </div>
             <br />
             <h1>  הוספת מנהל חדש</h1><br />
             <div class="row">

@@ -1726,15 +1726,15 @@ namespace Tar1.Models.DAL
             {
                 con = connect("DBConnectionString");
                 String selectSTR = "select StartPeriod, EndPeriod from SchedulingPeriod_2020";
-                selectSTR += " where ('"+ today+ "' between StartPeriod and EndPeriod OR '" + today + "' < StartPeriod )";
-                selectSTR += " AND UnitId = '"+ unit + "'";
+                selectSTR += " where ('" + today + "' between StartPeriod and EndPeriod OR '" + today + "' < StartPeriod )";
+                selectSTR += " AND UnitId = '" + unit + "'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (dr.Read())
                 {
                     Period period = new Period();
                     period.Startdate = Convert.ToDateTime(dr["StartPeriod"]).Date;
-                    period.Enddate = Convert.ToDateTime(dr["EndPeriod"]).Date; 
+                    period.Enddate = Convert.ToDateTime(dr["EndPeriod"]).Date;
                     P.Add(period);
                 }
                 return P;
@@ -1752,6 +1752,86 @@ namespace Tar1.Models.DAL
                 }
             }
 
+
+        }
+
+        public List<User> GetAvailableGuides(string shift)
+        {
+            List<User> G = new List<User>();
+            SqlConnection con = null;
+            //string today = DateTime.Today.ToString("yyyy-MM-dd");
+
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = CreateGetCommand(shift);
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    User u = new User();
+                    //period.Startdate = Convert.ToDateTime(dr["StartPeriod"]).Date;
+                    //period.Enddate = Convert.ToDateTime(dr["EndPeriod"]).Date;
+                    G.Add(u);
+                }
+                return G;
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+
+        }
+        private string CreateGetCommand(string shift)
+        {
+            string[] shiftdet = shift.Split('|');
+            string command="";
+            DateTime d = Convert.ToDateTime(shiftdet[0]);
+            DateTime tommorow = d.AddDays(1);
+            DateTime yesterday = d.AddDays(-1);
+            if (shiftdet[1] == "בוקר")
+            {
+                command = "select User_2020.UserId, User_2020.FirstName,User_2020.LastName,User_2020.Telephone, TrainingLevel_2020.TrainingLevel,OrganizeUnit_2020.UnitName";
+                command +=" from User_2020 inner join Guide_2020 on User_2020.UserId = Guide_2020.UserId inner join TrainingLevel_2020 on Guide_2020.TrainingLevelId = TrainingLevel_2020.TrainingLevelId inner join OrganizeUnit_2020 on User_2020.UnitId = OrganizeUnit_2020.UnitId";
+                command += " where User_2020.UserId not in(";
+                command += " select UserId";
+                command += " from OfficialShift_2020";
+                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or(ShiftType = 'ערב' and ShiftDate = '" + shiftdet[0] + "') or(ShiftType = 'לילה' and ShiftDate = '"+yesterday+"')";
+               command += "  and UserRole = 'מדריך' and Active = 1";
+                return command;
+            }
+           else if (shiftdet[1] == "ערב")
+            {
+                command = "select User_2020.UserId, User_2020.FirstName,User_2020.LastName,User_2020.Telephone, TrainingLevel_2020.TrainingLevel,OrganizeUnit_2020.UnitName";
+                command += " from User_2020 inner join Guide_2020 on User_2020.UserId = Guide_2020.UserId inner join TrainingLevel_2020 on Guide_2020.TrainingLevelId = TrainingLevel_2020.TrainingLevelId inner join OrganizeUnit_2020 on User_2020.UnitId = OrganizeUnit_2020.UnitId";
+                command += " where User_2020.UserId not in(";
+                command += " select UserId";
+                command += " from OfficialShift_2020";
+                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or(ShiftType = 'בוקר' and ShiftDate = '" + shiftdet[0] + "') or(ShiftType = 'לילה' and ShiftDate = '"+ shiftdet[0] + "')";
+                command += "  and UserRole = 'מדריך' and Active = 1";
+                return command;
+            }
+            else if (shiftdet[1] == "לילה")
+            {
+                command = "select User_2020.UserId, User_2020.FirstName,User_2020.LastName,User_2020.Telephone, TrainingLevel_2020.TrainingLevel,OrganizeUnit_2020.UnitName";
+                command += " from User_2020 inner join Guide_2020 on User_2020.UserId = Guide_2020.UserId inner join TrainingLevel_2020 on Guide_2020.TrainingLevelId = TrainingLevel_2020.TrainingLevelId inner join OrganizeUnit_2020 on User_2020.UnitId = OrganizeUnit_2020.UnitId";
+                command += " where User_2020.UserId not in(";
+                command += " select UserId";
+                command += " from OfficialShift_2020";
+                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or(ShiftType = ערב' and ShiftDate = '" + shiftdet[0] + "') or(ShiftType = 'בוקר' and ShiftDate = '" +tommorow + "')";
+                command += "  and UserRole = 'מדריך' and Active = 1";
+                return command;
+            }
+
+            return command;
 
         }
 
