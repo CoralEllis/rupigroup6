@@ -2281,7 +2281,6 @@ namespace Tar1.Models.DAL
             SqlConnection con = null;
             string unitid = unit.ToString();
   
-
             try
             {
                 con = connect("DBConnectionString");
@@ -2294,7 +2293,7 @@ namespace Tar1.Models.DAL
                     u.Userid = Convert.ToString(dr["UserId"]);
                     u.Firstname = Convert.ToString(dr["FirstName"]) + " " + Convert.ToString(dr["LastName"]);
                     u.Telephone = Convert.ToString(dr["Telephone"]);
-                    u.Role = Convert.ToString(dr["TrainingLevel"]);
+                    //u.Role = Convert.ToString(dr["TrainingLevel"]);
                     bool p = GetPer(unit);
                     User u1 = GuideInfoByDates(u.Userid, p,start,end);
                     u.MonthlyHours = u1.MonthlyHours;
@@ -2339,7 +2338,7 @@ namespace Tar1.Models.DAL
 
                 con = connect("DBConnectionString");
 
-                String selectSTR = "select * from OfficialShift_2020 where UserId = '"+Userid+"' and ShiftDate between '"+ startP + "' and '"+ endp + "';
+                String selectSTR = "select * from OfficialShift_2020 where UserId = '"+Userid+"' and ShiftDate between '"+ startP + "' and '"+ endp + "'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (dr.Read())

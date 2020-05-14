@@ -41,25 +41,25 @@ namespace AkimShifts.Controllers
         public List<User> Get(string shift)
         {
             User u = new User();
-         return u.GetAvailableGuides(shift);
-        }
-
-        [HttpGet]
-        [Route("api/User/Special")]
-        public List<User> Get(DateTime start, DateTime end, int unit)
-        {
-            User u = new User();
-            return u.GetGuidesHours(start, end, unit);
+            return u.GetAvailableGuides(shift);
         }
 
 
         [HttpGet]
         [Route("api/User/WorkUnit")]
-        public List<User> Get(int unit,DateTime  Date)
+        public List<User> Get(int unit, DateTime Date)
         {
-          
-           User u = new User();
+
+            User u = new User();
             return u.GetUnitUsers(unit, Date);
+        }
+
+        [HttpGet]
+        [Route("api/User/Special/{start}/{end}/{unitid}")]
+        public List<User> Get(DateTime start, DateTime end, int unitid)
+        {
+            User u = new User();
+            return u.GetGuidesHours(start, end, unitid);
         }
 
         // POST api/<controller>
@@ -77,6 +77,9 @@ namespace AkimShifts.Controllers
             }
             else u.updateUser(id);
         }
+
+
+       
 
         // DELETE api/<controller>/5
         public void Delete(int id)

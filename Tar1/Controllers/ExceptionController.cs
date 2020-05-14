@@ -21,6 +21,7 @@ namespace AkimShifts.Controllers
         {
             return "value";
         }
+               
         [HttpGet]
         [Route("api/Exception/Special")]
         public List<Exceptions> Get(DateTime start, DateTime end, int unitid)

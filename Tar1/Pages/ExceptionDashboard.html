@@ -137,12 +137,13 @@
             });
         }
         function GetHOURS() {
-            start = $("#startH").val().toString();
-            end = $("#endH").val().toString();
-            unit = $("#SelectUnitH").val().toString();
-            console.log(start, end, unit);
-            ajaxCall("GET", "../api/User/Special?start=" + start + "&end=" + end + "&unit=" + unit, "", GetGuides, error)
-         
+            start1 = $("#startH").val().toString();
+            end1 = $("#endH").val().toString();
+            unit1 = $("#SelectUnitH").val().toString();
+            ajaxCall("GET", "../api/User/Special/" + start1 +"/"+ end1 + "/" + unit1, "", GetGuides, error)
+         //ajaxCall("GET", "../api/User/Special?start=" + start1 + "&end=" + end1 + "&unitid=" + unit1, "", GetGuides, error)
+        
+        
         }
         function GetGuides(data) {
             console.log(data);
@@ -182,8 +183,6 @@
             <span> תאריך סיום:</span> <input type="date" id="endH" /><br />
             <button onclick="GetHOURS()">הראה לי את השעות</button>
         </div>
-
-
     </div>
 </body>
 </html>
