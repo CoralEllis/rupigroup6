@@ -1673,18 +1673,18 @@ namespace Tar1.Models.DAL
             return str;
         }
 
-        public List<OfficialShift> GetEmptyOfficial(int unitid)
+        public List<OfficialShift> GetEmptyOfficial(int unitid, string start, string end)
         {
             List<OfficialShift> OS = new List<OfficialShift>();
             SqlConnection con = null;
-            string today = DateTime.Today.ToString("yyyy-MM-dd");
+            //string today = DateTime.Today.ToString("yyyy-MM-dd");
 
             try
             {
                 con = connect("DBConnectionString");
                 String selectSTR = "SELECT os.ShiftDate, sf.StartShift, sf.EndShift, os.ShiftType, sf.NumOfGuides";
                 selectSTR += " FROM Shift_2020 as sf inner join OfficialShift_2020 as os on sf.ShiftType = os.ShiftType and sf.ShiftDate = os.ShiftDate";
-                selectSTR += " WHERE('" + today + "' < sf.StartPeriod or '" + today + "' between sf.StartPeriod and sf.EndPeriod)";
+                selectSTR += " WHERE('" + start + "'= sf.StartPeriod and '" + end + "' = sf.EndPeriod)";
                 selectSTR += " AND (os.UserId = '666666666' or os.UserId = '777777777' or os.UserId = '888888888' or os.UserId = '999999999') AND(sf.UnitId = '" + unitid + "')";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
@@ -1770,8 +1770,18 @@ namespace Tar1.Models.DAL
                 while (dr.Read())
                 {
                     User u = new User();
-                    //period.Startdate = Convert.ToDateTime(dr["StartPeriod"]).Date;
-                    //period.Enddate = Convert.ToDateTime(dr["EndPeriod"]).Date;
+                    u.Userid = Convert.ToString(dr["UserId"]);      
+                    u.Firstname = Convert.ToString(dr["FirstName"]);
+                    u.Lastname = Convert.ToString(dr["LastName"]);
+                    u.Telephone = Convert.ToString(dr["Telephone"]);
+                    u.Role= Convert.ToString(dr["TrainingLevel"]);
+                    u.Password= Convert.ToString(dr["UnitName"]);
+                    u.Unitid = Convert.ToInt32(dr["UnitId"]);
+                    bool p = GetPer(u.Unitid);
+                    User u1 = GuideInfo(u.Userid, p);
+                    u.MonthlyHours = u1.MonthlyHours;
+                    u.MonthlyExtraHours = u1.MonthlyExtraHours;
+
                     G.Add(u);
                 }
                 return G;
@@ -1795,39 +1805,39 @@ namespace Tar1.Models.DAL
             string[] shiftdet = shift.Split('|');
             string command="";
             DateTime d = Convert.ToDateTime(shiftdet[0]);
-            DateTime tommorow = d.AddDays(1);
-            DateTime yesterday = d.AddDays(-1);
+            string tommorow = d.AddDays(1).ToString("yyyy-MM-dd");
+            string yesterday = d.AddDays(-1).ToString("yyyy-MM-dd");
             if (shiftdet[1] == "בוקר")
             {
-                command = "select User_2020.UserId, User_2020.FirstName,User_2020.LastName,User_2020.Telephone, TrainingLevel_2020.TrainingLevel,OrganizeUnit_2020.UnitName";
+                command = "select User_2020.UserId, User_2020.FirstName,User_2020.LastName,User_2020.Telephone, TrainingLevel_2020.TrainingLevel,OrganizeUnit_2020.UnitName,User_2020.UnitId ";
                 command +=" from User_2020 inner join Guide_2020 on User_2020.UserId = Guide_2020.UserId inner join TrainingLevel_2020 on Guide_2020.TrainingLevelId = TrainingLevel_2020.TrainingLevelId inner join OrganizeUnit_2020 on User_2020.UnitId = OrganizeUnit_2020.UnitId";
                 command += " where User_2020.UserId not in(";
                 command += " select UserId";
                 command += " from OfficialShift_2020";
-                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or(ShiftType = 'ערב' and ShiftDate = '" + shiftdet[0] + "') or(ShiftType = 'לילה' and ShiftDate = '"+yesterday+"')";
-               command += "  and UserRole = 'מדריך' and Active = 1";
+                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'ערב' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'לילה' and ShiftDate = '"+yesterday+"'))";
+               command += "  and UserRole = 'מדריך' and Active = '1'";
                 return command;
             }
            else if (shiftdet[1] == "ערב")
             {
-                command = "select User_2020.UserId, User_2020.FirstName,User_2020.LastName,User_2020.Telephone, TrainingLevel_2020.TrainingLevel,OrganizeUnit_2020.UnitName";
+                command = "select User_2020.UserId, User_2020.FirstName,User_2020.LastName,User_2020.Telephone, TrainingLevel_2020.TrainingLevel,OrganizeUnit_2020.UnitName,User_2020.UnitId ";
                 command += " from User_2020 inner join Guide_2020 on User_2020.UserId = Guide_2020.UserId inner join TrainingLevel_2020 on Guide_2020.TrainingLevelId = TrainingLevel_2020.TrainingLevelId inner join OrganizeUnit_2020 on User_2020.UnitId = OrganizeUnit_2020.UnitId";
                 command += " where User_2020.UserId not in(";
                 command += " select UserId";
                 command += " from OfficialShift_2020";
-                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or(ShiftType = 'בוקר' and ShiftDate = '" + shiftdet[0] + "') or(ShiftType = 'לילה' and ShiftDate = '"+ shiftdet[0] + "')";
-                command += "  and UserRole = 'מדריך' and Active = 1";
+                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'בוקר' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'לילה' and ShiftDate = '"+ shiftdet[0] + "'))";
+                command += "  and UserRole = 'מדריך' and Active = '1'";
                 return command;
             }
             else if (shiftdet[1] == "לילה")
             {
-                command = "select User_2020.UserId, User_2020.FirstName,User_2020.LastName,User_2020.Telephone, TrainingLevel_2020.TrainingLevel,OrganizeUnit_2020.UnitName";
+                command = "select User_2020.UserId, User_2020.FirstName,User_2020.LastName,User_2020.Telephone, TrainingLevel_2020.TrainingLevel,OrganizeUnit_2020.UnitName,User_2020.UnitId ";
                 command += " from User_2020 inner join Guide_2020 on User_2020.UserId = Guide_2020.UserId inner join TrainingLevel_2020 on Guide_2020.TrainingLevelId = TrainingLevel_2020.TrainingLevelId inner join OrganizeUnit_2020 on User_2020.UnitId = OrganizeUnit_2020.UnitId";
                 command += " where User_2020.UserId not in(";
                 command += " select UserId";
                 command += " from OfficialShift_2020";
-                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or(ShiftType = ערב' and ShiftDate = '" + shiftdet[0] + "') or(ShiftType = 'בוקר' and ShiftDate = '" +tommorow + "')";
-                command += "  and UserRole = 'מדריך' and Active = 1";
+                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'ערב' and ShiftDate = '" + shiftdet[0] + "') or(ShiftType = 'בוקר' and ShiftDate = '" +tommorow + "'))";
+                command += "  and UserRole = 'מדריך' and Active = '1'";
                 return command;
             }
 
