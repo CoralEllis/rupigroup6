@@ -53,11 +53,11 @@
                         $("#ManagerBirth").val(birthFormat.format('DD/MM/YYYY'));
                         $("#ManagerTelephone").val(myData[i].Telephone);
                         $("#ManagerPassword").val(myData[i].Password);
-                        if (myData[i].IsActive == true) {
-                            $("#SelectManagerStatus").val(1);
+                        if (myData[i].Isactive == true) {
+                            $("#SelectManagerStatus").val("true");
                         }
                         else {
-                            $("#SelectManagerStatus").val(0);
+                            $("#SelectManagerStatus").val("false");
                         }
                         switch (myData[i].Role) {
                             case "מנהל יחידה ארגונית": 
@@ -117,7 +117,7 @@
                         { data: "Role" },
                         { data: "Password" },
                         {
-                            data: "IsActive",
+                            data: "Isactive",
                             render: function (data, type, row, meta) {
                                 if (data == true) {
                                     return "פעיל";
@@ -130,15 +130,16 @@
                         {
                             data: "Unitid",
                             render: function (data, type, row, meta) {
-                                if (data == 0) {
-                                    return "-";
-                                }
-                                else {
+                                if (data > 0) {
                                     for (var i = 0; i < UnitArray.length; i++) {
                                         if (UnitArray[i].Id == data) {
-                                            return UnitArray[i].Unitname;
+                                            return UnitArray[i].Unitname.toString();
                                         }
                                     }
+                                }
+                                else if (data == 0)
+                                {
+                                    return "-";
                                 }
                             }
                         },
@@ -165,7 +166,6 @@
         }
         function GetOrganizeUnitS(data) {
             UnitArray = data;
-            console.log(data);
             str = "<option value=' '>בחר יחידה ארגונית</option>";
             for (var i = 0; i < data.length; i++) {
                 str += "<option value='" + data[i].Id + "'>" + data[i].Unitname + "</option>"
@@ -206,7 +206,7 @@
                 "Unitmanager": um,
                 "Bigmanager": bm,
                 "Unitid": unitid,
-                "IsActive": 1,
+                "Isactive": 1,
             }
             ajaxCall("POST", "../api/User", JSON.stringify(User), PostUserS, PostUserE);
 
@@ -231,7 +231,7 @@
                 Telephone: $("#ManagerTelephone").val(),
                 Role: $("#ManagerRole option:selected").text(),
                 Password: $("#ManagerPassword").val(),
-                IsActive: $("#SelectManagerStatus").val(),
+                Isactive: $("#SelectManagerStatus").val(),
                 Unitid: $("#SelectEdit option:selected").val(),
             }
             str = "abc";
@@ -320,8 +320,8 @@
                         <div>
                             <label class="editMyGuide">סטטוס:</label>
                             <select id="SelectManagerStatus">
-                                <option value="0">לא פעיל</option>
-                                <option value="1">פעיל</option>
+                                <option value="false">לא פעיל</option>
+                                <option value="true">פעיל</option>
                             </select>
                         </div>
                         <span></span>

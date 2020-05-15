@@ -425,7 +425,7 @@ namespace Tar1.Models.DAL
             int month = user.Birthdate.Month;
             int year = user.Birthdate.Year;
             string bdate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
-            string active = user.IsActive.ToString();
+            string active = user.Isactive.ToString();
             //Insert big manager
             if (user.Unitid == 0)
             {
@@ -1460,7 +1460,7 @@ namespace Tar1.Models.DAL
                     us.Password = (string)dr["UPassword"];
                     us.Telephone = (string)dr["Telephone"];
                     us.TrainingLevelId = GetGuideTrainLev(us.Userid);
-                    us.IsActive = Convert.ToBoolean(dr["Active"]);
+                    us.Isactive = Convert.ToBoolean(dr["Active"]);
                     U.Add(us);
                 }
                 return U;
@@ -1496,7 +1496,7 @@ namespace Tar1.Models.DAL
             int month = u.Birthdate.Month;
             int year = u.Birthdate.Year;
             string bdate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
-            string active = u.IsActive.ToString();
+            string active = u.Isactive.ToString();
             string cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '" + active + "' WHERE UserId =" + id;
 
             cmd = CreateCommand(cStr, con);
@@ -1538,7 +1538,7 @@ namespace Tar1.Models.DAL
                     us.Userid = (string)dr["UserId"];
                     us.Role = (string)dr["UserRole"];
                     us.Telephone = (string)dr["Telephone"];
-                    us.IsActive = Convert.ToBoolean(dr["Active"]);
+                    us.Isactive = Convert.ToBoolean(dr["Active"]);
                     us.Birthdate = Convert.ToDateTime(dr["Birthdate"]).Date;
                     if (us.Role == "מנהל מערך הדיור")//in the future add libat!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     {
@@ -1582,7 +1582,7 @@ namespace Tar1.Models.DAL
             int month = u.Birthdate.Month;
             int year = u.Birthdate.Year;
             string bdate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
-            string active = u.IsActive.ToString();
+            string active = u.Isactive.ToString();
 
             string cStr = "";
             if (u.Role == "מנהל יחידה ארגונית")
