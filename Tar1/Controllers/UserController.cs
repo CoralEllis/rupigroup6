@@ -11,6 +11,7 @@ namespace AkimShifts.Controllers
     public class UserController : ApiController
     {
         // GET api/<controller>
+
         public List<User> Get()
         {
             User u = new User();
@@ -19,6 +20,9 @@ namespace AkimShifts.Controllers
         }
 
         // GET api/<controller>/5
+
+        [HttpGet]
+        [Route("api/User/{id:int}")]
         public List<User> Get(int id)
         {
             User u = new User();
@@ -29,6 +33,14 @@ namespace AkimShifts.Controllers
             }
             else
             return u.GetUnitUsers(id);
+        }
+
+        [HttpGet]
+        [Route("api/User/{shift}")]
+        public List<User> Get(string shift)
+        {
+            User u = new User();
+         return u.GetAvailableGuides(shift);
         }
 
         // POST api/<controller>

@@ -15,34 +15,113 @@
     <script src="../Scripts/moment.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="../Scripts/moment.js"></script>
+    <script src="../Scripts/moment.js"></script>
     <title>רשימת מדריכים פנויים לאיוש משמרות</title>
     <script>
         unit = 0;
+        ShiftsArray = [];
         function gets() {
             ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, error);
-
         }
         function GetOrganizeUnitS(data) {
             str = "<option>בחר יחידה ארגונית</option>";
             for (var i = 0; i < data.length; i++) {
-                str += "<option value='"+data[i].Id+"'>" + data[i].Unitname + "</option>"
+                str += "<option value='" + data[i].Id + "'>" + data[i].Unitname + "</option>"
             }
             $("#SelectUnit").html(str);
         }
         function error(err) {
             console.log(err);
-        
         }
-       function GetWorkSchedule(select){
-           id = select.options[select.selectedIndex].value;
-           unit = id.toString();
-           ajaxCall("GET", "../api/Period/Unit?unit=" + unit, "", GETOfficialS, error);
-            //ajaxCall("GET", "../api/Official/Unit?unit=" + unit, "", GETOfficialS, error);
+        function GetWorkSchedule(select) {
+            id = select.options[select.selectedIndex].value;
+            unit = id.toString();
+            ajaxCall("GET", "../api/Period/Id?id=" + unit, "", GETPeriodsS, error);
+           
+        }
+        function GETPeriodsS(data) {
+         
+            str = "<option value=''> בחר תקופת שיבוץ</option>";
+            for (var i = 0; i < data.length; i++) {
+                end = data[i].Enddate.split("T");
+                start = data[i].Startdate.split("T");
+                Speriod = moment(start[0]);
+                Eperiod = moment(end[0]);
+                str=str+  "<option value='"+Speriod.format("YYYY-MM-DD")+"|"+Eperiod.format("YYYY-MM-DD")+"'>"+Eperiod.format('DD/MM/YYYY')+" - "+Speriod.format('DD/MM/YYYY')+"</option>";
+            }
+            $("#period").html(str);
+        
+           
 
-      }
+        $("#Emptyshifts").show();
+        }
+        function getshifts(select) {
+            id = select.options[select.selectedIndex].value;
+            mahrozet = id.toString() + "|" + unit.toString();
+             ajaxCall("GET", "../api/Official/Unit?mahrozet=" + mahrozet, "", GETOfficialS, error);
+      
+        }
         function GETOfficialS(data) {
+            for (var i = 0; i < data.length; i++) {
+                d = data[i].Shiftdate.split("T");
+                x = data[i].Startshifthour.split("T");
+                y = data[i].Endshifthour.split("T");
+                shiftdatestart = d[0] + " " + x[1];
+                shiftdateend = d[0] + " " + y[1];
+                shift = {
+                    "Type": data[i].Shifttype,
+                    "StartShift": moment(shiftdatestart),
+                    "EndShift": moment(shiftdateend),             
+                }
+                ShiftsArray.push(shift);
+            }
+            ShiftsArray.sort(sortByDateAsc);
+            str = "<option value=''> בחר משמרת</option>";
+            for (var i = 0; i < ShiftsArray.length; i++) {
+            YomBa =  ShiftsArray[i].StartShift.day();
+            yom = "";
+            yom = TellMeTheDay(YomBa);
+                str += "<option value='"+ShiftsArray[i].StartShift.format("YYYY-MM-DD")+ "|" + ShiftsArray[i].Type+"'>"+ShiftsArray[i].StartShift.format('DD/MM/YYYY')+" "+yom+" "+ShiftsArray[i].Type+" </option>"
+            }
+            $("#shifts").show();
+            $("#shifts").html(str);
+        }
+        function checkGuides(select) {
+            shift = select.options[select.selectedIndex].value;
+             ajaxCall("GET", "../api/User/"+shift, "", SuccessUser, error);
+        }
+        function TellMeTheDay(YomBa) {
+            switch (YomBa) {
+                case 0:
+                    return 'יום ראשון';
+                    break;
+                case 1:
+                    return 'יום שני';
+                    break;
+                case 2:
+                    return 'יום שלישי';
+                    break;
+                case 3:
+                    return 'יום רביעי';
+                    break;
+                case 4:
+                    return 'יום חמישי';
+                    break;
+                case 5:
+                    return 'יום שישי ';
+                    break;
+                case 6:
+                    return 'יום שבת';
+                    break;
+                default:
+                    break;
+            }
+        }
+        function SuccessUser(data) {
+            alert("gooodd");
             console.log(data);
         }
+        sortByDateAsc = function (lhs, rhs) { return lhs.StartShift > rhs.StartShift ? 1 : lhs.StartShift < rhs.StartShift ? -1 : 0 }
 
     </script>
 </head>
@@ -55,32 +134,19 @@
         <div class="row">
             <h3> בחר יחידה ארגונית שברצונך לאייש עבורה משמרת  </h3>
             <select id="SelectUnit" onchange="GetWorkSchedule(this)"></select>
-            <select id="scheduelPeriod"> </select>
+           
+        </div>
+        <div id="Emptyshifts" style="display:none">
+            <span>בחר מהרשימה תקופת שיבוץ </span>
+
+            <select id="period" onchange="getshifts(this)"> </select><br />
+            <select id="shifts" onchange="checkGuides(this)" style="display:none"> </select>
         </div>
 
-        <div class="row" id="submitshift" dir="rtl">
-            <div class="col" id="0">
-                <label> א'</label>
-            </div>
-            <div class="col" id="1">
-                <label> ב'</label>
-            </div>
-            <div class="col" id="2">
-                <label> ג'</label>
-            </div>
-            <div class="col" id="3">
-                <label> ד'</label>
-            </div>
-            <div class="col" id="4">
-                <label> ה'</label>
-            </div>
-            <div class="col" id="5">
-                <label> ו'</label>
-            </div>
-            <div class="col" id="6">
-                <label> ש'</label>
-            </div>
-        </div><br /><br />
+
+
+
+        <br /><br />
 
 
     </div>

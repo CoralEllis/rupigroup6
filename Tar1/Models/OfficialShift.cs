@@ -52,10 +52,10 @@ namespace Tar1.Models
             dbs.updateOS(this);
         }
 
-        public List<OfficialShift> GetEmptyOfficial(int unitid)
+        public List<OfficialShift> GetEmptyOfficial(int unitid,string start, string end)
         {
             DBservices dbs = new DBservices();
-            return dbs.GetEmptyOfficial(unitid);
+            return dbs.GetEmptyOfficial(unitid,start,end);
         }
 
     }

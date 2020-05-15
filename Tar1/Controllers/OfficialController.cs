@@ -17,7 +17,7 @@ namespace Tar1.Controllers
 
         // GET api/<controller>/5
         [HttpGet]
-        [Route("api/Official/{Unitid:int}")]
+        [Route("api/Official/Unit/{Unitid:int}")]
         public List<OfficialShift> Get(int Unitid)
         {
             OfficialShift OS = new OfficialShift();
@@ -25,11 +25,12 @@ namespace Tar1.Controllers
         }
         [HttpGet]
         [Route("api/Official/Unit")]
-        public List<OfficialShift> Get(string unit)
+        public List<OfficialShift> Get(string mahrozet)
         {
-          int Unitid = Convert.ToInt32(unit);
-           OfficialShift OS = new OfficialShift();
-          return  OS.GetEmptyOfficial(Unitid);
+          string [] arr= mahrozet.Split('|');
+            int Unitid = Convert.ToInt32(arr[2]);
+            OfficialShift OS = new OfficialShift();
+            return OS.GetEmptyOfficial(Unitid,arr[0],arr[1]);
         }
 
         // POST api/<controller>
