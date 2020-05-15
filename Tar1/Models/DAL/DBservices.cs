@@ -1759,8 +1759,7 @@ namespace Tar1.Models.DAL
         {
             List<User> G = new List<User>();
             SqlConnection con = null;
-            //string today = DateTime.Today.ToString("yyyy-MM-dd");
-
+           
             try
             {
                 con = connect("DBConnectionString");
