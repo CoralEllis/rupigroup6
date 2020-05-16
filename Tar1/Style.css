@@ -11,6 +11,9 @@ form {
     font-family: Calibri;
     font-size:20px;
 }
+.nowrap{
+    width:50%;
+}
 th, td {
     width: auto;
     background-color: aliceblue;

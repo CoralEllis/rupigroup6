@@ -48,11 +48,11 @@
                         $("#GuideTelephone").val(myData[i].Telephone);
                         $("#GuidePassword").val(myData[i].Password);
                         $("#SelectGuideTL").val(myData[i].TrainingLevelId);
-                        if (myData[i].IsActive == true) {
-                            $("#SelectGuideStatus").val(1);
+                        if (myData[i].Isactive == true) {
+                            $("#SelectGuideStatus").val("true");
                         }
                         else {
-                            $("#SelectGuideStatus").val(0);
+                            $("#SelectGuideStatus").val("false");
                         }
 
                         break;
@@ -105,7 +105,7 @@
                             }
                         },
                         {
-                            data: "IsActive",
+                            data: "Isactive",
                             render: function (data, type, row, meta) {
                                 if (data == true)
                                     return "פעיל";
@@ -175,7 +175,7 @@
                 "Telephone": tel,
                 "Role": role,
                 "Unitid": unit,
-                "IsActive": 1,
+                "Isactive": 1,
             }
             console.log(User);
 
@@ -216,19 +216,19 @@
                 Userid: $("#GuideId").val(),
                 Firstname: $("#GuideName").val(),
                 Lastname: $("#GuideLastName").val(),
-                GuideBirth: birth,
+                Birthdate: birth,
                 Telephone: $("#GuideTelephone").val(),
                 Password: $("#GuidePassword").val(),
-                IsActive: $("#SelectGuideStatus").val(),
+                Isactive: $("#SelectGuideStatus").val(),
             }
             ajaxCall("PUT", "../api/User/" + GuidetoSave.Userid, JSON.stringify(GuidetoSave), PutGuideS, PutGuideE);
 
-            id = GuidetoSave.Userid;
-            trl = $("#SelectGuideTL").val();
-            SpicialLevel = {
-                "Id": trl,
-            }
-            ajaxCall("PUT", "../api/TrainingLevel/" + id, JSON.stringify(SpicialLevel), PutTrianingS, PutTrianingE);
+            //id = GuidetoSave.Userid;
+            //trl = $("#SelectGuideTL").val();
+            //SpicialLevel = {
+            //    "Id": trl,
+            //}
+            //ajaxCall("PUT", "../api/TrainingLevel/" + id, JSON.stringify(SpicialLevel), PutTrianingS, PutTrianingE);
         }
         function PutGuideS(data) {
             alert("SABABA");
@@ -302,8 +302,8 @@
                         <div>
                             <label class="editMyGuide">סטטוס:</label>
                             <select id="SelectGuideStatus">
-                                <option value="0">לא פעיל</option>
-                                <option value="1">פעיל</option>
+                                <option value="false">לא פעיל</option>
+                                <option value="true">פעיל</option>
                             </select>
                         </div>
                     </div>

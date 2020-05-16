@@ -30,32 +30,29 @@
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     <script>
         var myData;
         var ApartmentTypeA;
-        // will run when the document is ready
+        ApartmentTypeA = [];
+        id = 1;
         $(document).ready(function () {
             $("#cancelSaveBTN").on("click", function () {
                 $("#editDiv").hide();
             });
             ajaxCall("GET", "../api/OrganizeUnit", "", getSuccess, error);
             ajaxCall("GET", "../api/ApartmentType", "", GetTypeS, GetTypeE);
-
             $("#editDiv").hide();
         });
-
-        // mark the selected row
         function markSelected(btn) {
-            $("#UnitTable tr").removeClass("selected"); // remove seleced class from rows that were selected before
-            row = (btn.parentNode).parentNode; // button is in TD which is in Row
-            row.className = 'selected'; // mark as selected
+            $("#UnitTable tr").removeClass("selected");
+            row = (btn.parentNode).parentNode;
+            row.className = 'selected';
         }
-
-         
-
         function getSuccess(data) {
-            
-            myData = data; // keep the cars array in a global variable;
+            myData = data;
             try {
                 tbl = $('#UnitTable').DataTable({
                     data: data,
@@ -65,16 +62,15 @@
                         { data: "Street_hnumber" },
                         { data: "Numofguides" },
                         { data: "Numofresidents" },
-                        { data: "Unittype" },
                         {
                             data: "ApartmentType1",
                             render: function (data, type, row, meta) {
                                 if (data == 0) {
-                                    return "-";
+                                    return "הוסטל";
                                 }
                                 for (var i = 0; i < ApartmentTypeA.length; i++) {
                                     if (data == ApartmentTypeA[i].Id) {
-                                        return ApartmentTypeA[i].Apartmenttype;
+                                        return "דירה " + ApartmentTypeA[i].Apartmenttype.toString();
                                     }
                                 }
                             }
@@ -87,14 +83,51 @@
                 alert(err);
             }
         }
-        // this function is activated in case of a failure
         function error(err) {
             swal("Error: " + err);
         }
-
-
-        ApartmentTypeA = [];
-        id = 1;
+        function validateForm() {
+            var Uname = document.forms["myForm"]["name1"].value;
+            var Ucity = document.forms["myForm"]["city1"].value;
+            var Ustreet = document.forms["myForm"]["street1"].value;
+            var Unumber = document.forms["myForm"]["number1"].value;
+            var GuideNum = document.forms["myForm"]["UGuideNum1"].value;
+            var UResNum = document.forms["myForm"]["UResNum1"].value;
+            var SUnitType = document.forms["myForm"]["SUnitType1"].value;
+            if (Uname == "") {
+                alert("חובה למלא שדה שם יחידה");
+                return;
+            }
+            else if (Ucity == "") {
+                alert("חובה למלא שדה עיר");
+                return;
+            }
+            else if (Ustreet == "") {
+                alert("חובה למלא שדה רחוב");
+                return;
+            }
+            else if (Unumber == "") {
+                alert("חובה למלא שדה מספר בית");
+                return;
+            }
+            else if (GuideNum == "") {
+                alert("חובה למלא שדה מספר מדריכים");
+                return;
+            }
+            else if (UResNum == "") {
+                alert("חובה למלא שדה מספר דיירים");
+                return;
+            }
+            else if (SUnitType == "") {
+                alert("חובה למלא שדה סוג דירה");
+                return;
+            }
+            else {
+                alert("goodddd");
+                InsertUnit();
+                return false;
+            }
+        }
         function InsertUnit() {
             name = $("#name").val();
             for (var i = 0; i < myData.length; i++) {
@@ -116,7 +149,6 @@
                 }
             }
 
-            alert("dfhdfhdh");
 
             Unit = {
                 "Unitname": name,
@@ -134,16 +166,13 @@
 
         }
         function PostUnitS(data) {
-
             alert("goood!");
             return false;
         }
         function PostUnitE(error) {
-            alert("error");
             console.log(error);
             return false;
         }
-
         function GetApartmentType() {
             Unittype = $("#unittype").val();
             if (Unittype == "דירה") {
@@ -161,12 +190,10 @@
         }
         function GetTypeS(data) {
             ApartmentTypeA = data;
-            
         }
         function GetTypeE(error) {
             console.log(error);
         }
-
     </script>
 
 </head>
@@ -191,7 +218,6 @@
                         <th>מספר מדריכים</th>
                         <th>מספר דיירים</th>
                         <th>סוג יחידה</th>
-                        <th>סוג דירה</th>
                     </tr>
                 </thead>
             </table>
@@ -205,27 +231,29 @@
 
         <div class="row">
 
-            <form dir="rtl">
+            <form dir="rtl" name="myForm" action="/action_page.php" onsubmit="return validateForm()" method="post">
                 <div class="col" id="insertUnit">
 
-                    <span>שם היחידה: </span><input type="text" id="name" value="הגלריה" /><br />
-                    <span>עיר: </span><input type="text" id="city" value="חיפה" /><br />
-                    <span> רחוב:</span><input type="text" id="street" value="ביאליק" /> <br />
-                    <span> מספר:</span><input type="number" id="Hnum" value="2" /><br />
-                    <span> מספר מדריכים:</span><input type="text" id="numofguides" value="10" /><br />
-                    <span> מספר דיירים:</span><input type="text" id="numofresidents" value="10" /><br />
-                    <span>סוג:</span><select id="unittype" onchange="GetApartmentType()">
-                        <option> בחר סוג יחידה ארגונית</option>
-                        <option> דירה</option>
-                        <option> הוסטל</option>
+                    <span>שם היחידה: </span><input type="text" id="name" name="name1" required /><br />
+                    <span>עיר: </span><input type="text" id="city" name="city1" required /><br />
+                    <span> רחוב:</span><input type="text" id="street" name="street1" required /> <br />
+                    <span> מספר:</span><input type="number" id="Hnum" required name="number1" /><br />
+                    <span> מספר מדריכים:</span><input type="text" id="numofguides" required name="UGuideNum1" /><br />
+                    <span> מספר דיירים:</span><input type="text" id="numofresidents" required name="UResNum1" /><br />
+                    <span>סוג:</span><select id="unittype" onchange="GetApartmentType()" required name="SUnitType1">
+                        <option value=""> בחר סוג יחידה ארגונית</option>
+                        <option value="דירה"> דירה</option>
+                        <option value="הוסטל"> הוסטל</option>
                     </select><br /><div id="apartmenttype">
 
                     </div>
 
                 </div>
+                <!--<br /><input type="submit" value="שמור" onclick="InsertUnit()" /><br />-->
+                <br /><input type="submit" value="שמור" /><br />
+
             </form>
 
-            <br /><input type="submit" value="שמור" onclick="InsertUnit()" /><br />
         </div>
     </div>
 </body>
