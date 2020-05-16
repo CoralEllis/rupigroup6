@@ -26,11 +26,25 @@
     <link rel="stylesheet" href="sweetalert2/dist/sweetalert2.min.css">
     <title>רשימת מדריכים פנויים לאיוש משמרות</title>
     <script>
+        embed = true;
         unit = 0;
         ShiftsArray = [];
-
+        MaxRestHours = 0;// the rest hours that worker need to get evry week
+        MonthNormalHours = 0;//hours per month
+        ExtraHours = 0;//extra hours per month
+        HoursPerWeek = 0;//number of hours that worker can work in 1 week
         function gets() {
             ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, error);
+
+            ajaxCall("GET", "../api/Constraint", "", GETConstraintSuccess, error);
+        }
+        function GETConstraintSuccess(data) {
+            HoursPerWeek = data[0].ConstraintValue;
+            MonthNormalHours = data[1].ConstraintValue;
+            ExtraHours = data[2].ConstraintValue;
+            MaxRestHours = data[3].ConstraintValue;
+
+
         }
         function GetOrganizeUnitS(data) {
             str = "<option>בחר יחידה ארגונית</option>";
@@ -69,6 +83,7 @@
 
         }
         function GETOfficialS(data) {
+            console.log(data);
             for (var i = 0; i < data.length; i++) {
                 d = data[i].Shiftdate.split("T");
                 x = data[i].Startshifthour.split("T");
@@ -79,6 +94,7 @@
                     "Type": data[i].Shifttype,
                     "StartShift": moment(shiftdatestart),
                     "EndShift": moment(shiftdateend),
+                    "Userid":data[i].Userid,
                 }
                 ShiftsArray.push(shift);
             }
@@ -169,26 +185,80 @@
             }
         }
         sortByDateAsc = function (lhs, rhs) { return lhs.StartShift > rhs.StartShift ? 1 : lhs.StartShift < rhs.StartShift ? -1 : 0 }
-        function CheckGuide(button, extre, weekly, monthly) {
-            console.log(button, extre, weekly, monthly);
-         Swal.fire({
-  title: 'Are you sure?',
-  text: "You won't be able to revert this!",
-  icon: 'warning',
-  showCancelButton: true,
-  confirmButtonColor: '#3085d6',
-  cancelButtonColor: '#d33',
-  confirmButtonText: 'Yes, delete it!'
-}).then((result) => {
-  if (result.value) {
-    Swal.fire(
-      'Deleted!',
-      'Your file has been deleted.',
-      'success'
-    )
-  }
-})
+        function CheckGuide(button, extra, weekly, monthly) {
+            if (extra > ExtraHours) {
+                Swal.fire({
+                    title: 'שעות העבודה הנוספות חורגות מהמותר החודש, האם ברצונך להמשיך?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'כן'
+                }).then((result) => {
+                    if (result.value == false) {
+                        embed = false;
+                        return;
+                        //Swal.fire(
+                        //    'Deleted!',
+                        //    'Your file has been deleted.',
+                        //    'success'
+                        //)
+                    }
+                })
         }
+            if (weekly > HoursPerWeek) {
+                Swal.fire({
+                    title: 'שעות העבודה השבועיות חורגות מהמותר האם ברצונך להמשיך?',
+                    text: "",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'כן'
+                }).then((result) => {
+                    if (result.value == false) {
+                        embed = false;
+                        return;
+                        //Swal.fire(
+                        //    'Deleted!',
+                        //    'Your file has been deleted.',
+                        //    'success'
+                        //)
+                    }
+                })
+            }
+            if (monthly >= MonthNormalHours) {
+                Swal.fire({
+                    title: 'שעות העבודה החודשיות חורגות מהמותר האם ברצונך להמשיך?',
+                    text: "",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'כן'
+                }).then((result) => {
+                    if (result.value == false) {
+                        embed = false;
+                        return;
+                        //Swal.fire(
+                        //    'Deleted!',
+                        //    'Your file has been deleted.',
+                        //    'success'
+                        //)
+                    }
+                })
+            }
+        }     
+
+
+
+         
+ 
+ // update OfficialShift_2020 
+ //SET UserId='123456789'
+ // WHERE ShiftDate='2020-05-29' and ShiftType='ערב' and UserId='666666666'
+                   
     </script>
 </head>
 <body dir="rtl" style="background-color:aliceblue" onload="gets()">
@@ -212,21 +282,21 @@
         </div>
 
         <div id="guidestbl" style="display:none">
-   
-                <table id="GTable" class="display nowrap">
-                    <thead>
-                        <tr>
-                            <th>שם המדריך</th>
-                            <th>יחידה ארגונית</th>
-                            <th>טלפון </th>
-                            <th>מספר שעות חודשיות</th>
-                            <th>מספר שעות נוספות חודשיות</th>
-                            <th>מספר שעות שבועיות</th>
-                            <th>רמת הכשרה</th>
-                            <th>שיבוץ מדריך</th>
-                        </tr>
-                    </thead>
-                </table>
+
+            <table id="GTable" class="display nowrap">
+                <thead>
+                    <tr>
+                        <th>שם המדריך</th>
+                        <th>יחידה ארגונית</th>
+                        <th>טלפון </th>
+                        <th>מספר שעות חודשיות</th>
+                        <th>מספר שעות נוספות חודשיות</th>
+                        <th>מספר שעות שבועיות</th>
+                        <th>רמת הכשרה</th>
+                        <th>שיבוץ מדריך</th>
+                    </tr>
+                </thead>
+            </table>
 
         </div>
 

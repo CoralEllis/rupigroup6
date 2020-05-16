@@ -33,6 +33,7 @@ namespace AkimShifts.Controllers
             }
             //else
             //return u.GetUnitUsers(id);
+            return null;
         }
 
         [HttpGet]
@@ -43,14 +44,14 @@ namespace AkimShifts.Controllers
          return u.GetAvailableGuides(shift);
         }
         [HttpGet]
-        [Route("api/User/WorkUnit/{unidDate}")]
-        public List<User> Get(string unitDate)
+        [Route("api/User/WorkUnit")]
+        public List<User> Get(int unit,DateTime  Date)
         {
-            string[] infor = unitDate.Split('|');
-            int unit = Convert.ToInt32(infor[0]);
-            DateTime date = Convert.ToDateTime(infor[1]);
+            //string[] infor = unitDate.Split('|');
+            //int unit = Convert.ToInt32(infor[0]);
+            //DateTime date = Convert.ToDateTime(infor[1]);
             User u = new User();
-            return u.GetUnitUsers(unit, date);
+            return u.GetUnitUsers(unit, Date);
         }
 
         // POST api/<controller>

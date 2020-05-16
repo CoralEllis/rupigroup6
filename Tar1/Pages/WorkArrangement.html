@@ -277,7 +277,7 @@
                 ExtraDiv += "<br /></div>";
                 for (var j = 0; j < calendar.length; j++) {
                     if (j == 0)
-                        Guide.WeeklyHours.push(data[i].WeeklyHours);
+                        Guide.WeeklyHours.push(data[i].Weeklyhours);
                     else
                         Guide.WeeklyHours.push(0);
                 }
@@ -334,7 +334,8 @@
                 calendar.push(weekRange);
             }
             Unitid = 2;//in the future get it from localstorage
-            ajaxCall("GET", "../api/User/WorkUnit" + Unitid, "", GETGuideS, GETGuideE);
+            unitDate =  ShiftsArray[0].StartShift.format("YYYY-MM-DD");
+            ajaxCall("GET", "../api/User/WorkUnit?unit=" + Unitid+"&Date="+unitDate, "", GETGuideS, GETGuideE);
         }
         function GETConstraintError(error) {
             console.log(error);

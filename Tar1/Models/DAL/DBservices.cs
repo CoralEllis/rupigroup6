@@ -1683,7 +1683,7 @@ namespace Tar1.Models.DAL
             try
             {
                 con = connect("DBConnectionString");
-                String selectSTR = "SELECT os.ShiftDate, sf.StartShift, sf.EndShift, os.ShiftType, sf.NumOfGuides";
+                String selectSTR = "SELECT os.ShiftDate, sf.StartShift, sf.EndShift, os.ShiftType, sf.NumOfGuides,os.UserId";
                 selectSTR += " FROM Shift_2020 as sf inner join OfficialShift_2020 as os on sf.ShiftType = os.ShiftType and sf.ShiftDate = os.ShiftDate";
                 selectSTR += " WHERE('" + start + "'= sf.StartPeriod and '" + end + "' = sf.EndPeriod)";
                 selectSTR += " AND (os.UserId = '666666666' or os.UserId = '777777777' or os.UserId = '888888888' or os.UserId = '999999999') AND(sf.UnitId = '" + unitid + "')";
@@ -1699,6 +1699,7 @@ namespace Tar1.Models.DAL
                     TimeSpan myTimeSpan2 = ((dr).GetTimeSpan(dr.GetOrdinal("EndShift")));
                     realshift.Endshifthour = new DateTime(myTimeSpan2.Ticks);
                     realshift.Numofguides = Convert.ToInt32(dr["NumOfGuides"]);
+                    realshift.Userid = Convert.ToString(dr["UserId"]);
                     OS.Add(realshift);
                 }
                 return OS;
@@ -1848,8 +1849,8 @@ namespace Tar1.Models.DAL
 
         public double GetWeeklyHours(string userId, DateTime date)
         {
-            DateTime sunday = date.AddDays(-(int)date.DayOfWeek);
-            DateTime saturday = date.AddDays(DayOfWeek.Saturday - date.DayOfWeek);
+            string sunday = date.AddDays(-(int)date.DayOfWeek).ToString("yyyy-MM-dd");
+            string saturday = date.AddDays(DayOfWeek.Saturday - date.DayOfWeek).ToString("yyyy-MM-dd");
             double weeklyhours = 0;
             SqlConnection con = null;
             try
