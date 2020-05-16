@@ -1207,7 +1207,8 @@ namespace Tar1.Models.DAL
                 String checkSTR = "select TypeofException_2020.TypeofExceptionId from TypeofException_2020 where TypeofException = '" + str + "'";
                 SqlCommand cmd = new SqlCommand(checkSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-                ind = Convert.ToInt32(dr.Read());
+                dr.Read();
+                ind = Convert.ToInt32(dr["TypeofExceptionId"]);
                 return ind;
             }
             catch (Exception ex)
@@ -1667,9 +1668,7 @@ namespace Tar1.Models.DAL
             int year = OS.Shiftdate.Year;
             string d = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
 
-            string str = "UPDATE OfficialShift_2020 SET UserId =" + u + " WHERE UnitId = " + unit + " and ShiftType = '" + OS.Shifttype + "' and ShiftDate = '" + d + "'";
-            str += " UPDATE OfficialShift_2020 SET StartShift ='" + strH + "' WHERE UserId =" + u + " and UnitId = " + unit + " and ShiftType = '" + OS.Shifttype + "' and ShiftDate = '" + d + "'";
-            str += " UPDATE OfficialShift_2020 SET EndShift ='" + endH + "' WHERE UserId =" + u + " and UnitId = " + unit + " and ShiftType = '" + OS.Shifttype + "' and ShiftDate = '" + d + "'";
+            string str = "UPDATE OfficialShift_2020 SET UserId =" + u + ", StartShift ='" + strH + "', EndShift ='" + endH + "' WHERE UnitId = " + unit + " and ShiftType = '" + OS.Shifttype + "' and ShiftDate = '" + d + "'";
             return str;
         }
 

@@ -161,7 +161,7 @@
                                     "Occupied": true
                                 }
                                 ShiftsArray[i].NuminOfficialShift.push(MultipleGuides);
-                                rf += SaveShifts[a].Shiftdate + "|" + SaveShifts[a].Shifttype;
+                                rf = SaveShifts[a].Shiftdate + "|" + SaveShifts[a].Shifttype;
                                 document.getElementById(rf).childNodes[0].innerHTML += "<span id='" + SaveShifts[a].Userid + "embed" + rf + "' class='row' style='margin:auto'>" + SaveShifts[a].UserName + "</span>";
                                 continue loop2;
                             }
@@ -190,11 +190,7 @@
                         document.getElementById(rf).style.backgroundColor = "#CCFFCC";
                         document.getElementById(rf).innerHTML += "<i class='fa fa-thumbs-up' style='font-size:36px; margin:auto'></i>";
                     }
-                    //else {
-                    //    //rf = ShiftsArray[i].Shiftdate + "|" + ShiftsArray[i].Shifttype;
-                    //    document.getElementById(rf).childNodes[0].innerHTML += "<span id='" + SaveShifts[a].Userid + "embed" + rf + "' class='row' style='margin:auto'>" + SaveShifts[a].UserName + "</span>";
-                    //    continue loop1;
-                    //}
+
                 }
                 else {
                     loop2:
@@ -657,6 +653,9 @@
                     if (document.getElementById(rf).childNodes.length > 1)
                         document.getElementById(rf).childNodes[1].remove()
                 }
+                if (id == "666666666" || id == "777777777" || id == "888888888" || id == "999999999")
+                    document.getElementById(id + "embed" + rf).remove();
+
             }
             dateShift = OfficialShifts[ShiftsArray[num].NuminOfficialShift[0].NumInArray].Shiftdate;
             type = OfficialShifts[ShiftsArray[num].NuminOfficialShift[0].NumInArray].Shifttype;
@@ -744,7 +743,6 @@
                             }
                             Exceptions.push(Excpt);
                         }
-
                         if (Guides[i].MonthlyExtraHours > ExtraHours)//60 extra hours per month
                         {
                             //swal("שים לב! שעות העבודה הנוספות בחודש זה עולות על 60 שעות!");
@@ -840,28 +838,28 @@
                                     }
                                     Exceptions.push(Excpt);
 
-                                    Swal.fire({
-                                        title: 'שים לב!',
-                                        text: 'ישנו הפרש של פחות מ- 8 שעות עבור  ' + Guides[j].Username + '  בין המשמרות:  ' + Guides[j].ShiftsSorted[f].ShiftDate + ' ' + Guides[j].ShiftsSorted[f].ShiftType + ' ו' + Guides[j].ShiftsSorted[f + 1].ShiftDate + ' ' + Guides[j].ShiftsSorted[f + 1].ShiftType,
-                                        icon: 'warning',
-                                        showCancelButton: true,
-                                        confirmButtonColor: '#3085d6',
-                                        cancelButtonColor: '#d33',
-                                        confirmButtonText: 'הגש סידור עבודה',
-                                        cancelButtonText: 'בטל וחזור',
-                                    }).then((result) => {
+                                    //Swal.fire({
+                                    //    title: 'שים לב!',
+                                    //    text: 'ישנו הפרש של פחות מ- 8 שעות עבור  ' + Guides[j].Username + '  בין המשמרות:  ' + Guides[j].ShiftsSorted[f].ShiftDate + ' ' + Guides[j].ShiftsSorted[f].ShiftType + ' ו' + Guides[j].ShiftsSorted[f + 1].ShiftDate + ' ' + Guides[j].ShiftsSorted[f + 1].ShiftType,
+                                    //    icon: 'warning',
+                                    //    showCancelButton: true,
+                                    //    confirmButtonColor: '#3085d6',
+                                    //    cancelButtonColor: '#d33',
+                                    //    confirmButtonText: 'הגש סידור עבודה',
+                                    //    cancelButtonText: 'בטל וחזור',
+                                    //}).then((result) => {
 
-                                        if (result.dismiss == 'cancel') {
-                                            //return;
-                                        }
-                                        if (result.value) {
-                                            Swal.fire(
-                                                'הסידור הוגש',
-                                                '',
-                                                'success'
-                                            )
-                                        }
-                                    })
+                                    //    if (result.dismiss == 'cancel') {
+                                    //        //return;
+                                    //    }
+                                    //    if (result.value) {
+                                    //        Swal.fire(
+                                    //            'הסידור הוגש',
+                                    //            '',
+                                    //            'success'
+                                    //        )
+                                    //    }
+                                    //})
                                 }
                             }
                         }
@@ -876,27 +874,27 @@
                         }
                         Exceptions.push(Excpt);
 
-                        Swal.fire({
-                            title: 'שים לב!',
-                            text: Guides[j].Username + " לא קיבל 36 שעות מנוחה ברציפות",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'הגש סידור עבודה',
-                            cancelButtonText: 'בטל וחזור',
-                        }).then((result) => {
-                            if (result.dismiss == 'cancel') {
-                                //return;
-                            }
-                            if (result.value) {
-                                Swal.fire(
-                                    'הסידור הוגש',
-                                    '',
-                                    'success'
-                                )
-                            }
-                        })
+                        //Swal.fire({
+                        //    title: 'שים לב!',
+                        //    text: Guides[j].Username + " לא קיבל 36 שעות מנוחה ברציפות",
+                        //    icon: 'warning',
+                        //    showCancelButton: true,
+                        //    confirmButtonColor: '#3085d6',
+                        //    cancelButtonColor: '#d33',
+                        //    confirmButtonText: 'הגש סידור עבודה',
+                        //    cancelButtonText: 'בטל וחזור',
+                        //}).then((result) => {
+                        //    if (result.dismiss == 'cancel') {
+                        //        //return;
+                        //    }
+                        //    if (result.value) {
+                        //        Swal.fire(
+                        //            'הסידור הוגש',
+                        //            '',
+                        //            'success'
+                        //        )
+                        //    }
+                        //})
                     }
                 }
             }
@@ -926,29 +924,23 @@
             console.log(OfficialShifts);
             if (again == true) {
                 for (var i = 0; i < OfficialShifts.length; i++) {
-                    ajaxCall("PUT", "../api/Official", JSON.stringify(OfficialShifts[i]), PostShiftAgainS, PostShiftAgainE);
-                    //ajaxCall("PUT", "../api/Exception", JSON.stringify(Exceptions), PostExceptionAgainS, PostExceptionAgainE);
+                    if(OfficialShifts[i].Userid != "666666666" && OfficialShifts[i].Userid != "777777777" && OfficialShifts[i].Userid != "888888888" && OfficialShifts[i].Userid != "999999999")
+                        ajaxCall("PUT", "../api/Official", JSON.stringify(OfficialShifts[i]), PostShiftAgainS, PostShiftAgainE);
                 }
             }
             else {
                 ajaxCall("POST", "../api/Official", JSON.stringify(OfficialShifts), PostShiftS, PostShiftE);
-                ajaxCall("POST", "../api/Exception", JSON.stringify(Exceptions), PostExceptionS, PostExceptionE);
             }
+            console.log(Exceptions);
+            ajaxCall("POST", "../api/Exception", JSON.stringify(Exceptions), PostExceptionS, PostExceptionE);
+
         }
         function PostShiftAgainS(data) {
-            alert("Update succeed");
+            alert("The Shift was Update");
             console.log(data);
         }
         function PostShiftAgainE(error) {
             alert("Update failed");
-            console.log(error);
-        }
-        function PostExceptionAgainS(data) {
-            alert("The Exceptions saved on DB");
-            console.log(data);
-        }
-        function PostExceptionAgainE(error) {
-            alert("The Exceptions can't be added");
             console.log(error);
         }
         function PostExceptionS(data) {
