@@ -36,29 +36,23 @@
     <script>
         var myData;
         var ApartmentTypeA;
-        // will run when the document is ready
+        ApartmentTypeA = [];
+        id = 1;
         $(document).ready(function () {
             $("#cancelSaveBTN").on("click", function () {
                 $("#editDiv").hide();
             });
             ajaxCall("GET", "../api/OrganizeUnit", "", getSuccess, error);
             ajaxCall("GET", "../api/ApartmentType", "", GetTypeS, GetTypeE);
-
             $("#editDiv").hide();
         });
-
-        // mark the selected row
         function markSelected(btn) {
-            $("#UnitTable tr").removeClass("selected"); // remove seleced class from rows that were selected before
-            row = (btn.parentNode).parentNode; // button is in TD which is in Row
-            row.className = 'selected'; // mark as selected
+            $("#UnitTable tr").removeClass("selected");
+            row = (btn.parentNode).parentNode;
+            row.className = 'selected';
         }
-
-
-
         function getSuccess(data) {
-
-            myData = data; // keep the cars array in a global variable;
+            myData = data;
             try {
                 tbl = $('#UnitTable').DataTable({
                     data: data,
@@ -89,15 +83,9 @@
                 alert(err);
             }
         }
-        // this function is activated in case of a failure
         function error(err) {
             swal("Error: " + err);
         }
-
-
-        ApartmentTypeA = [];
-        id = 1;
-
         function validateForm() {
             var Uname = document.forms["myForm"]["name1"].value;
             var Ucity = document.forms["myForm"]["city1"].value;
@@ -140,9 +128,6 @@
                 return false;
             }
         }
-
-
-
         function InsertUnit() {
             name = $("#name").val();
             for (var i = 0; i < myData.length; i++) {
@@ -181,7 +166,6 @@
 
         }
         function PostUnitS(data) {
-
             alert("goood!");
             return false;
         }
@@ -189,7 +173,6 @@
             console.log(error);
             return false;
         }
-
         function GetApartmentType() {
             Unittype = $("#unittype").val();
             if (Unittype == "דירה") {
@@ -207,13 +190,10 @@
         }
         function GetTypeS(data) {
             ApartmentTypeA = data;
-
         }
         function GetTypeE(error) {
             console.log(error);
         }
-
-
     </script>
 
 </head>
@@ -256,10 +236,10 @@
 
                     <span>שם היחידה: </span><input type="text" id="name" name="name1" required /><br />
                     <span>עיר: </span><input type="text" id="city" name="city1" required /><br />
-                    <span> רחוב:</span><input type="text" id="street" value="ביאליק" name="street1" required /> <br />
-                    <span> מספר:</span><input type="number" id="Hnum" value="2" required name="number1" /><br />
-                    <span> מספר מדריכים:</span><input type="text" id="numofguides" value="10" required name="UGuideNum1"/><br />
-                    <span> מספר דיירים:</span><input type="text" id="numofresidents" value="10" required name="UResNum1" /><br />
+                    <span> רחוב:</span><input type="text" id="street" name="street1" required /> <br />
+                    <span> מספר:</span><input type="number" id="Hnum" required name="number1" /><br />
+                    <span> מספר מדריכים:</span><input type="text" id="numofguides" required name="UGuideNum1" /><br />
+                    <span> מספר דיירים:</span><input type="text" id="numofresidents" required name="UResNum1" /><br />
                     <span>סוג:</span><select id="unittype" onchange="GetApartmentType()" required name="SUnitType1">
                         <option value=""> בחר סוג יחידה ארגונית</option>
                         <option value="דירה"> דירה</option>
@@ -270,7 +250,7 @@
 
                 </div>
                 <!--<br /><input type="submit" value="שמור" onclick="InsertUnit()" /><br />-->
-                <br /><input type="submit" value="שמור"  /><br />
+                <br /><input type="submit" value="שמור" /><br />
 
             </form>
 

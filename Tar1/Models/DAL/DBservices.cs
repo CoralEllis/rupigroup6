@@ -1754,12 +1754,12 @@ namespace Tar1.Models.DAL
 
 
         }
-
         public List<User> GetAvailableGuides(string shift)
         {
             List<User> G = new List<User>();
             SqlConnection con = null;
-           
+            string[] shiftdet = shift.Split('|');          
+            DateTime d = Convert.ToDateTime(shiftdet[0]);
             try
             {
                 con = connect("DBConnectionString");
@@ -1769,20 +1769,21 @@ namespace Tar1.Models.DAL
                 while (dr.Read())
                 {
                     User u = new User();
-                    u.Userid = Convert.ToString(dr["UserId"]);      
-                    u.Firstname = Convert.ToString(dr["FirstName"]);
-                    u.Lastname = Convert.ToString(dr["LastName"]);
+                    u.Userid = Convert.ToString(dr["UserId"]);
+                    u.Firstname = Convert.ToString(dr["FirstName"]) + " " + Convert.ToString(dr["LastName"]);
                     u.Telephone = Convert.ToString(dr["Telephone"]);
-                    u.Role= Convert.ToString(dr["TrainingLevel"]);
-                    u.Password= Convert.ToString(dr["UnitName"]);
+                    u.Role = Convert.ToString(dr["TrainingLevel"]);
+                    u.Password = Convert.ToString(dr["UnitName"]);
                     u.Unitid = Convert.ToInt32(dr["UnitId"]);
                     bool p = GetPer(u.Unitid);
                     User u1 = GuideInfo(u.Userid, p);
+                    u.Weeklyhours = 
                     u.MonthlyHours = u1.MonthlyHours;
                     u.MonthlyExtraHours = u1.MonthlyExtraHours;
 
                     G.Add(u);
                 }
+                G.OrderBy(a => a.MonthlyExtraHours).ToList();
                 return G;
 
             }
@@ -1802,29 +1803,29 @@ namespace Tar1.Models.DAL
         private string CreateGetCommand(string shift)
         {
             string[] shiftdet = shift.Split('|');
-            string command="";
+            string command = "";
             DateTime d = Convert.ToDateTime(shiftdet[0]);
             string tommorow = d.AddDays(1).ToString("yyyy-MM-dd");
             string yesterday = d.AddDays(-1).ToString("yyyy-MM-dd");
             if (shiftdet[1] == "בוקר")
             {
                 command = "select User_2020.UserId, User_2020.FirstName,User_2020.LastName,User_2020.Telephone, TrainingLevel_2020.TrainingLevel,OrganizeUnit_2020.UnitName,User_2020.UnitId ";
-                command +=" from User_2020 inner join Guide_2020 on User_2020.UserId = Guide_2020.UserId inner join TrainingLevel_2020 on Guide_2020.TrainingLevelId = TrainingLevel_2020.TrainingLevelId inner join OrganizeUnit_2020 on User_2020.UnitId = OrganizeUnit_2020.UnitId";
+                command += " from User_2020 inner join Guide_2020 on User_2020.UserId = Guide_2020.UserId inner join TrainingLevel_2020 on Guide_2020.TrainingLevelId = TrainingLevel_2020.TrainingLevelId inner join OrganizeUnit_2020 on User_2020.UnitId = OrganizeUnit_2020.UnitId";
                 command += " where User_2020.UserId not in(";
                 command += " select UserId";
                 command += " from OfficialShift_2020";
-                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'ערב' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'לילה' and ShiftDate = '"+yesterday+"'))";
-               command += "  and UserRole = 'מדריך' and Active = '1'";
+                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'ערב' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'לילה' and ShiftDate = '" + yesterday + "'))";
+                command += "  and UserRole = 'מדריך' and Active = '1'";
                 return command;
             }
-           else if (shiftdet[1] == "ערב")
+            else if (shiftdet[1] == "ערב")
             {
                 command = "select User_2020.UserId, User_2020.FirstName,User_2020.LastName,User_2020.Telephone, TrainingLevel_2020.TrainingLevel,OrganizeUnit_2020.UnitName,User_2020.UnitId ";
                 command += " from User_2020 inner join Guide_2020 on User_2020.UserId = Guide_2020.UserId inner join TrainingLevel_2020 on Guide_2020.TrainingLevelId = TrainingLevel_2020.TrainingLevelId inner join OrganizeUnit_2020 on User_2020.UnitId = OrganizeUnit_2020.UnitId";
                 command += " where User_2020.UserId not in(";
                 command += " select UserId";
                 command += " from OfficialShift_2020";
-                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'בוקר' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'לילה' and ShiftDate = '"+ shiftdet[0] + "'))";
+                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'בוקר' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'לילה' and ShiftDate = '" + shiftdet[0] + "'))";
                 command += "  and UserRole = 'מדריך' and Active = '1'";
                 return command;
             }
@@ -1835,12 +1836,64 @@ namespace Tar1.Models.DAL
                 command += " where User_2020.UserId not in(";
                 command += " select UserId";
                 command += " from OfficialShift_2020";
-                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'ערב' and ShiftDate = '" + shiftdet[0] + "') or(ShiftType = 'בוקר' and ShiftDate = '" +tommorow + "'))";
+                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'ערב' and ShiftDate = '" + shiftdet[0] + "') or(ShiftType = 'בוקר' and ShiftDate = '" + tommorow + "'))";
                 command += "  and UserRole = 'מדריך' and Active = '1'";
                 return command;
             }
 
             return command;
+
+        }
+
+        public double GetWeeklyHours(string userId, DateTime date)
+        {
+            DateTime sunday = date.AddDays(-(int)date.DayOfWeek);
+            DateTime saturday = date.AddDays(DayOfWeek.Saturday - date.DayOfWeek);
+            double weeklyhours = 0;
+            SqlConnection con = null;
+            try
+            {
+                con = connect("DBConnectionString");
+                string selectSTR = "select * from OfficialShift_2020 where UserId = '" + userId + "'";
+                selectSTR += " and (ShiftDate between '" + sunday + "' and '" + saturday + "')";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    OfficialShift OffiS = new OfficialShift();                   
+                    TimeSpan myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("StartShift")));
+                    OffiS.Startshifthour = new DateTime(myTimeSpan.Ticks);
+                    myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("EndShift")));
+                    OffiS.Endshifthour = new DateTime(myTimeSpan.Ticks);
+                    TimeSpan interval = OffiS.Endshifthour - OffiS.Startshifthour;
+                    double x = interval.TotalHours;
+                    double x1 = 0.0;
+                    if (x < 0)
+                    {
+                        x1 = x + 24.0;
+                    }
+                    else if (x > 0)
+                    {
+                        x1 = x;
+                    }
+                    weeklyhours += x1;
+
+                }
+                return weeklyhours;
+
+            }
+
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
 
         }
 
