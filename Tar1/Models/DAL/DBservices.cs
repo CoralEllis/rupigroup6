@@ -565,7 +565,7 @@ namespace Tar1.Models.DAL
 
 
         }
-        public List<User> GetUnitUser(int id)
+        public List<User> GetUnitUser(int id, DateTime date)
         {
             List<User> U = new List<User>();
             SqlConnection con = null;
@@ -588,6 +588,8 @@ namespace Tar1.Models.DAL
                     User us2 = CountShift(us.Userid);
                     us.NumOfPref = us2.NumOfPref;
                     us.TrainingLevelId = GetGuideTrainLev(us.Userid);
+                    us.Weeklyhours = GetWeeklyHours(us.Userid, date);
+
                     U.Add(us);
                 }
                 return U;

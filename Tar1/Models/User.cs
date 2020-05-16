@@ -75,10 +75,10 @@ namespace Tar1.Models
             return U;
         }
 
-        public List<User> GetUnitUsers(int id)
+        public List<User> GetUnitUsers(int Un, DateTime date)
         {
             DBservices dbs = new DBservices();
-            return dbs.GetUnitUser(id);
+            return dbs.GetUnitUser(Un, date);
         }
 
         public List<User> getGuides(int id)
