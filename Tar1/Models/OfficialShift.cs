@@ -58,5 +58,16 @@ namespace Tar1.Models
             return dbs.GetEmptyOfficial(unitid,start,end);
         }
 
+        public bool CheckLongBreak()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.CheckLongBreak(this);
+        }
+         public void PutMish(string idbefore)
+        {
+            DBservices dbs = new DBservices();
+             dbs.PutMish(this, idbefore);
+        }
+
     }
 }

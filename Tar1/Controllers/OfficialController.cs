@@ -32,6 +32,7 @@ namespace Tar1.Controllers
             OfficialShift OS = new OfficialShift();
             return OS.GetEmptyOfficial(Unitid,arr[0],arr[1]);
         }
+    
 
         // POST api/<controller>
         public void Post([FromBody]List<OfficialShift> OffShiftArr)
@@ -39,13 +40,24 @@ namespace Tar1.Controllers
             OfficialShift OS = new OfficialShift();
             OS.InsertOffShift(OffShiftArr);
         }
-
+        [HttpPost]
+        [Route("api/Official/CheckHours")]
+        public bool Post([FromBody]OfficialShift o)
+        {
+            return o.CheckLongBreak();
+        }
         // PUT api/<controller>/5
+     
         public void Put([FromBody] OfficialShift OS)
         {
             OS.UpdateOfficialShift();
         }
-
+        [HttpPut]
+        [Route("api/Official/CheckHours")]
+        public void PutCheckHours([FromBody]OfficialShift o,string idbefore)
+        {
+             o.PutMish(idbefore);
+        }
         // DELETE api/<controller>/5
         public void Delete(int id)
         {

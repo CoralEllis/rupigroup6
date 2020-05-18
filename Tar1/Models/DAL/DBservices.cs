@@ -1678,7 +1678,7 @@ namespace Tar1.Models.DAL
         {
             List<OfficialShift> OS = new List<OfficialShift>();
             SqlConnection con = null;
-            //string today = DateTime.Today.ToString("yyyy-MM-dd");
+            string today = DateTime.Today.ToString("yyyy-MM-dd");
 
             try
             {
@@ -1686,7 +1686,7 @@ namespace Tar1.Models.DAL
                 String selectSTR = "SELECT os.ShiftDate, sf.StartShift, sf.EndShift, os.ShiftType, sf.NumOfGuides,os.UserId";
                 selectSTR += " FROM Shift_2020 as sf inner join OfficialShift_2020 as os on sf.ShiftType = os.ShiftType and sf.ShiftDate = os.ShiftDate";
                 selectSTR += " WHERE('" + start + "'= sf.StartPeriod and '" + end + "' = sf.EndPeriod)";
-                selectSTR += " AND (os.UserId = '666666666' or os.UserId = '777777777' or os.UserId = '888888888' or os.UserId = '999999999') AND(sf.UnitId = '" + unitid + "')";
+                selectSTR += " AND (os.UserId = '666666666' or os.UserId = '777777777' or os.UserId = '888888888' or os.UserId = '999999999') AND(sf.UnitId = '" + unitid + "') AND (os.ShiftDate> '" + today + "')";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (dr.Read())
@@ -1760,7 +1760,7 @@ namespace Tar1.Models.DAL
         {
             List<User> G = new List<User>();
             SqlConnection con = null;
-            string[] shiftdet = shift.Split('|');          
+            string[] shiftdet = shift.Split('|');
             DateTime d = Convert.ToDateTime(shiftdet[0]);
             try
             {
@@ -1779,13 +1779,13 @@ namespace Tar1.Models.DAL
                     u.Unitid = Convert.ToInt32(dr["UnitId"]);
                     bool p = GetPer(u.Unitid);
                     User u1 = GuideInfo(u.Userid, p);
-                    u.Weeklyhours = 
+                    u.Weeklyhours =
                     u.MonthlyHours = u1.MonthlyHours;
                     u.MonthlyExtraHours = u1.MonthlyExtraHours;
 
                     G.Add(u);
                 }
-                G.OrderBy(a => a.MonthlyExtraHours).ToList();
+
                 return G;
 
             }
@@ -1862,7 +1862,7 @@ namespace Tar1.Models.DAL
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (dr.Read())
                 {
-                    OfficialShift OffiS = new OfficialShift();                   
+                    OfficialShift OffiS = new OfficialShift();
                     TimeSpan myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("StartShift")));
                     OffiS.Startshifthour = new DateTime(myTimeSpan.Ticks);
                     myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("EndShift")));
@@ -1899,5 +1899,130 @@ namespace Tar1.Models.DAL
 
         }
 
+        public bool CheckLongBreak(OfficialShift o1)
+        {
+            string sunday = o1.Shiftdate.AddDays(-(int)o1.Shiftdate.DayOfWeek).ToString("yyyy-MM-dd");
+            string saturday = o1.Shiftdate.AddDays(DayOfWeek.Saturday - o1.Shiftdate.DayOfWeek).ToString("yyyy-MM-dd");
+            bool HasABreak = false;
+            List<OfficialShift> shifts = new List<OfficialShift>();
+            SqlConnection con = null;
+            try
+            {
+                con = connect("DBConnectionString");
+                string selectSTR = "select * from OfficialShift_2020 where UserId = '" + o1.Userid + "'";
+                selectSTR += " and (ShiftDate between '" + sunday + "' and '" + saturday + "')";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    OfficialShift OffiS = new OfficialShift();
+
+                    OffiS.Shiftdate = Convert.ToDateTime(dr["ShiftDate"]).Date;
+                    TimeSpan myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("StartShift")));
+                    OffiS.Startshifthour = new DateTime(myTimeSpan.Ticks);
+                    OffiS.Startshifthour = new DateTime(OffiS.Shiftdate.Year, OffiS.Shiftdate.Month, OffiS.Shiftdate.Day, OffiS.Startshifthour.Hour, OffiS.Startshifthour.Minute, OffiS.Startshifthour.Second);
+                    myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("EndShift")));
+                    OffiS.Endshifthour = new DateTime(myTimeSpan.Ticks);
+                    OffiS.Endshifthour = new DateTime(OffiS.Shiftdate.Year, OffiS.Shiftdate.Month, OffiS.Shiftdate.Day, OffiS.Endshifthour.Hour, OffiS.Endshifthour.Minute, OffiS.Endshifthour.Second);
+                    shifts.Add(OffiS);
+                }
+                o1.Startshifthour = new DateTime(o1.Shiftdate.Year, o1.Shiftdate.Month, o1.Shiftdate.Day, o1.Startshifthour.Hour, o1.Startshifthour.Minute, o1.Startshifthour.Second);
+                o1.Endshifthour = new DateTime(o1.Shiftdate.Year, o1.Shiftdate.Month, o1.Shiftdate.Day, o1.Endshifthour.Hour, o1.Endshifthour.Minute, o1.Endshifthour.Second);
+                shifts.Add(o1);
+                shifts = shifts.OrderBy(p => p.Startshifthour).ToList(); ;
+                for (int i = 0; i < shifts.Count; i++)
+                {
+                    double x = 0;
+                    if (i == 0)
+                    {
+                        DateTime sunday1 = o1.Shiftdate.AddDays(-(int)o1.Shiftdate.DayOfWeek);
+                        sunday1 = new DateTime(sunday1.Year, sunday1.Month, sunday1.Day, 00, 00, 00);
+                        TimeSpan interval = shifts[i].Startshifthour - sunday1;
+                        x = interval.TotalHours;
+                        if (x >= 36)
+                        {
+                            HasABreak = true;
+                            return HasABreak;
+                        }
+
+                    }
+                    else if (i > 0 && i < (shifts.Count) - 1)
+                    {
+                        TimeSpan interval = shifts[i + 1].Startshifthour - shifts[i].Endshifthour;
+                        x = interval.TotalHours;
+                        if (x >= 36)
+                        {
+                            HasABreak = true;
+                            return HasABreak;
+                        }
+                    }
+                    else if (i == (shifts.Count) - 1)
+                    {
+                        DateTime saturday1 = o1.Shiftdate.AddDays(DayOfWeek.Saturday - o1.Shiftdate.DayOfWeek);
+                        saturday1 = new DateTime(saturday1.Year, saturday1.Month, saturday1.Day, 23, 59, 00);
+                        TimeSpan interval = saturday1 - shifts[i].Endshifthour;
+                        x = interval.TotalHours;
+                        if (x >= 36)
+                        {
+                            HasABreak = true;
+                            return HasABreak;
+                        }
+                    }
+
+
+                }
+                return HasABreak;
+
+            }
+
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+
+        }
+
+        public void PutMish(OfficialShift os, string idbefore)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+
+            }
+            string dateShif =os.Shiftdate.ToString("yyyy-MM-dd");
+            string cStr = "update OfficialShift_2020 SET UserId='" + os.Userid + "'";
+            cStr += " WHERE ShiftDate='" + dateShif + "' and ShiftType='" + os.Shifttype + "' and UserId='"+ idbefore+"'";
+            cmd = CreateCommand(cStr, con);
+            try
+            {
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
     }
+
 }

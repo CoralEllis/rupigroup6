@@ -32,11 +32,39 @@ body {
 p {
     text-align: center;
 }
-
-#GuidesTable {
-    width: 50%;
-    margin-right: -270px;
+#putguides {
+    direction: rtl;
+    font-size:30px;
+    color: #005473;
+    font-family:Calibri;
 }
+    #putguides > input, #putguides > span {
+        color: #005473;
+        font-family: Calibri;
+        direction: rtl;
+    }
+
+    #putguides >div{
+        direction:rtl;
+    }
+    #putguides > h1 {
+     color:#66CCFF;
+    }
+#Emptyperiod, #emptyshifts {
+    margin-left: 1000px;
+    margin-top: 30px;
+}
+#guidestbl, #GTable {
+    /*direction: rtl;
+    text-align: right;*/
+    margin: 20px;
+    width:60%;
+}
+
+    #GuidesTable {
+        width: 50%;
+        margin-right: -270px;
+    }
 
 #managerTable {
     margin-right: -350px;
