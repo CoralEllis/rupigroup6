@@ -23,7 +23,7 @@ namespace Tar1.Models
         int numOfPref;
         int trainingLevelId;
         bool isactive;
-
+        double weeklyhours;
         public string Userid { get => userid; set => userid = value; }
         public string Password { get => password; set => password = value; }
         public string Firstname { get => firstname; set => firstname = value; }
@@ -39,9 +39,10 @@ namespace Tar1.Models
         public int NumOfPref { get => numOfPref; set => numOfPref = value; }
         public int TrainingLevelId { get => trainingLevelId; set => trainingLevelId = value; }
         public bool Isactive { get => isactive; set => isactive = value; }
+        public double Weeklyhours { get => weeklyhours; set => weeklyhours = value; }
 
         public User() { }
-        public User(string id, string pass,string first, string last, DateTime bdate, string tel, string _role, bool um, bool bm, int Uid,double monthhour,double exmonthhour, int numofP, int _trainingLevelId, bool _isactive)
+        public User(string id, string pass,string first, string last, DateTime bdate, string tel, string _role, bool um, bool bm, int Uid,double monthhour,double exmonthhour, int numofP, int _trainingLevelId, bool _isactive, double _weeklyhours)
         {
             Userid = id;
             Password = pass;
@@ -58,6 +59,7 @@ namespace Tar1.Models
             NumOfPref = numofP;
             TrainingLevelId = _trainingLevelId;
             Isactive = _isactive;
+            Weeklyhours = _weeklyhours;
         }
         public void InsertUser()
         {
@@ -73,10 +75,10 @@ namespace Tar1.Models
             return U;
         }
 
-        public List<User> GetUnitUsers(int id)
+        public List<User> GetUnitUsers(int Un, DateTime date)
         {
             DBservices dbs = new DBservices();
-            return dbs.GetUnitUser(id);
+            return dbs.GetUnitUser(Un, date);
         }
 
         public List<User> getGuides(int id)

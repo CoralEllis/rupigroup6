@@ -13,15 +13,37 @@
     <script type="text/javascript"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
     <script src="../Scripts/moment.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-    <script src="../Scripts/moment.js"></script>
-    <script src="../Scripts/moment.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+
     <title>רשימת מדריכים פנויים לאיוש משמרות</title>
     <script>
+        embed = true;
         unit = 0;
         ShiftsArray = [];
+        MaxRestHours = 0;// the rest hours that worker need to get evry week
+        MonthNormalHours = 0;//hours per month
+        ExtraHours = 0;//extra hours per month
+        HoursPerWeek = 0;//number of hours that worker can work in 1 week
+        offics=0;
         function gets() {
             ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, error);
+
+            ajaxCall("GET", "../api/Constraint", "", GETConstraintSuccess, error);
+        }
+        function GETConstraintSuccess(data) {
+            HoursPerWeek = data[0].ConstraintValue;
+            MonthNormalHours = data[1].ConstraintValue;
+            ExtraHours = data[2].ConstraintValue;
+            MaxRestHours = data[3].ConstraintValue;
+
+
         }
         function GetOrganizeUnitS(data) {
             str = "<option>בחר יחידה ארגונית</option>";
@@ -37,29 +59,26 @@
             id = select.options[select.selectedIndex].value;
             unit = id.toString();
             ajaxCall("GET", "../api/Period/Id?id=" + unit, "", GETPeriodsS, error);
-           
+
         }
         function GETPeriodsS(data) {
-         
+
             str = "<option value=''> בחר תקופת שיבוץ</option>";
             for (var i = 0; i < data.length; i++) {
                 end = data[i].Enddate.split("T");
                 start = data[i].Startdate.split("T");
                 Speriod = moment(start[0]);
                 Eperiod = moment(end[0]);
-                str=str+  "<option value='"+Speriod.format("YYYY-MM-DD")+"|"+Eperiod.format("YYYY-MM-DD")+"'>"+Eperiod.format('DD/MM/YYYY')+" - "+Speriod.format('DD/MM/YYYY')+"</option>";
+                str = str + "<option value='" + Speriod.format("YYYY-MM-DD") + "|" + Eperiod.format("YYYY-MM-DD") + "'>" + Eperiod.format('DD/MM/YYYY') + " - " + Speriod.format('DD/MM/YYYY') + "</option>";
             }
             $("#period").html(str);
-        
-           
 
-        $("#Emptyshifts").show();
+            $("#Emptyperiod").show();
         }
         function getshifts(select) {
             id = select.options[select.selectedIndex].value;
             mahrozet = id.toString() + "|" + unit.toString();
-             ajaxCall("GET", "../api/Official/Unit?mahrozet=" + mahrozet, "", GETOfficialS, error);
-      
+            ajaxCall("GET", "../api/Official/Unit?mahrozet=" + mahrozet, "", GETOfficialS, error);
         }
         function GETOfficialS(data) {
             for (var i = 0; i < data.length; i++) {
@@ -71,24 +90,25 @@
                 shift = {
                     "Type": data[i].Shifttype,
                     "StartShift": moment(shiftdatestart),
-                    "EndShift": moment(shiftdateend),             
+                    "EndShift": moment(shiftdateend),
+                    "Userid": data[i].Userid,
                 }
                 ShiftsArray.push(shift);
             }
             ShiftsArray.sort(sortByDateAsc);
             str = "<option value=''> בחר משמרת</option>";
             for (var i = 0; i < ShiftsArray.length; i++) {
-            YomBa =  ShiftsArray[i].StartShift.day();
-            yom = "";
-            yom = TellMeTheDay(YomBa);
-                str += "<option value='"+ShiftsArray[i].StartShift.format("YYYY-MM-DD")+ "|" + ShiftsArray[i].Type+"'>"+ShiftsArray[i].StartShift.format('DD/MM/YYYY')+" "+yom+" "+ShiftsArray[i].Type+" </option>"
+                YomBa = ShiftsArray[i].StartShift.day();
+                yom = "";
+                yom = TellMeTheDay(YomBa);
+                str += "<option id='" + i + "' value='" + ShiftsArray[i].StartShift.format("YYYY-MM-DD") + "|" + ShiftsArray[i].Type + "'>" + ShiftsArray[i].StartShift.format('DD/MM/YYYY') + " " + yom + " " + ShiftsArray[i].Type + " </option>"
             }
-            $("#shifts").show();
+            $("#emptyshifts").show();
             $("#shifts").html(str);
         }
         function checkGuides(select) {
             shift = select.options[select.selectedIndex].value;
-             ajaxCall("GET", "../api/User/"+shift, "", SuccessUser, error);
+            ajaxCall("GET", "../api/User/" + shift, "", SuccessUser, error);
         }
         function TellMeTheDay(YomBa) {
             switch (YomBa) {
@@ -118,37 +138,262 @@
             }
         }
         function SuccessUser(data) {
-            alert("gooodd");
-            console.log(data);
+            data[2].MonthlyExtraHours = 62;
+            data[2].Weeklyhours = 65;
+            data[2].MonthlyHours = 205;
+            $("#guidestbl").show();
+            try {
+                tbl = $('#GTable').DataTable({
+                    "aaSorting": [[4, 'asc']],
+                    data: data,
+                    columns: [
+                        { data: "Firstname" },
+                        { data: "Password" },
+                        { data: "Telephone" },
+                        {
+                            data: "MonthlyHours",
+                            render: function (data, type, row, meta) {
+                                return data.toFixed(2);
+                            }
+                        },
+                        {
+                            data: "MonthlyExtraHours",
+                            render: function (data, type, row, meta) {
+                                return data.toFixed(2);
+                            }
+                        },
+                        {
+                            data: "Weeklyhours",
+                            render: function (data, type, row, meta) {
+                                return data.toFixed(2);
+                            }
+                        },
+                        { data: "Role" },
+                        {
+                            render: function (data, type, row, meta) {
+
+                                editBtn = "<button  id='" + row.Userid + "' class = 'editBtn btn btn-success' onclick='CheckGuide(this," + row.MonthlyExtraHours + "," + row.Weeklyhours + "," + row.MonthlyHours + ")'> שבץ מדריך </button>";
+                                return editBtn;
+                            }
+                        },
+                    ],
+                });
+            }
+
+            catch (err) {
+                alert(err);
+            }
         }
         sortByDateAsc = function (lhs, rhs) { return lhs.StartShift > rhs.StartShift ? 1 : lhs.StartShift < rhs.StartShift ? -1 : 0 }
+        function CheckGuide(button, extra, weekly, monthly) {
+            if (extra > ExtraHours) {
+                $('#extraModal').modal("show");
+            }
+            if (weekly > HoursPerWeek) {
 
+                    $('#WeeklyModal').modal("show");                
+            }
+            if (monthly >= MonthNormalHours) {
+                    $('#MonthlyModal').modal("show");
+            }
+            uesrid = button.id;
+            index = $("#shifts").children(":selected").attr("id");
+            offics = {
+                "Userid": uesrid,
+                "Endshifthour": ShiftsArray[index].EndShift.format("HH:mm"),
+                "Startshifthour": ShiftsArray[index].StartShift.format("HH:mm"),
+                "Shiftdate": ShiftsArray[index].StartShift.format("YYYY-MM-DD"),
+                "Shifttype":ShiftsArray[index].Type
+            }
+
+            ajaxCall("POST", "../api/Official/CheckHours", JSON.stringify(offics), succesBreak, error);
+
+        }
+        function succesBreak(data) {
+            console.log(data);
+            if (data == false) {
+                $('#BigBreak').modal("show");
+            }
+
+            if (embed == true) {
+                index = $("#shifts").children(":selected").attr("id");
+                ShiftsArray[index].Userid;
+                 ajaxCall("Put", "../api/Official/CheckHours?idbefore="+ShiftsArray[index].Userid, JSON.stringify(offics), succesPut, error);
+            }
+        }
+        function whatisthechioseextra(button) {
+            ButtonText = (button).innerText;
+            if (ButtonText == "המשך") {
+
+                embed = true;
+
+            }
+             else if (ButtonText == "בטל") {
+                embed = false;
+
+
+            }
+        }
+         function whatisthechioseweekly(button) {
+            ButtonText = (button).innerText;
+            if (ButtonText == "המשך") {
+
+                embed = true;
+
+            }
+             else if (ButtonText == "בטל") {
+                embed = false;
+
+
+            }
+        }
+        function whatisthechiosemonthly(button) {
+            ButtonText = (button).innerText;
+            if (ButtonText == "המשך") {
+
+                embed = true;
+
+            }
+             else if (ButtonText == "בטל") {
+                embed = false;
+
+
+            }
+        }
+        function whatisthechioseBreak(button){
+            if (ButtonText == "המשך") {
+
+                embed = true;
+
+            }
+             else if (ButtonText == "בטל") {
+                embed = false;
+
+
+            }
+        }
+        function succesPut(data) {
+        alert("Gooodododod");
+        }
+       
     </script>
 </head>
 <body dir="rtl" style="background-color:aliceblue" onload="gets()">
 
     <img src="../Photos/LOGO.PNG" />
-    <div class="container-fluid" id="SubmShift">
-
+    <div class="container-fluid" id="putguides">
         <h1> איוש מדריכים למשמרות</h1><br />
         <div class="row">
-            <h3> בחר יחידה ארגונית שברצונך לאייש עבורה משמרת  </h3>
+            <span> בחר יחידה ארגונית שברצונך לאייש עבורה משמרת:  </span><span></span>
             <select id="SelectUnit" onchange="GetWorkSchedule(this)"></select>
-           
+
         </div>
-        <div id="Emptyshifts" style="display:none">
-            <span>בחר מהרשימה תקופת שיבוץ </span>
-
-            <select id="period" onchange="getshifts(this)"> </select><br />
-            <select id="shifts" onchange="checkGuides(this)" style="display:none"> </select>
+            <div id="Emptyperiod" style="display:none" dir="rtl">
+                <span>בחר מהרשימה תקופת שיבוץ: </span><span> </span>
+                <select id="period" onchange="getshifts(this)"> </select><br />
+            </div>
+            <div id="emptyshifts" style="display:none" dir="rtl">
+                <span>בחר מהרשימה משמרת: </span><span></span>
+                <select id="shifts" onchange="checkGuides(this)"> </select>
+            </div>
+ 
+        <div id="guidestbl" style="display:none" class="row">
+            <table id="GTable" class="display nowrap">
+                <thead>
+                    <tr>
+                        <th>שם המדריך</th>
+                        <th>יחידה ארגונית</th>
+                        <th>טלפון </th>
+                        <th>מספר שעות חודשיות</th>
+                        <th>מספר שעות נוספות חודשיות</th>
+                        <th>מספר שעות שבועיות</th>
+                        <th>רמת הכשרה</th>
+                        <th>שיבוץ מדריך</th>
+                    </tr>
+                </thead>
+            </table>
         </div>
-
-
-
-
         <br /><br />
+    </div>
+    <div class="modal fade" id="extraModal" tabindex="-1" role="dialog" aria-labelledby="extra" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" dir="rtl">
+                    <h5>חריגה מהשעות הנוספות</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" dir="rtl">
+                    השעות הנוספות חורגות מהמותר, האם ברצונך להמשיך?
+                </div>
+                <div class="modal-footer" dir="rtl">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="whatisthechioseextra(this)">המשך</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="whatisthechioseextra(this)">בטל</button>
 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="WeeklyModal" tabindex="-1" role="dialog" aria-labelledby="extra" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" dir="rtl">
+                    <h5>חריגה מהשעות השבועיות</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" dir="rtl">
+                    השעות השבועיות חורגות מהמותר, האם ברצונך להמשיך?
+                </div>
+                <div class="modal-footer" dir="rtl">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="whatisthechioseweekly(this)">המשך</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="whatisthechioseweekly(this)">בטל</button>
 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="MonthlyModal" tabindex="-1" role="dialog" aria-labelledby="extra" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" dir="rtl">
+                    <h5>חריגה מהשעות החודשיות</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" dir="rtl">
+                    השעות החודשיות חורגות מהמותר, האם ברצונך להמשיך?
+                </div>
+                <div class="modal-footer" dir="rtl">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="whatisthechiosemonthly(this)">המשך</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="whatisthechiosemonthly(this)">בטל</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="BigBreak" tabindex="-1" role="dialog" aria-labelledby="extra" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" dir="rtl">
+                    <h5>חריגה מהפסקה שבועית</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" dir="rtl">
+                    במידה ותשבץ מדריך זה הוא לא יקבל את המנוחה השבועית הנדרשת, האם ברצונך להמשיך?
+                </div>
+                <div class="modal-footer" dir="rtl">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="whatisthechioseBreak(this)">המשך</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="whatisthechioseBreak(this)">בטל</button>
+
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>

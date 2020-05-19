@@ -565,7 +565,7 @@ namespace Tar1.Models.DAL
 
 
         }
-        public List<User> GetUnitUser(int id)
+        public List<User> GetUnitUser(int id, DateTime date)
         {
             List<User> U = new List<User>();
             SqlConnection con = null;
@@ -588,6 +588,8 @@ namespace Tar1.Models.DAL
                     User us2 = CountShift(us.Userid);
                     us.NumOfPref = us2.NumOfPref;
                     us.TrainingLevelId = GetGuideTrainLev(us.Userid);
+                    us.Weeklyhours = GetWeeklyHours(us.Userid, date);
+
                     U.Add(us);
                 }
                 return U;
@@ -1207,7 +1209,8 @@ namespace Tar1.Models.DAL
                 String checkSTR = "select TypeofException_2020.TypeofExceptionId from TypeofException_2020 where TypeofException = '" + str + "'";
                 SqlCommand cmd = new SqlCommand(checkSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-                ind = Convert.ToInt32(dr.Read());
+                dr.Read();
+                ind = Convert.ToInt32(dr["TypeofExceptionId"]);
                 return ind;
             }
             catch (Exception ex)
@@ -1667,9 +1670,7 @@ namespace Tar1.Models.DAL
             int year = OS.Shiftdate.Year;
             string d = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
 
-            string str = "UPDATE OfficialShift_2020 SET UserId =" + u + " WHERE UnitId = " + unit + " and ShiftType = '" + OS.Shifttype + "' and ShiftDate = '" + d + "'";
-            str += " UPDATE OfficialShift_2020 SET StartShift ='" + strH + "' WHERE UserId =" + u + " and UnitId = " + unit + " and ShiftType = '" + OS.Shifttype + "' and ShiftDate = '" + d + "'";
-            str += " UPDATE OfficialShift_2020 SET EndShift ='" + endH + "' WHERE UserId =" + u + " and UnitId = " + unit + " and ShiftType = '" + OS.Shifttype + "' and ShiftDate = '" + d + "'";
+            string str = "UPDATE OfficialShift_2020 SET UserId =" + u + ", StartShift ='" + strH + "', EndShift ='" + endH + "' WHERE UnitId = " + unit + " and ShiftType = '" + OS.Shifttype + "' and ShiftDate = '" + d + "'";
             return str;
         }
 
@@ -1677,15 +1678,15 @@ namespace Tar1.Models.DAL
         {
             List<OfficialShift> OS = new List<OfficialShift>();
             SqlConnection con = null;
-            //string today = DateTime.Today.ToString("yyyy-MM-dd");
+            string today = DateTime.Today.ToString("yyyy-MM-dd");
 
             try
             {
                 con = connect("DBConnectionString");
-                String selectSTR = "SELECT os.ShiftDate, sf.StartShift, sf.EndShift, os.ShiftType, sf.NumOfGuides";
+                String selectSTR = "SELECT os.ShiftDate, sf.StartShift, sf.EndShift, os.ShiftType, sf.NumOfGuides,os.UserId";
                 selectSTR += " FROM Shift_2020 as sf inner join OfficialShift_2020 as os on sf.ShiftType = os.ShiftType and sf.ShiftDate = os.ShiftDate";
                 selectSTR += " WHERE('" + start + "'= sf.StartPeriod and '" + end + "' = sf.EndPeriod)";
-                selectSTR += " AND (os.UserId = '666666666' or os.UserId = '777777777' or os.UserId = '888888888' or os.UserId = '999999999') AND(sf.UnitId = '" + unitid + "')";
+                selectSTR += " AND (os.UserId = '666666666' or os.UserId = '777777777' or os.UserId = '888888888' or os.UserId = '999999999') AND(sf.UnitId = '" + unitid + "') AND (os.ShiftDate> '" + today + "')";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (dr.Read())
@@ -1698,6 +1699,7 @@ namespace Tar1.Models.DAL
                     TimeSpan myTimeSpan2 = ((dr).GetTimeSpan(dr.GetOrdinal("EndShift")));
                     realshift.Endshifthour = new DateTime(myTimeSpan2.Ticks);
                     realshift.Numofguides = Convert.ToInt32(dr["NumOfGuides"]);
+                    realshift.Userid = Convert.ToString(dr["UserId"]);
                     OS.Add(realshift);
                 }
                 return OS;
@@ -1754,13 +1756,12 @@ namespace Tar1.Models.DAL
 
 
         }
-
         public List<User> GetAvailableGuides(string shift)
         {
             List<User> G = new List<User>();
             SqlConnection con = null;
-            //string today = DateTime.Today.ToString("yyyy-MM-dd");
-
+            string[] shiftdet = shift.Split('|');
+            DateTime d = Convert.ToDateTime(shiftdet[0]);
             try
             {
                 con = connect("DBConnectionString");
@@ -1770,20 +1771,21 @@ namespace Tar1.Models.DAL
                 while (dr.Read())
                 {
                     User u = new User();
-                    u.Userid = Convert.ToString(dr["UserId"]);      
-                    u.Firstname = Convert.ToString(dr["FirstName"]);
-                    u.Lastname = Convert.ToString(dr["LastName"]);
+                    u.Userid = Convert.ToString(dr["UserId"]);
+                    u.Firstname = Convert.ToString(dr["FirstName"]) + " " + Convert.ToString(dr["LastName"]);
                     u.Telephone = Convert.ToString(dr["Telephone"]);
-                    u.Role= Convert.ToString(dr["TrainingLevel"]);
-                    u.Password= Convert.ToString(dr["UnitName"]);
+                    u.Role = Convert.ToString(dr["TrainingLevel"]);
+                    u.Password = Convert.ToString(dr["UnitName"]);
                     u.Unitid = Convert.ToInt32(dr["UnitId"]);
                     bool p = GetPer(u.Unitid);
                     User u1 = GuideInfo(u.Userid, p);
+                    u.Weeklyhours =
                     u.MonthlyHours = u1.MonthlyHours;
                     u.MonthlyExtraHours = u1.MonthlyExtraHours;
 
                     G.Add(u);
                 }
+
                 return G;
 
             }
@@ -1803,29 +1805,29 @@ namespace Tar1.Models.DAL
         private string CreateGetCommand(string shift)
         {
             string[] shiftdet = shift.Split('|');
-            string command="";
+            string command = "";
             DateTime d = Convert.ToDateTime(shiftdet[0]);
             string tommorow = d.AddDays(1).ToString("yyyy-MM-dd");
             string yesterday = d.AddDays(-1).ToString("yyyy-MM-dd");
             if (shiftdet[1] == "בוקר")
             {
                 command = "select User_2020.UserId, User_2020.FirstName,User_2020.LastName,User_2020.Telephone, TrainingLevel_2020.TrainingLevel,OrganizeUnit_2020.UnitName,User_2020.UnitId ";
-                command +=" from User_2020 inner join Guide_2020 on User_2020.UserId = Guide_2020.UserId inner join TrainingLevel_2020 on Guide_2020.TrainingLevelId = TrainingLevel_2020.TrainingLevelId inner join OrganizeUnit_2020 on User_2020.UnitId = OrganizeUnit_2020.UnitId";
+                command += " from User_2020 inner join Guide_2020 on User_2020.UserId = Guide_2020.UserId inner join TrainingLevel_2020 on Guide_2020.TrainingLevelId = TrainingLevel_2020.TrainingLevelId inner join OrganizeUnit_2020 on User_2020.UnitId = OrganizeUnit_2020.UnitId";
                 command += " where User_2020.UserId not in(";
                 command += " select UserId";
                 command += " from OfficialShift_2020";
-                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'ערב' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'לילה' and ShiftDate = '"+yesterday+"'))";
-               command += "  and UserRole = 'מדריך' and Active = '1'";
+                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'ערב' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'לילה' and ShiftDate = '" + yesterday + "'))";
+                command += "  and UserRole = 'מדריך' and Active = '1'";
                 return command;
             }
-           else if (shiftdet[1] == "ערב")
+            else if (shiftdet[1] == "ערב")
             {
                 command = "select User_2020.UserId, User_2020.FirstName,User_2020.LastName,User_2020.Telephone, TrainingLevel_2020.TrainingLevel,OrganizeUnit_2020.UnitName,User_2020.UnitId ";
                 command += " from User_2020 inner join Guide_2020 on User_2020.UserId = Guide_2020.UserId inner join TrainingLevel_2020 on Guide_2020.TrainingLevelId = TrainingLevel_2020.TrainingLevelId inner join OrganizeUnit_2020 on User_2020.UnitId = OrganizeUnit_2020.UnitId";
                 command += " where User_2020.UserId not in(";
                 command += " select UserId";
                 command += " from OfficialShift_2020";
-                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'בוקר' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'לילה' and ShiftDate = '"+ shiftdet[0] + "'))";
+                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'בוקר' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'לילה' and ShiftDate = '" + shiftdet[0] + "'))";
                 command += "  and UserRole = 'מדריך' and Active = '1'";
                 return command;
             }
@@ -1836,7 +1838,7 @@ namespace Tar1.Models.DAL
                 command += " where User_2020.UserId not in(";
                 command += " select UserId";
                 command += " from OfficialShift_2020";
-                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'ערב' and ShiftDate = '" + shiftdet[0] + "') or(ShiftType = 'בוקר' and ShiftDate = '" +tommorow + "'))";
+                command += " where(ShiftType = '" + shiftdet[1] + "' and ShiftDate = '" + shiftdet[0] + "') or (ShiftType = 'ערב' and ShiftDate = '" + shiftdet[0] + "') or(ShiftType = 'בוקר' and ShiftDate = '" + tommorow + "'))";
                 command += "  and UserRole = 'מדריך' and Active = '1'";
                 return command;
             }
@@ -1845,5 +1847,182 @@ namespace Tar1.Models.DAL
 
         }
 
+        public double GetWeeklyHours(string userId, DateTime date)
+        {
+            string sunday = date.AddDays(-(int)date.DayOfWeek).ToString("yyyy-MM-dd");
+            string saturday = date.AddDays(DayOfWeek.Saturday - date.DayOfWeek).ToString("yyyy-MM-dd");
+            double weeklyhours = 0;
+            SqlConnection con = null;
+            try
+            {
+                con = connect("DBConnectionString");
+                string selectSTR = "select * from OfficialShift_2020 where UserId = '" + userId + "'";
+                selectSTR += " and (ShiftDate between '" + sunday + "' and '" + saturday + "')";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    OfficialShift OffiS = new OfficialShift();
+                    TimeSpan myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("StartShift")));
+                    OffiS.Startshifthour = new DateTime(myTimeSpan.Ticks);
+                    myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("EndShift")));
+                    OffiS.Endshifthour = new DateTime(myTimeSpan.Ticks);
+                    TimeSpan interval = OffiS.Endshifthour - OffiS.Startshifthour;
+                    double x = interval.TotalHours;
+                    double x1 = 0.0;
+                    if (x < 0)
+                    {
+                        x1 = x + 24.0;
+                    }
+                    else if (x > 0)
+                    {
+                        x1 = x;
+                    }
+                    weeklyhours += x1;
+
+                }
+                return weeklyhours;
+
+            }
+
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+
+        }
+
+        public bool CheckLongBreak(OfficialShift o1)
+        {
+            string sunday = o1.Shiftdate.AddDays(-(int)o1.Shiftdate.DayOfWeek).ToString("yyyy-MM-dd");
+            string saturday = o1.Shiftdate.AddDays(DayOfWeek.Saturday - o1.Shiftdate.DayOfWeek).ToString("yyyy-MM-dd");
+            bool HasABreak = false;
+            List<OfficialShift> shifts = new List<OfficialShift>();
+            SqlConnection con = null;
+            try
+            {
+                con = connect("DBConnectionString");
+                string selectSTR = "select * from OfficialShift_2020 where UserId = '" + o1.Userid + "'";
+                selectSTR += " and (ShiftDate between '" + sunday + "' and '" + saturday + "')";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    OfficialShift OffiS = new OfficialShift();
+
+                    OffiS.Shiftdate = Convert.ToDateTime(dr["ShiftDate"]).Date;
+                    TimeSpan myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("StartShift")));
+                    OffiS.Startshifthour = new DateTime(myTimeSpan.Ticks);
+                    OffiS.Startshifthour = new DateTime(OffiS.Shiftdate.Year, OffiS.Shiftdate.Month, OffiS.Shiftdate.Day, OffiS.Startshifthour.Hour, OffiS.Startshifthour.Minute, OffiS.Startshifthour.Second);
+                    myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("EndShift")));
+                    OffiS.Endshifthour = new DateTime(myTimeSpan.Ticks);
+                    OffiS.Endshifthour = new DateTime(OffiS.Shiftdate.Year, OffiS.Shiftdate.Month, OffiS.Shiftdate.Day, OffiS.Endshifthour.Hour, OffiS.Endshifthour.Minute, OffiS.Endshifthour.Second);
+                    shifts.Add(OffiS);
+                }
+                o1.Startshifthour = new DateTime(o1.Shiftdate.Year, o1.Shiftdate.Month, o1.Shiftdate.Day, o1.Startshifthour.Hour, o1.Startshifthour.Minute, o1.Startshifthour.Second);
+                o1.Endshifthour = new DateTime(o1.Shiftdate.Year, o1.Shiftdate.Month, o1.Shiftdate.Day, o1.Endshifthour.Hour, o1.Endshifthour.Minute, o1.Endshifthour.Second);
+                shifts.Add(o1);
+                shifts = shifts.OrderBy(p => p.Startshifthour).ToList(); ;
+                for (int i = 0; i < shifts.Count; i++)
+                {
+                    double x = 0;
+                    if (i == 0)
+                    {
+                        DateTime sunday1 = o1.Shiftdate.AddDays(-(int)o1.Shiftdate.DayOfWeek);
+                        sunday1 = new DateTime(sunday1.Year, sunday1.Month, sunday1.Day, 00, 00, 00);
+                        TimeSpan interval = shifts[i].Startshifthour - sunday1;
+                        x = interval.TotalHours;
+                        if (x >= 36)
+                        {
+                            HasABreak = true;
+                            return HasABreak;
+                        }
+
+                    }
+                    else if (i > 0 && i < (shifts.Count) - 1)
+                    {
+                        TimeSpan interval = shifts[i + 1].Startshifthour - shifts[i].Endshifthour;
+                        x = interval.TotalHours;
+                        if (x >= 36)
+                        {
+                            HasABreak = true;
+                            return HasABreak;
+                        }
+                    }
+                    else if (i == (shifts.Count) - 1)
+                    {
+                        DateTime saturday1 = o1.Shiftdate.AddDays(DayOfWeek.Saturday - o1.Shiftdate.DayOfWeek);
+                        saturday1 = new DateTime(saturday1.Year, saturday1.Month, saturday1.Day, 23, 59, 00);
+                        TimeSpan interval = saturday1 - shifts[i].Endshifthour;
+                        x = interval.TotalHours;
+                        if (x >= 36)
+                        {
+                            HasABreak = true;
+                            return HasABreak;
+                        }
+                    }
+
+
+                }
+                return HasABreak;
+
+            }
+
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+
+        }
+
+        public void PutMish(OfficialShift os, string idbefore)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+
+            }
+            string dateShif =os.Shiftdate.ToString("yyyy-MM-dd");
+            string cStr = "update OfficialShift_2020 SET UserId='" + os.Userid + "'";
+            cStr += " WHERE ShiftDate='" + dateShif + "' and ShiftType='" + os.Shifttype + "' and UserId='"+ idbefore+"'";
+            cmd = CreateCommand(cStr, con);
+            try
+            {
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
     }
+
 }
