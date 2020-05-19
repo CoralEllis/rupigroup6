@@ -17,6 +17,7 @@ form {
 th, td {
     width: auto;
     background-color: aliceblue;
+    text-align:center;
 }
 #formDiv{
 
@@ -54,11 +55,12 @@ p {
     margin-left: 1000px;
     margin-top: 30px;
 }
-#guidestbl, #GTable {
-    /*direction: rtl;
-    text-align: right;*/
-    margin: 20px;
-    width:60%;
+
+#GTable > thead>tr>th{
+    text-align:center;
+}
+#GTable > tbody > tr > td > button {
+    font-size:25px;
 }
 
     #GuidesTable {
