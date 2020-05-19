@@ -515,7 +515,6 @@
                     if (Guides[j].WeeklyHours[i] > HoursPerWeek)//60  job hours per week
                     {
                         Res = {
-                            "Res": Guides[j].Username + "   עובד יותר מ- 60 שעות בשבוע העבודה",
                             "Emoji": "&#xf017;"
                         }
                         ResonsArray.push(Res);
@@ -525,7 +524,6 @@
                 if (Guides[j].MonthlyNormalHours > MonthNormalHours)  //200 hours
                 {
                     Res = {
-                        "Res": Guides[j].Username + "   עובד יותר מ- 200 שעות החודש",
                         "Emoji": "&#xf024;"
                     }
                     ResonsArray.push(Res);
@@ -534,7 +532,6 @@
                 if (Guides[j].MonthlyExtraHours > ExtraHours)//60 extra hours per month
                 {
                     Res = {
-                        "Res": Guides[j].Username + "   עובד יותר מ- 60 שעות נוספות החודש",
                         "Emoji": "&#xf0fe;"
                     }
                     ResonsArray.push(Res);
@@ -545,7 +542,6 @@
                     if (ShiftsArray[numinarrshift].StartShift.format("YYYY-MM-DD") == Dd[0] && ShiftsArray[numinarrshift].Type == GuidesPref[i].Shifttype && Guides[j].UserId == GuidesPref[i].Userid) {
                         if (GuidesPref[i].Isaplly1 == false) {
                             Res = {
-                                "Res": Guides[j].Username + "   לא הגיש את המשמרת",
                                 "Emoji": "&#xf056;",
                             }
                             ResonsArray.push(Res);
@@ -786,7 +782,7 @@
                             Excpt = {
                                 "User": Guides[i].UserId,
                                 "Unit": Unitid,
-                                "Index": "עובד יותר מ- " + MonthNormalHours + " שעות בחודש",
+                                "Index": "חריגה ממספר שעות עבודה חודשיות",
                                 "ShiftType": type,
                                 "ShiftDate": dateShift
                             }
@@ -798,7 +794,7 @@
                             Excpt = {
                                 "User": Guides[i].UserId,
                                 "Unit": Unitid,
-                                "Index": "עובד יותר מ- " + ExtraHours + " שעות נוספות החודש",
+                                "Index": "חריגה ממספר שעות עבודה נוספות חודשיות",
                                 "ShiftType": type,
                                 "ShiftDate": dateShift
                             }
@@ -809,7 +805,7 @@
                             Excpt = {
                                 "User": Guides[i].UserId,
                                 "Unit": Unitid,
-                                "Index": "עובד יותר מ- " + HoursPerWeek + " שעות בשבוע העבודה",
+                                "Index": "חריגה משעות עבודה שבועיות",
                                 "ShiftType": type,
                                 "ShiftDate": dateShift
                             }
@@ -881,7 +877,7 @@
                                     Excpt = {
                                         "User": Guides[j].UserId,
                                         "Unit": Unitid,
-                                        "Index": "ישנו הפרש של פחות מ-  " + HoursBetweenShifts + " שעות בין המשמרות",
+                                        "Index": "חריגה ממספר השעות המותר בין משמרת למשמרת",
                                         "ShiftType": Guides[j].ShiftsSorted[f].ShiftType,
                                         "ShiftDate": Guides[j].ShiftsSorted[f].ShiftDate
                                     }
@@ -917,7 +913,7 @@
                         Excpt = {
                             "User": Guides[j].UserId,
                             "Unit": Unitid,
-                            "Index": "לא קיבל " + MaxRestHours + " שעות מנוחה ברציפות"
+                            "Index": "אי קבלת מנוחה שבועית"
                             //"ShiftType": type,
                             //"ShiftDate": dateShift
                         }

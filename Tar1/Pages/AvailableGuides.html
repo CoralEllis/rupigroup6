@@ -31,7 +31,10 @@
         MonthNormalHours = 0;//hours per month
         ExtraHours = 0;//extra hours per month
         HoursPerWeek = 0;//number of hours that worker can work in 1 week
-        offics=0;
+        offics = 0;
+        Exceptions = [];
+        queue = [];
+        tbl = "";
         function gets() {
             ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, error);
 
@@ -138,9 +141,7 @@
             }
         }
         function SuccessUser(data) {
-            data[2].MonthlyExtraHours = 62;
-            data[2].Weeklyhours = 65;
-            data[2].MonthlyHours = 205;
+
             $("#guidestbl").show();
             try {
                 tbl = $('#GTable').DataTable({
@@ -172,7 +173,7 @@
                         {
                             render: function (data, type, row, meta) {
 
-                                editBtn = "<button  id='" + row.Userid + "' class = 'editBtn btn btn-success' onclick='CheckGuide(this," + row.MonthlyExtraHours + "," + row.Weeklyhours + "," + row.MonthlyHours + ")'> שבץ מדריך </button>";
+                                editBtn = "<button  id='" + row.Userid + "' class = 'editBtn btn btn-success' onclick='CheckGuide(this," + row.MonthlyExtraHours + "," + row.Weeklyhours + "," + row.MonthlyHours + ")'> בדוק זמינות של מדריך </button>";
                                 return editBtn;
                             }
                         },
@@ -187,14 +188,16 @@
         sortByDateAsc = function (lhs, rhs) { return lhs.StartShift > rhs.StartShift ? 1 : lhs.StartShift < rhs.StartShift ? -1 : 0 }
         function CheckGuide(button, extra, weekly, monthly) {
             if (extra > ExtraHours) {
-                $('#extraModal').modal("show");
+                queue.push("extraModal");
+
             }
             if (weekly > HoursPerWeek) {
+                queue.push("WeeklyModal");
 
-                    $('#WeeklyModal').modal("show");                
             }
             if (monthly >= MonthNormalHours) {
-                    $('#MonthlyModal').modal("show");
+                queue.push("MonthlyModal");
+
             }
             uesrid = button.id;
             index = $("#shifts").children(":selected").attr("id");
@@ -203,83 +206,108 @@
                 "Endshifthour": ShiftsArray[index].EndShift.format("HH:mm"),
                 "Startshifthour": ShiftsArray[index].StartShift.format("HH:mm"),
                 "Shiftdate": ShiftsArray[index].StartShift.format("YYYY-MM-DD"),
-                "Shifttype":ShiftsArray[index].Type
+                "Shifttype": ShiftsArray[index].Type
             }
 
             ajaxCall("POST", "../api/Official/CheckHours", JSON.stringify(offics), succesBreak, error);
-
         }
         function succesBreak(data) {
-            console.log(data);
             if (data == false) {
-                $('#BigBreak').modal("show");
+
+                queue.push("BigBreak");
+            }
+            queue.push("Continue");
+
+            for (var i = 0; i < queue.length; i++) {
+                $('#' + queue[i]).modal("show");
             }
 
-            if (embed == true) {
-                index = $("#shifts").children(":selected").attr("id");
-                ShiftsArray[index].Userid;
-                 ajaxCall("Put", "../api/Official/CheckHours?idbefore="+ShiftsArray[index].Userid, JSON.stringify(offics), succesPut, error);
-            }
         }
-        function whatisthechioseextra(button) {
+        function whatisthechiose(button, str) {
             ButtonText = (button).innerText;
             if (ButtonText == "המשך") {
-
                 embed = true;
+                switch (str) {
+                    case 'extra': {
 
+                        Excpt = {
+                            "User": offics.Userid,
+                            "Unit": unit,
+                            "Index": "חריגה ממספר שעות עבודה נוספות חודשיות",
+                            "ShiftType": offics.Shifttype,
+                            "ShiftDate": offics.Shiftdate,
+                        }
+                        Exceptions.push(Excpt);
+                        break;
+                    }
+                    case 'weekly':
+                        {
+                            Excpt = {
+                                "User": offics.Userid,
+                                "Unit": unit,
+                                "Index": "חריגה משעות עבודה שבועיות",
+                                "ShiftType": offics.Shifttype,
+                                "ShiftDate": offics.Shiftdate,
+                            }
+                            Exceptions.push(Excpt);
+                            break;
+                        }
+                    case 'monthly': {
+                        Excpt = {
+                            "User": offics.Userid,
+                            "Unit": unit,
+                            "Index": "חריגה ממספר שעות עבודה חודשיות",
+                            "ShiftType": offics.Shifttype,
+                            "ShiftDate": offics.Shiftdate,
+                        }
+                        Exceptions.push(Excpt);
+                        break;
+                    }
+                }
             }
-             else if (ButtonText == "בטל") {
+            else if (ButtonText == "בטל") {
                 embed = false;
-
-
+                return null;
             }
-        }
-         function whatisthechioseweekly(button) {
-            ButtonText = (button).innerText;
-            if (ButtonText == "המשך") {
-
-                embed = true;
-
-            }
-             else if (ButtonText == "בטל") {
-                embed = false;
 
 
-            }
-        }
-        function whatisthechiosemonthly(button) {
-            ButtonText = (button).innerText;
-            if (ButtonText == "המשך") {
-
-                embed = true;
-
-            }
-             else if (ButtonText == "בטל") {
-                embed = false;
-
-
-            }
-        }
-        function whatisthechioseBreak(button){
-            if (ButtonText == "המשך") {
-
-                embed = true;
-
-            }
-             else if (ButtonText == "בטל") {
-                embed = false;
-
-
-            }
         }
         function succesPut(data) {
-        alert("Gooodododod");
+            alert("הנתונים נשמרו בהצלחה");
+            tbl
+                .clear()
+                .draw();
+
         }
-       
+        function PostExceptionS(data) {
+            console.log("האילוצים נשמרו בהצלחה")
+
+
+        }
+        function realPut(button) {
+            ButtonText = (button).innerText;
+            if (ButtonText == "שבץ") {
+                if (embed == true) {
+                    index = $("#shifts").children(":selected").attr("id");
+                    ShiftsArray[index].Userid;
+                    ajaxCall("Put", "../api/Official/CheckHours?idbefore=" + ShiftsArray[index].Userid, JSON.stringify(offics), succesPut, error);
+                    ajaxCall("POST", "../api/Exception", JSON.stringify(Exceptions), PostExceptionS, error);
+                    offics = 0;
+                    Exceptions = [];
+                    queue = [];
+                }
+            }
+            else if (ButtonText == "בטל") {
+                offics = 0;
+                Exceptions = [];
+                queue = [];
+            }
+
+
+        }
     </script>
 </head>
 <body dir="rtl" style="background-color:aliceblue" onload="gets()">
-
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid" id="putguides">
         <h1> איוש מדריכים למשמרות</h1><br />
@@ -288,16 +316,16 @@
             <select id="SelectUnit" onchange="GetWorkSchedule(this)"></select>
 
         </div>
-            <div id="Emptyperiod" style="display:none" dir="rtl">
-                <span>בחר מהרשימה תקופת שיבוץ: </span><span> </span>
-                <select id="period" onchange="getshifts(this)"> </select><br />
-            </div>
-            <div id="emptyshifts" style="display:none" dir="rtl">
-                <span>בחר מהרשימה משמרת: </span><span></span>
-                <select id="shifts" onchange="checkGuides(this)"> </select>
-            </div>
- 
-        <div id="guidestbl" style="display:none" class="row">
+        <div id="Emptyperiod" style="display:none" dir="rtl">
+            <span>בחר מהרשימה תקופת שיבוץ: </span><span> </span>
+            <select id="period" onchange="getshifts(this)"> </select><br />
+        </div>
+        <div id="emptyshifts" style="display:none" dir="rtl">
+            <span>בחר מהרשימה משמרת: </span><span></span>
+            <select id="shifts" onchange="checkGuides(this)"> </select>
+        </div>
+
+        <div id="guidestbl" style="display:none">
             <table id="GTable" class="display nowrap">
                 <thead>
                     <tr>
@@ -315,6 +343,26 @@
         </div>
         <br /><br />
     </div>
+    <div class="modal fade" id="Continue" tabindex="-1" role="dialog" aria-labelledby="extra" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" dir="rtl">
+                    <h5>מנהל יקר שים לב</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" dir="rtl">
+                    בעת לחיצה על "שבץ" המדריך ישובץ למשמרת, במידה והופיעו הודעות של חריגות מאילוצי השעות והמנוחה המגיעות למדריך הן יירשמו במערכת, במידה ואינך רוצה להמשיך אנא לחץ על בטל
+                </div>
+                <div class="modal-footer" dir="rtl">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="realPut(this)">שבץ</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="realPut(this)">בטל</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="extraModal" tabindex="-1" role="dialog" aria-labelledby="extra" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -328,8 +376,8 @@
                     השעות הנוספות חורגות מהמותר, האם ברצונך להמשיך?
                 </div>
                 <div class="modal-footer" dir="rtl">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="whatisthechioseextra(this)">המשך</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="whatisthechioseextra(this)">בטל</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="whatisthechiose(this, 'extra')">המשך</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="whatisthechiose(this, '')">בטל</button>
 
                 </div>
             </div>
@@ -348,8 +396,8 @@
                     השעות השבועיות חורגות מהמותר, האם ברצונך להמשיך?
                 </div>
                 <div class="modal-footer" dir="rtl">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="whatisthechioseweekly(this)">המשך</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="whatisthechioseweekly(this)">בטל</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="whatisthechiose(this, 'weekly')">המשך</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="whatisthechiose(this, '')">בטל</button>
 
                 </div>
             </div>
@@ -368,8 +416,8 @@
                     השעות החודשיות חורגות מהמותר, האם ברצונך להמשיך?
                 </div>
                 <div class="modal-footer" dir="rtl">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="whatisthechiosemonthly(this)">המשך</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="whatisthechiosemonthly(this)">בטל</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="whatisthechiose(this, 'monthly')">המשך</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="whatisthechiose(this, '')">בטל</button>
 
                 </div>
             </div>
@@ -395,5 +443,6 @@
             </div>
         </div>
     </div>
+
 </body>
 </html>
