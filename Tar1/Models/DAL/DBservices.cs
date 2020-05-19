@@ -2023,6 +2023,54 @@ namespace Tar1.Models.DAL
                 }
             }
         }
+
+
+        public void UpdateOrganizeUnit(OrganizeUnit OrUn)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString");
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            String cStr = BuildPutCommandSale(OrUn);
+            cmd = CreateCommand(cStr, con);
+            try
+            {
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception ex)
+            {
+
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        private String BuildPutCommandSale(OrganizeUnit OrgU)
+        {
+            string id = OrgU.Id.ToString();
+            string N_Guides = OrgU.Numofguides.ToString();
+            string N_Res = OrgU.Numofresidents.ToString();
+            string A_Type = OrgU.ApartmentType1.ToString();
+            String prefix = "UPDATE OrganizeUnit_2020 SET [UnitName] = '" + OrgU.Unitname + "', [City] =  '" + OrgU.City + "', [Street_HNumber] = '"+ OrgU.Street_hnumber + "', [NumOfGuides] = '"+ N_Guides + "', [NumOfResidents] = '"+ N_Res + "', [UnitType] = '"+ A_Type + "' WHERE [UnitId] = " + id + "";
+            string str = "UPDATE Apartment_2020 SET [ApartmentTypeId] = '" + A_Type + "' WHERE [UnitId] = '"+id+"'";
+            return prefix + str;
+        }
+
+
     }
 
 }

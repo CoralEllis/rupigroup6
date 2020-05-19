@@ -47,6 +47,10 @@ namespace Tar1.Models
              return dbs.GetUnit();
         }
 
-
+        public void PutOrganizeUnit(OrganizeUnit ou)
+        {
+            DBservices dbs = new DBservices();
+            dbs.UpdateOrganizeUnit(ou);
+        }
     }
 }

@@ -31,8 +31,10 @@ namespace AkimShifts.Controllers
         }
 
         // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody]OrganizeUnit unit)
         {
+            OrganizeUnit u = new OrganizeUnit();
+            u.PutOrganizeUnit(unit);
         }
 
         // DELETE api/<controller>/5

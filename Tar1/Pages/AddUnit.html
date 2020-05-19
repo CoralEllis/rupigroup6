@@ -37,7 +37,7 @@
         var myData;
         var ApartmentTypeA;
         ApartmentTypeA = [];
-
+        IdOfUnit = 0;
         //function buttonEvents(NameOfUnit, City, Street_hn, Numguides, Numresidents, ApartmentT) {
         //    //$(document).on("click", ".editBtn", function () {
         //        console.log(this.id);
@@ -65,22 +65,19 @@
             function buttonEvents(button, id) {
             $("#editDiv").show();
                 markSelected(button);
+                console.log()
                 for (var i = 0; i < myData.length; i++) {
                     if (myData[i].Id == id) {
+                        IdOfUnit = id;
                         $("#UnitName").val(myData[i].Unitname);
                         $("#UnitCity").val(myData[i].City);
                         $("#UnitStreetNum").val(myData[i].Street_hnumber);
-                        $("#Numofguides").val(myData[i].Numofguides);
-                        $("#Numofresidents").val(myData[i].Numofresidents);
-                        
+                        $("#UnitNumGuides").val(myData[i].Numofguides);
+                        $("#UnitNumRes").val(myData[i].Numofresidents);
                         $("#SelectUnitType").val(myData[i].ApartmentType1);
-
+                        break;
                     }
                 }
-
-                $("#UnitCity").val(id);
-
-
         }
 
 
@@ -255,6 +252,23 @@
         function GetTypeE(error) {
             console.log(error);
         }
+        function SaveChanges() {
+            UnitToSave = {
+                "Id": IdOfUnit,
+                "Unitname": $("#UnitName").val(),
+                "City": $("#UnitCity").val(),
+                "Street_hnumber": $("#UnitStreetNum").val(),
+                "Numofguides": $("#UnitNumGuides").val(),
+                "Numofresidents": $("#UnitNumRes").val(),
+                "ApartmentType1": $("#SelectUnitType option:selected").val(),
+            }
+            ajaxCall("PUT", "../api/OrganizeUnit/" + IdOfUnit  , JSON.stringify(UnitToSave), PutUnitS, PutUnitE);        }
+        function PutUnitS(data) {
+            alert("good");
+        }
+        function PutUnitE(error) {
+            console.log(error);
+        }
     </script>
 
 </head>
@@ -267,23 +281,23 @@
         <h1>צפייה ביחידות ארגוניות </h1>
         <br />
         <br />
-        <form id="pForm">
-            <p class="expl">בטבלה שלהלן מוצגות כל היחידות הארגוניות.</p>
-            <br />
-            <table id="UnitTable" style="width:50%">
-                <thead>
-                    <tr>
-                        <th>שם היחידה</th>
-                        <th>עיר</th>
-                        <th>רחוב ומספר</th>
-                        <th>מספר מדריכים</th>
-                        <th>מספר דיירים</th>
-                        <th>סוג יחידה</th>
-                        <th>עריכה</th>
-                    </tr>
-                </thead>
-            </table>
+        <p class="expl">בטבלה שלהלן מוצגות כל היחידות הארגוניות.</p>
+        <br />
+        <table id="UnitTable" style="width:50%">
+            <thead>
+                <tr>
+                    <th>שם היחידה</th>
+                    <th>עיר</th>
+                    <th>רחוב ומספר</th>
+                    <th>מספר מדריכים</th>
+                    <th>מספר דיירים</th>
+                    <th>סוג יחידה</th>
+                    <th>עריכה</th>
+                </tr>
+            </thead>
+        </table>
 
+        <form id="pForm">
 
             <div id="editDiv">
                 <div class="row">
