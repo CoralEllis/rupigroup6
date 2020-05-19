@@ -142,28 +142,49 @@
                             if (ShiftsArray[i].Type == SaveShifts[a].Shifttype && ShiftsArray[i].StartShift.format("YYYY-MM-DD") == SaveShifts[a].Shiftdate) {
                                 if (SaveShifts[a].Done == true)
                                     continue loop3;
-                                else
+                                else if (SaveShifts[a].Userid != "666666666" && SaveShifts[a].Userid != "777777777" && SaveShifts[a].Userid != "888888888" && SaveShifts[a].Userid != "999999999") {
                                     count += 1;
-
-                                SaveShifts[a].Done = true;
-                                OfficialShift = {
-                                    "Userid": SaveShifts[a].Userid,
-                                    "Startshifthour": SaveShifts[a].Startshifthour,
-                                    "Endshifthour": SaveShifts[a].Endshifthour,
-                                    "Unitid": SaveShifts[a].Unitid,
-                                    "Shifttype": SaveShifts[a].Shifttype,
-                                    "Shiftdate": SaveShifts[a].Shiftdate
+                                    SaveShifts[a].Done = true;
+                                    OfficialShift = {
+                                        "Userid": SaveShifts[a].Userid,
+                                        "Startshifthour": SaveShifts[a].Startshifthour,
+                                        "Endshifthour": SaveShifts[a].Endshifthour,
+                                        "Unitid": SaveShifts[a].Unitid,
+                                        "Shifttype": SaveShifts[a].Shifttype,
+                                        "Shiftdate": SaveShifts[a].Shiftdate
+                                    }
+                                    OfficialShifts.push(OfficialShift);
+                                    s = OfficialShifts.length - 1;
+                                    MultipleGuides = {
+                                        "NumInArray": s,
+                                        "Occupied": true
+                                    }
+                                    ShiftsArray[i].NuminOfficialShift.push(MultipleGuides);
+                                    rf = SaveShifts[a].Shiftdate + "|" + SaveShifts[a].Shifttype;
+                                    document.getElementById(rf).childNodes[0].innerHTML += "<span id='" + SaveShifts[a].Userid + "embed" + rf + "' class='row' style='margin:auto'>" + SaveShifts[a].UserName + "</span>";
+                                    continue loop2;
                                 }
-                                OfficialShifts.push(OfficialShift);
-                                s = OfficialShifts.length - 1;
-                                MultipleGuides = {
-                                    "NumInArray": s,
-                                    "Occupied": true
+                                else if (SaveShifts[a].Userid == "666666666" && SaveShifts[a].Userid == "777777777" && SaveShifts[a].Userid == "888888888" && SaveShifts[a].Userid == "999999999") {
+                                    SaveShifts[a].Done = true;
+                                    OfficialShift = {
+                                        "Userid": SaveShifts[a].Userid,
+                                        "Startshifthour": SaveShifts[a].Startshifthour,
+                                        "Endshifthour": SaveShifts[a].Endshifthour,
+                                        "Unitid": SaveShifts[a].Unitid,
+                                        "Shifttype": SaveShifts[a].Shifttype,
+                                        "Shiftdate": SaveShifts[a].Shiftdate
+                                    }
+                                    OfficialShifts.push(OfficialShift);
+                                    s = OfficialShifts.length - 1;
+                                    MultipleGuides = {
+                                        "NumInArray": s,
+                                        "Occupied": false
+                                    }
+                                    ShiftsArray[i].NuminOfficialShift.push(MultipleGuides);
+                                    //rf = SaveShifts[a].Shiftdate + "|" + SaveShifts[a].Shifttype;
+                                    //document.getElementById(rf).childNodes[0].innerHTML += "<span id='" + SaveShifts[a].Userid + "embed" + rf + "' class='row' style='margin:auto'>" + SaveShifts[a].UserName + "</span>";
+                                    continue loop2;
                                 }
-                                ShiftsArray[i].NuminOfficialShift.push(MultipleGuides);
-                                rf = SaveShifts[a].Shiftdate + "|" + SaveShifts[a].Shifttype;
-                                document.getElementById(rf).childNodes[0].innerHTML += "<span id='" + SaveShifts[a].Userid + "embed" + rf + "' class='row' style='margin:auto'>" + SaveShifts[a].UserName + "</span>";
-                                continue loop2;
                             }
                         }
                         OfficialShift = {
@@ -196,26 +217,50 @@
                     loop2:
                     for (var a = 0; a < SaveShifts.length; a++) {
                         if (ShiftsArray[i].Type == SaveShifts[a].Shifttype && ShiftsArray[i].StartShift.format("YYYY-MM-DD") == SaveShifts[a].Shiftdate) {
-                            OfficialShift = {
-                                "Userid": SaveShifts[a].Userid,
-                                "Startshifthour": SaveShifts[a].Startshifthour,
-                                "Endshifthour": SaveShifts[a].Endshifthour,
-                                "Unitid": SaveShifts[a].Unitid,
-                                "Shifttype": SaveShifts[a].Shifttype,
-                                "Shiftdate": SaveShifts[a].Shiftdate
+                            if (SaveShifts[a].Userid != "666666666" && SaveShifts[a].Userid != "777777777" && SaveShifts[a].Userid != "888888888" && SaveShifts[a].Userid != "999999999") {
+                                OfficialShift = {
+                                    "Userid": SaveShifts[a].Userid,
+                                    "Startshifthour": SaveShifts[a].Startshifthour,
+                                    "Endshifthour": SaveShifts[a].Endshifthour,
+                                    "Unitid": SaveShifts[a].Unitid,
+                                    "Shifttype": SaveShifts[a].Shifttype,
+                                    "Shiftdate": SaveShifts[a].Shiftdate
+                                }
+                                OfficialShifts.push(OfficialShift);
+                                s = OfficialShifts.length - 1;
+                                MultipleGuides = {
+                                    "NumInArray": s,
+                                    "Occupied": true
+                                }
+                                ShiftsArray[i].NuminOfficialShift.push(MultipleGuides);
+                                rf = SaveShifts[a].Shiftdate + "|" + SaveShifts[a].Shifttype;
+                                document.getElementById(rf).childNodes[0].innerHTML += "<span id='" + SaveShifts[a].Userid + "embed" + rf + "' class='row' style='margin:auto'>" + SaveShifts[a].UserName + "</span>";
+                                document.getElementById(rf).style.backgroundColor = "#CCFFCC";
+                                document.getElementById(rf).innerHTML += "<i class='fa fa-thumbs-up' style='font-size:36px; margin:auto'></i>";
+                                continue loop1;
                             }
-                            OfficialShifts.push(OfficialShift);
-                            s = OfficialShifts.length - 1;
-                            MultipleGuides = {
-                                "NumInArray": s,
-                                "Occupied": true
+                            else if (SaveShifts[a].Userid == "666666666" && SaveShifts[a].Userid == "777777777" && SaveShifts[a].Userid == "888888888" && SaveShifts[a].Userid == "999999999") {
+                                OfficialShift = {
+                                    "Userid": SaveShifts[a].Userid,
+                                    "Startshifthour": SaveShifts[a].Startshifthour,
+                                    "Endshifthour": SaveShifts[a].Endshifthour,
+                                    "Unitid": SaveShifts[a].Unitid,
+                                    "Shifttype": SaveShifts[a].Shifttype,
+                                    "Shiftdate": SaveShifts[a].Shiftdate
+                                }
+                                OfficialShifts.push(OfficialShift);
+                                s = OfficialShifts.length - 1;
+                                MultipleGuides = {
+                                    "NumInArray": s,
+                                    "Occupied": false
+                                }
+                                ShiftsArray[i].NuminOfficialShift.push(MultipleGuides);
+                                //rf = SaveShifts[a].Shiftdate + "|" + SaveShifts[a].Shifttype;
+                                //document.getElementById(rf).childNodes[0].innerHTML += "<span id='" + SaveShifts[a].Userid + "embed" + rf + "' class='row' style='margin:auto'>" + SaveShifts[a].UserName + "</span>";
+                                //document.getElementById(rf).style.backgroundColor = "#CCFFCC";
+                                //document.getElementById(rf).innerHTML += "<i class='fa fa-thumbs-up' style='font-size:36px; margin:auto'></i>";
+                                continue loop1;
                             }
-                            ShiftsArray[i].NuminOfficialShift.push(MultipleGuides);
-                            rf = SaveShifts[a].Shiftdate + "|" + SaveShifts[a].Shifttype;
-                            document.getElementById(rf).childNodes[0].innerHTML += "<span id='" + SaveShifts[a].Userid + "embed" + rf + "' class='row' style='margin:auto'>" + SaveShifts[a].UserName + "</span>";
-                            document.getElementById(rf).style.backgroundColor = "#CCFFCC";
-                            document.getElementById(rf).innerHTML += "<i class='fa fa-thumbs-up' style='font-size:36px; margin:auto'></i>";
-                            continue loop1;
                         }
                     }
                     OfficialShift = {
@@ -334,8 +379,8 @@
                 calendar.push(weekRange);
             }
             Unitid = 2;//in the future get it from localstorage
-            unitDate =  ShiftsArray[0].StartShift.format("YYYY-MM-DD");
-            ajaxCall("GET", "../api/User/WorkUnit?unit=" + Unitid+"&Date="+unitDate, "", GETGuideS, GETGuideE);
+            unitDate = ShiftsArray[0].StartShift.format("YYYY-MM-DD");
+            ajaxCall("GET", "../api/User/WorkUnit?unit=" + Unitid + "&Date=" + unitDate, "", GETGuideS, GETGuideE);
         }
         function GETConstraintError(error) {
             console.log(error);
@@ -928,7 +973,7 @@
             console.log(OfficialShifts);
             if (again == true) {
                 for (var i = 0; i < OfficialShifts.length; i++) {
-                    if(OfficialShifts[i].Userid != "666666666" && OfficialShifts[i].Userid != "777777777" && OfficialShifts[i].Userid != "888888888" && OfficialShifts[i].Userid != "999999999")
+                    if (OfficialShifts[i].Userid != "666666666" && OfficialShifts[i].Userid != "777777777" && OfficialShifts[i].Userid != "888888888" && OfficialShifts[i].Userid != "999999999")
                         ajaxCall("PUT", "../api/Official", JSON.stringify(OfficialShifts[i]), PostShiftAgainS, PostShiftAgainE);
                 }
             }
