@@ -338,20 +338,21 @@
             <br />
             <h1>  הוספת מנהל חדש</h1><br />
             <div class="row">
-                <form dir="rtl">
+                <form dir="rtl" action="/action_page.php" method="post">
                     <div class="col" id="formDiv">
                         <select id="SelectUnit"></select><br />
-                        <span>ת"ז: </span><input type="text" id="id" /><br />
-                        <span>שם פרטי: </span><input type="text" id="first" /><br />
-                        <span>שם משפחה: </span><input type="text" id="last" /><br />
-                        <span> תאריך לידה:</span><input type="date" id="bdate" /><br />
-                        <span> טלפון:</span><input type="tel" id="tel" /><br />
-                        <input type="radio" id="BigManager" name="Manager" /><label> מנהל מערך הדיור?</label><br />
-                        <input type="radio" id="SmallManager" name="Manager" /><label> מנהל יחידה ארגונית?</label><br />
-                        <span> סיסמא:</span><input type="text" id="pass" /><br />
+                        <span>ת"ז: </span><input type="text" id="id" pattern="^\d{9}$" required /><br />
+                        <span>שם פרטי: </span><input type="text" id="first" required /><br />
+                        <span>שם משפחה: </span><input type="text" id="last" required /><br />
+                        <span> תאריך לידה:</span><input type="date" id="bdate" required /><br />
+                        <span> טלפון:</span><input type="tel" id="tel" required /><br />
+                        <input type="radio" id="BigManager" name="Manager" value="bigManager" /><label> מנהל מערך הדיור?</label><br />
+                        <input type="radio" id="SmallManager" name="Manager" value="littleManager" /><label> מנהל יחידה ארגונית?</label><br />
+                        <span> סיסמא:</span><input type="text" id="pass" required /><br />
                     </div>
+                    <br /><input type="submit" value="שמור" onclick="InsertUser()" /><br />
+
                 </form>
-                <br /><input type="submit" value="שמור" onclick="InsertUser()" /><br />
             </div>
         </div>
     </body>

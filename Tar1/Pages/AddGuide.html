@@ -250,7 +250,7 @@
         <p class="expl">בטבלה שלהלן מוצגים כל פרטי המדריכים. על מנת לערוך פרטי מדריך יש ללחוץ על כפתור "ערוך מדריך", לעדכן את פרטיו ולבסוף ללחוץ על שמור.</p>
         <br />
         <div class="row">
-            <form dir="rtl">
+            <form dir="rtl" action="/action_page.php" method="post">
                 <table id="GuidesTable" class="display nowrap">
                     <thead>
                         <tr>
@@ -317,19 +317,20 @@
                     <p class="expl">על מנת להוסיף מדריך חדש, יש למלא את פרטיו ולבסוף ללחוץ על כפתור שמור.</p>
                 </div>
 
-                <div class="col" id="formDiv">
+                <div class="col" id="formDiv" >
                     <select id="SelectUnit"></select><br />
-                    <span>ת"ז: </span><input type="text" id="id" /><br />
-                    <span>שם פרטי: </span><input type="text" id="first" /><br />
-                    <span>שם משפחה: </span><input type="text" id="last" /><br />
-                    <span> תאריך לידה:</span><input type="date" id="bdate" /><br />
-                    <span> טלפון:</span><input type="tel" id="tel" /><br />
+                    <span>ת"ז: </span><input type="text" id="id" pattern="^\d{9}$" required /><br />
+                    <span>שם פרטי: </span><input type="text" id="first" required/><br />
+                    <span>שם משפחה: </span><input type="text" id="last" required/><br />
+                    <span> תאריך לידה:</span><input type="date" id="bdate" required/><br />
+                    <span> טלפון:</span><input type="tel" id="tel" /><br required/>
                     <span>    רמת הכשרה:    </span>
-                    <select id="SelectTraining"></select><br />
-                    <span> סיסמא:</span><input type="text" id="pass" /><br />
+                    <select id="SelectTraining" required></select><br />
+                    <span> סיסמא:</span><input type="text" id="pass" required/><br />
+                    <br /><input type="submit" class="btn btn-warning btn-lg" id="SaveB" value="שמור" onclick="InsertUser()" /><br />
+
                 </div>
             </form>
-            <br /><input type="submit" class="btn btn-warning btn-lg" id="SaveB" value="שמור" onclick="InsertUser()" /><br />
         </div>
     </div>
     <input type="text" />

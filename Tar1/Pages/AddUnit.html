@@ -37,6 +37,58 @@
         var myData;
         var ApartmentTypeA;
         ApartmentTypeA = [];
+
+        //function buttonEvents(NameOfUnit, City, Street_hn, Numguides, Numresidents, ApartmentT) {
+        //    //$(document).on("click", ".editBtn", function () {
+        //        console.log(this.id);
+        //        alert("flksglnjrt");
+        //    //    markSelected(this);
+        //        $("#editDiv").show();
+        //        //for (var i = 0; i < myData.length; i++) {
+        //        //    if (myData[i].Id == this.id) {
+
+        //    $("#UnitName").val(NameOfUnit);
+        //    $("#UnitCity").val(City);
+        //    $("#UnitStreetNum").val(Street_hn);
+        //    $("#Numofguides").val(Numguides);
+        //    $("#Numofresidents").val(Numresidents);
+        //    $("#ApartmentType1").val(ApartmentT);
+
+        //                //break;
+        //        //    }
+        //        //}
+        //        $("#editDiv :input").prop("disabled", false);
+        //    //});
+        //}
+
+        //function buttonEvents(NameOfUnit, City, Street_hn, Numguides, Numresidents, ApartmentT) {
+            function buttonEvents(button, id) {
+            $("#editDiv").show();
+                markSelected(button);
+                for (var i = 0; i < myData.length; i++) {
+                    if (myData[i].Id == id) {
+                        $("#UnitName").val(myData[i].Unitname);
+                        $("#UnitCity").val(myData[i].City);
+                        $("#UnitStreetNum").val(myData[i].Street_hnumber);
+                        $("#Numofguides").val(myData[i].Numofguides);
+                        $("#Numofresidents").val(myData[i].Numofresidents);
+                        
+                        $("#SelectUnitType").val(myData[i].ApartmentType1);
+
+                    }
+                }
+
+                $("#UnitCity").val(id);
+
+
+        }
+
+
+        function markSelected(btn) {
+            $("#UnitTable tr").removeClass("selected");
+            row = (btn.parentNode).parentNode;
+            row.className = 'selected';
+        }
         id = 1;
         $(document).ready(function () {
             $("#cancelSaveBTN").on("click", function () {
@@ -73,6 +125,15 @@
                                         return "דירה " + ApartmentTypeA[i].Apartmenttype.toString();
                                     }
                                 }
+                            }
+                        },
+                        {
+                            render: function (data, type, row, meta) {
+                                //let dataU = "data-UId='" + row.Id + "'";
+                                //editBtn = "<button  id='" + row.Id + "' class = 'editBtn btn btn-success' onclick='buttonEvents(" + row.Unitname + "," + row.City + "," + row.Street_hnumber + "," + row.Numofguides + "," + row.Numofresidents + ", " + row.ApartmentType1 + ")'> ערוך יחידה </button>";
+
+                                editBtn = "<button  id='" + row.Id + "' class = 'editBtn btn btn-success' onclick='buttonEvents(this," + row.Id + ")'> ערוך יחידה </button>";
+                                return editBtn;
                             }
                         },
                     ],
@@ -209,7 +270,7 @@
         <form id="pForm">
             <p class="expl">בטבלה שלהלן מוצגות כל היחידות הארגוניות.</p>
             <br />
-            <table id="UnitTable" class="display nowrap" style="width:50%">
+            <table id="UnitTable" style="width:50%">
                 <thead>
                     <tr>
                         <th>שם היחידה</th>
@@ -218,9 +279,52 @@
                         <th>מספר מדריכים</th>
                         <th>מספר דיירים</th>
                         <th>סוג יחידה</th>
+                        <th>עריכה</th>
                     </tr>
                 </thead>
             </table>
+
+
+            <div id="editDiv">
+                <div class="row">
+                    <div>
+                        <label class="editMyUnit">שם היחידה:</label>
+                        <input type="text" id="UnitName">
+                    </div>
+                    <div>
+                        <label class="editMyUnit">עיר:</label>
+                        <input type="text" id="UnitCity" required>
+                    </div>
+                    <div>
+                        <label class="editMyUnit">רחוב ומספר:</label>
+                        <input type="text" id="UnitStreetNum" required>
+                    </div>
+                    <div>
+                        <label class="editMyUnit">מספר המדריכים:</label>
+                        <input type="number" id="UnitNumGuides" required />
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div>
+                        <label class="editMyUnit">מספר הדיירים:</label>
+                        <input type="number" id="UnitNumRes" required>
+                    </div>
+                    <div>
+                        <label class="editMyUnit">סוג היחידה:</label>
+                        <select id="SelectUnitType">
+                            <option value="0">הוסטל</option>
+                            <option value="3">דירה עצמאית</option>
+                            <option value="2">דירה חצי עצמאית</option>
+                            <option value="1">דירה טיפולית</option>
+                        </select>
+                    </div>
+                </div>
+                <br />
+                <button type="button" class="btn btn-primary btn-lg" id="saveBTN" onclick="SaveChanges()">שמור</button>
+                <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
+            </div>
+
         </form>
         <br />
         <br />
