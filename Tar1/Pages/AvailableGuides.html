@@ -210,7 +210,7 @@
 
         }
         function succesBreak(data) {
-            console.log(data);
+         
             if (data == false) {
                 $('#BigBreak').modal("show");
             }
@@ -218,7 +218,7 @@
             if (embed == true) {
                 index = $("#shifts").children(":selected").attr("id");
                 ShiftsArray[index].Userid;
-                 ajaxCall("Put", "../api/Official/CheckHours?idbefore="+ShiftsArray[index].Userid, JSON.stringify(offics), succesPut, error);
+                ajaxCall("Put", "../api/Official/CheckHours?idbefore="+ShiftsArray[index].Userid, JSON.stringify(offics), succesPut, error);
             }
         }
         function whatisthechioseextra(button) {
