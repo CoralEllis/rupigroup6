@@ -20,6 +20,21 @@
         //}
         i = 0;
         ShiftsArray = [];
+        Unitid = 2;
+        function GetSHifts() {
+            ajaxCall("GET", "../api/Shifts/" + Unitid, "", GetShiftS, GetShiftE);
+        }
+        function GetShiftS(data) {
+            alert("SABABA!");
+            ShiftsArray = data;
+            for (var i = 0; i < ShiftsArray.length; i++) {
+
+            }
+        }
+        function GetShiftE(error) {
+            alert("BASSA!");
+            console.log(error);
+        }
         function ShowShifts() {
             startdate = $("#start").val();
             enddate = $("#end").val();
@@ -165,7 +180,7 @@
     </script>
     <title></title>
 </head>
-<body dir="rtl" style="background-color:aliceblue">
+<body dir="rtl" style="background-color:aliceblue" onload="GetSHifts()>
     <!--onload="GetUser()"-->
     <img src="../Photos/LOGO.PNG" />
     <div class="container">

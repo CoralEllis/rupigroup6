@@ -46,10 +46,7 @@ namespace Tar1.Models
 
         public List<Shift> GetShifts(int id){
             DBservices dbs = new DBservices();
-
-       return dbs.GetShiftList(id);
-
-
+            return dbs.GetShiftList(id);
         }
 
     }

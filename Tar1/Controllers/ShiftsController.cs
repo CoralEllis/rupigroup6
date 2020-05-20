@@ -19,7 +19,7 @@ namespace AkimShifts.Controllers
         // GET api/<controller>/5
         public List<Shift> Get(int id)
         {
-            Shift s = new Shift();
+           Shift s = new Shift();
            return s.GetShifts(id);
         }
 
