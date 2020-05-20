@@ -2057,6 +2057,11 @@ namespace Tar1.Models.DAL
                     con.Close();
                 }
             }
+            if (OrUn.Unittype == "דירה")
+            {
+                UpdateApartmentType(OrUn.ApartmentType1, OrUn.Id);
+
+            }
         }
 
         private String BuildPutCommandSale(OrganizeUnit OrgU)
@@ -2064,10 +2069,10 @@ namespace Tar1.Models.DAL
             string id = OrgU.Id.ToString();
             string N_Guides = OrgU.Numofguides.ToString();
             string N_Res = OrgU.Numofresidents.ToString();
-            string A_Type = OrgU.ApartmentType1.ToString();
+            string A_Type = OrgU.Unittype.ToString();
             String prefix = "UPDATE OrganizeUnit_2020 SET [UnitName] = '" + OrgU.Unitname + "', [City] =  '" + OrgU.City + "', [Street_HNumber] = '"+ OrgU.Street_hnumber + "', [NumOfGuides] = '"+ N_Guides + "', [NumOfResidents] = '"+ N_Res + "', [UnitType] = '"+ A_Type + "' WHERE [UnitId] = " + id + "";
-            string str = "UPDATE Apartment_2020 SET [ApartmentTypeId] = '" + A_Type + "' WHERE [UnitId] = '"+id+"'";
-            return prefix + str;
+            return prefix;
+
         }
 
 

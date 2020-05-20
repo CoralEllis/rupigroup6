@@ -11,8 +11,14 @@ form {
     font-family: Calibri;
     font-size:20px;
 }
-.nowrap{
-    width:50%;
+
+#UnitTable{
+    color: #005473;
+
+}
+
+.nowrap {
+    width: 50%;
 }
 th, td {
     width: auto;
@@ -33,11 +39,13 @@ body {
 p {
     text-align: center;
 }
+
+
 #putguides {
     direction: rtl;
-    font-size:30px;
+    font-size: 30px;
     color: #005473;
-    font-family:Calibri;
+    font-family: Calibri;
 }
     #putguides > input, #putguides > span {
         color: #005473;
@@ -72,8 +80,12 @@ p {
     margin-right: -350px;
 }
 
-#addNewGuide{
-    margin-left:250px;
+#UnitTable > tbody > tr > td > button {
+    background-color: #008CBA;
+}
+
+#addNewGuide {
+    margin-left: 250px;
 }
 
 #editDiv {
@@ -139,6 +151,7 @@ button, input[type=submit], button[type=button], #cancelSaveBTN, #saveBTN {
     background-color: #008CBA;
     color: white;
     font-family: Calibri;
+    font-size:20px;
 
 }
 
@@ -153,6 +166,12 @@ button, input[type=submit], button[type=button], #cancelSaveBTN, #saveBTN {
     position: absolute;
     left: 1190px;
 }
+/*.btn-success {
+    color: #fff;
+    background-color: #008CBA !important;
+    border-color: #28a745;
+    font-size:20px !important;
+}*/
 
 button[type=button], #cancelSaveBTN, #saveBTN {
     font-size: 20px;

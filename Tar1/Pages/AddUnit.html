@@ -126,10 +126,10 @@
                         },
                         {
                             render: function (data, type, row, meta) {
-                                //let dataU = "data-UId='" + row.Id + "'";
+                                let dataU = "data-UId='" + row.Id + "'";
                                 //editBtn = "<button  id='" + row.Id + "' class = 'editBtn btn btn-success' onclick='buttonEvents(" + row.Unitname + "," + row.City + "," + row.Street_hnumber + "," + row.Numofguides + "," + row.Numofresidents + ", " + row.ApartmentType1 + ")'> ערוך יחידה </button>";
 
-                                editBtn = "<button  id='" + row.Id + "' class = 'editBtn btn btn-success' onclick='buttonEvents(this," + row.Id + ")'> ערוך יחידה </button>";
+                                editBtn = "<button style='background-color: #008CBA;color: white;font - family: Calibri; ' id='" + row.Id + "' class = 'editBtn btn btn-success' " + dataU + "onclick='buttonEvents(this," + row.Id + ")'> ערוך יחידה </button>";
                                 return editBtn;
                             }
                         },
@@ -253,6 +253,16 @@
             console.log(error);
         }
         function SaveChanges() {
+
+            x = $("#SelectUnitType option:selected").val();
+            if (x == 0) {
+                unitType = "הוסטל";
+            }
+            else {
+                unitType = "דירה";
+            }
+
+
             UnitToSave = {
                 "Id": IdOfUnit,
                 "Unitname": $("#UnitName").val(),
@@ -260,8 +270,11 @@
                 "Street_hnumber": $("#UnitStreetNum").val(),
                 "Numofguides": $("#UnitNumGuides").val(),
                 "Numofresidents": $("#UnitNumRes").val(),
-                "ApartmentType1": $("#SelectUnitType option:selected").val(),
+                "ApartmentType1": x,
+                "Unittype": unitType,
             }
+
+            console.log(UnitToSave);
             ajaxCall("PUT", "../api/OrganizeUnit/" + IdOfUnit  , JSON.stringify(UnitToSave), PutUnitS, PutUnitE);        }
         function PutUnitS(data) {
             alert("good");
@@ -283,21 +296,21 @@
         <br />
         <p class="expl">בטבלה שלהלן מוצגות כל היחידות הארגוניות.</p>
         <br />
-        <table id="UnitTable" style="width:50%">
-            <thead>
-                <tr>
-                    <th>שם היחידה</th>
-                    <th>עיר</th>
-                    <th>רחוב ומספר</th>
-                    <th>מספר מדריכים</th>
-                    <th>מספר דיירים</th>
-                    <th>סוג יחידה</th>
-                    <th>עריכה</th>
-                </tr>
-            </thead>
-        </table>
-
+            <table id="UnitTable" class="display nowrap" style="width:50%">
+                <thead>
+                    <tr>
+                        <th>שם היחידה</th>
+                        <th>עיר</th>
+                        <th>רחוב ומספר</th>
+                        <th>מספר מדריכים</th>
+                        <th>מספר דיירים</th>
+                        <th>סוג יחידה</th>
+                        <th>עריכה</th>
+                    </tr>
+                </thead>
+            </table>
         <form id="pForm">
+
 
             <div id="editDiv">
                 <div class="row">
