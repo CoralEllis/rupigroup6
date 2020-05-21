@@ -21,78 +21,123 @@
         i = 0;
         ShiftsArray = [];
         Unitid = 2;
+        again = false;
         function GetSHifts() {
             ajaxCall("GET", "../api/Shifts/" + Unitid, "", GetShiftS, GetShiftE);
         }
         function GetShiftS(data) {
             alert("SABABA!");
-            ShiftsArray = data;
-            for (var i = 0; i < ShiftsArray.length; i++) {
-
+            if (data) {
+                Array = data;
+                again = true;
             }
+            console.log(again);
         }
         function GetShiftE(error) {
             alert("BASSA!");
             console.log(error);
         }
+
         function ShowShifts() {
             startdate = $("#start").val();
             enddate = $("#end").val();
             str = "";
             $("#Placeholder").html(str);
-            var start = new Date(startdate);
-            var end = new Date(enddate);
             var loop = new Date(start);
-            i = 0;
-            if (document.getElementById("NightShift").checked == false) {
-                while (loop <= end) {
-                    m = loop.getMonth() + 1;
-                    D = loop.getDate() + "/" + m + "/" + loop.getFullYear();
-                    str += " <br /> <br /><div ><div class='row'><div class='col'>";
-                    str += "</div><div class='col'><h4>משמרת בוקר </h4><br /></div><div class='col'><h4>משמרת ערב </h4><br />";
-                    str += " </div></div><div class='row'><div class='col'><label style='font-size:25px; font-weight:bold' id='DayDate" + i + "'>" + D + "</label> </div>";
-                    str += "<div class='col'><span>שעות:</span> <input type='time' id='Mend" + i + "' value='15:00'/><strong> - </strong><input type='time' id='Mstr" + i + "' value='07:00'/> <br />";
-                    str += " <span> מספר מדריכים:</span> <input type='number' id='Mnum" + i + "' value='1'/> <br /> <br /></div > <div class='col'>";
-                    str += "<span>שעות:</span> <input type='time'id='Eend" + i + "' value='23:00'/> <strong> - </strong> <input type='time'  id='Estr" + i + "' value='15:00'/> <br /><span> מספר מדריכים:</span> <input type='number' id='Enum" + i + "' value='2'/> <br /> <br /> </div >  <br /> <br /></div ></div>";
-                    var newDate = loop.setDate(loop.getDate() + 1);
-                    loop = new Date(newDate);
-                    i++;
+            if (again == true) {
+                if (document.getElementById("NightShift").checked == false) {
+                    for (var g = 0; g < Array.length; g++) {
+                        m = loop.getMonth() + 1;
+                        D = loop.getDate() + "/" + m + "/" + loop.getFullYear();
+                        str += " <br /> <br /><div ><div class='row'><div class='col'>";
+                        str += "</div><div class='col'><h4>משמרת בוקר </h4><br /></div><div class='col'><h4>משמרת ערב </h4><br />";
+                        str += " </div></div><div class='row'><div class='col'><label style='font-size:25px; font-weight:bold' id='DayDate" + i + "'>" + D + "</label> </div>";
+                        str += "<div class='col'><span>שעות:</span> <input type='time' id='Mend" + i + "' value='" + Array[g].End + "'/><strong> - </strong><input type='time' id='Mstr" + i + "' value='" + Array[g].Start + "'/> <br />";
+                        str += " <span> מספר מדריכים:</span> <input type='number' id='Mnum" + i + "' value='" + Array[g].GuideNum1 + "'/> <br /> <br /></div > <div class='col'>";
+                        g++;
+                        str += "<span>שעות:</span> <input type='time'id='Eend" + i + "' value='" + Array[g].End + "'/> <strong> - </strong> <input type='time'  id='Estr" + i + "' value='" + Array[g].Start + "'/> <br /><span> מספר מדריכים:</span> <input type='number' id='Enum" + i + "' value='" + Array[g].GuideNum1 + "'/> <br /> <br /> </div >  <br /> <br /></div ></div>";
+                        var newDate = loop.setDate(loop.getDate() + 1);
+                        loop = new Date(newDate);
+                    }
+                    $("#AskPreparedness").html(" ");
                 }
-                   $("#AskPreparedness").html(" ");
-            }
-            else if (document.getElementById("NightShift").checked == true) {
-                str = "";
-                while (loop <= end) {
+                else if (document.getElementById("NightShift").checked == true) {
+                    str = "";
+                    for (var g = 0; g < Array.length; g++) {
+                        m = loop.getMonth() + 1;
+                        D = loop.getDate() + "/" + m + "/" + loop.getFullYear();
+                        str += "<br /> <br /><div><div class='row'><div class='col'></div><div class='col'><h4>משמרת בוקר </h4><br /></div><div class='col'>";
+                        str += "<h4>משמרת ערב </h4><br /></div><div class='col'><h4>משמרת לילה </h4><br /></div>";
+                        str += "</div > <div class='row'><div class='col'><label style='font-size:25px; font-weight:bold'  id='DayDate" + i + "'>" + D + "</label> </div>";
+                        str += " <div class='col'><span>שעות:</span> <input type='time' id='Mend" + i + "' value='" + Array[g].End + "'/> <strong> - </strong> <input type='time' id='Mstr" + i + "' value='" + Array[g].Start + "'/> <br />";
+                        str += "<span> מספר מדריכים:</span> <input type='number'  id='Mnum" + i + "' value='" + Array[g].GuideNum1 + "'/> <br /> <br /></div > <div class='col'>";
+                        g++;
+                        str += "<span>שעות:</span><input type='time' id='Eend" + i + "' value='" + Array[g].End + "'/> <strong> - </strong>  <input type='time' id='Estr" + i + "' value='" + Array[g].Start + "'/> <br /><span> מספר מדריכים:</span> <input type='number' id='Enum" + i + "' value='" + Array[g].GuideNum1 + "'/> <br /> <br />";
+                        g++;
+                        str += "</div> <div class='col'><span>שעות:</span>  <input type='time'  id='Nend" + i + "' value='" + Array[g].End + "'/><strong> - </strong> <input type='time'  id='Nstr" + i + "' value='" + Array[g].Start + "'/> <br /><span> מספר מדריכים:</span> <input type='number' id='Nnum" + i + "' value='" + Array[g].GuideNum1 + "'/> <br /> <br />";
+                        str += " </div > <br /> <br /></div ></div >";
+                        var newDate = loop.setDate(loop.getDate() + 1);
+                        loop = new Date(newDate);
+                    }
 
-                    m = loop.getMonth() + 1;
-                    D = loop.getDate() + "/" + m + "/" + loop.getFullYear();
-                    str += "<br /> <br /><div><div class='row'><div class='col'></div><div class='col'><h4>משמרת בוקר </h4><br /></div><div class='col'>";
-                    str += "<h4>משמרת ערב </h4><br /></div><div class='col'><h4>משמרת לילה </h4><br /></div>";
-                    str += "</div > <div class='row'><div class='col'><label style='font-size:25px; font-weight:bold'  id='DayDate" + i + "'>" + D + "</label> </div>";
-                    str += " <div class='col'><span>שעות:</span> <input type='time' id='Mend" + i + "' value='15:00'/> <strong> - </strong> <input type='time' id='Mstr" + i + "' value='07:00'/> <br />";
-                    str += "<span> מספר מדריכים:</span> <input type='number'  id='Mnum" + i + "' value='1'/> <br /> <br /></div > <div class='col'>";
-                    str += "<span>שעות:</span><input type='time' id='Eend" + i + "' value='23:00'/> <strong> - </strong>  <input type='time' id='Estr" + i + "' value='15:00'/> <br /><span> מספר מדריכים:</span> <input type='number' id='Enum" + i + "' value='2'/> <br /> <br />";
-                    str += "</div> <div class='col'><span>שעות:</span>  <input type='time'  id='Nend" + i + "' value='07:00'/><strong> - </strong> <input type='time'  id='Nstr" + i + "' value='23:00'/> <br /><span> מספר מדריכים:</span> <input type='number' id='Nnum" + i + "' value='1'/> <br /> <br />";
-                    str += " </div > <br /> <br /></div ></div >";
-                    var newDate = loop.setDate(loop.getDate() + 1);
-                    loop = new Date(newDate);
-                    i++;
+                    strAks = "<label> האם המדריכים נשארים ערים במשמרת הלילה?</label><br />";
+                    strAks += "<input type='radio' name='wakeup' value='True' /><label>כן</label><br />";
+                    strAks += "<input type='radio' name='wakeup' value='false' /><label>לא</label><br />";
+                    $("#AskPreparedness").html(strAks);
                 }
-                  
-                strAks = "<label> האם המדריכים נשארים ערים במשמרת הלילה?</label><br />";
-                strAks += "<input type='radio' name='wakeup' value='True' /><label>כן</label><br />";
-                strAks += "<input type='radio' name='wakeup' value='false' /><label>לא</label><br />";
-                $("#AskPreparedness").html(strAks);
             }
-           
-          
+            else if (again == false) {
+                var start = new Date(startdate);
+                var end = new Date(enddate);
+                i = 0;
+                if (document.getElementById("NightShift").checked == false) {
+                    while (loop <= end) {
+                        m = loop.getMonth() + 1;
+                        D = loop.getDate() + "/" + m + "/" + loop.getFullYear();
+                        str += " <br /> <br /><div ><div class='row'><div class='col'>";
+                        str += "</div><div class='col'><h4>משמרת בוקר </h4><br /></div><div class='col'><h4>משמרת ערב </h4><br />";
+                        str += " </div></div><div class='row'><div class='col'><label style='font-size:25px; font-weight:bold' id='DayDate" + i + "'>" + D + "</label> </div>";
+                        str += "<div class='col'><span>שעות:</span> <input type='time' id='Mend" + i + "' value='15:00'/><strong> - </strong><input type='time' id='Mstr" + i + "' value='07:00'/> <br />";
+                        str += " <span> מספר מדריכים:</span> <input type='number' id='Mnum" + i + "' value='1'/> <br /> <br /></div > <div class='col'>";
+                        str += "<span>שעות:</span> <input type='time'id='Eend" + i + "' value='23:00'/> <strong> - </strong> <input type='time'  id='Estr" + i + "' value='15:00'/> <br /><span> מספר מדריכים:</span> <input type='number' id='Enum" + i + "' value='2'/> <br /> <br /> </div >  <br /> <br /></div ></div>";
+                        var newDate = loop.setDate(loop.getDate() + 1);
+                        loop = new Date(newDate);
+                        i++;
+                    }
+                    $("#AskPreparedness").html(" ");
+                }
+                else if (document.getElementById("NightShift").checked == true) {
+                    str = "";
+                    while (loop <= end) {
+
+                        m = loop.getMonth() + 1;
+                        D = loop.getDate() + "/" + m + "/" + loop.getFullYear();
+                        str += "<br /> <br /><div><div class='row'><div class='col'></div><div class='col'><h4>משמרת בוקר </h4><br /></div><div class='col'>";
+                        str += "<h4>משמרת ערב </h4><br /></div><div class='col'><h4>משמרת לילה </h4><br /></div>";
+                        str += "</div > <div class='row'><div class='col'><label style='font-size:25px; font-weight:bold'  id='DayDate" + i + "'>" + D + "</label> </div>";
+                        str += " <div class='col'><span>שעות:</span> <input type='time' id='Mend" + i + "' value='15:00'/> <strong> - </strong> <input type='time' id='Mstr" + i + "' value='07:00'/> <br />";
+                        str += "<span> מספר מדריכים:</span> <input type='number'  id='Mnum" + i + "' value='1'/> <br /> <br /></div > <div class='col'>";
+                        str += "<span>שעות:</span><input type='time' id='Eend" + i + "' value='23:00'/> <strong> - </strong>  <input type='time' id='Estr" + i + "' value='15:00'/> <br /><span> מספר מדריכים:</span> <input type='number' id='Enum" + i + "' value='2'/> <br /> <br />";
+                        str += "</div> <div class='col'><span>שעות:</span>  <input type='time'  id='Nend" + i + "' value='07:00'/><strong> - </strong> <input type='time'  id='Nstr" + i + "' value='23:00'/> <br /><span> מספר מדריכים:</span> <input type='number' id='Nnum" + i + "' value='1'/> <br /> <br />";
+                        str += " </div > <br /> <br /></div ></div >";
+                        var newDate = loop.setDate(loop.getDate() + 1);
+                        loop = new Date(newDate);
+                        i++;
+                    }
+
+                    strAks = "<label> האם המדריכים נשארים ערים במשמרת הלילה?</label><br />";
+                    strAks += "<input type='radio' name='wakeup' value='True' /><label>כן</label><br />";
+                    strAks += "<input type='radio' name='wakeup' value='false' /><label>לא</label><br />";
+                    $("#AskPreparedness").html(strAks);
+                }
+            }
             $("#Placeholder").html(str);
             $("#save").show();
         }
         function PostPeriod() {
             ShiftsArray = [];
             startdate = $("#start").val();
-            enddate = $("#end").val(); 
+            enddate = $("#end").val();
             if (document.getElementById("NightShift").checked == true) {
                 arr = document.getElementsByName("wakeup");
                 if (arr[0].checked == true)
@@ -104,7 +149,7 @@
                 "Startdate": startdate,
                 "Enddate": enddate,
                 "Unitid": 2,
-                "Preparedness1":Preparedness
+                "Preparedness1": Preparedness
                 /*user.Unitid*/
             }
             for (var k = 0; k < i; k++) {
@@ -176,7 +221,7 @@
             alert("BASSA");
             console.log(error);
         }
-   
+
     </script>
     <title></title>
 </head>
