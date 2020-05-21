@@ -830,15 +830,22 @@
                 if (Guides[g].ShiftsSorted.length > 0)
                     Guides[g].ShiftsSorted.sort(sortByDateAsc);
             }
-            //dayofscheduele = moment(ShiftsArray[0].Shiftdate);
-            //from_date = dayofscheduele.isoWeekday(1).startOf('week');
-            //to_date = dayofscheduele.endOf('week');
             for (var j = 0; j < Guides.length; j++) {
                 if (Guides[j].ShiftsSorted.length > 0) {
                     HasABreak = false;//36 hours break
                     for (var f = 0; f < Guides[j].ShiftsSorted.length; f++) {
+                        FirstShift = 0;
+                        Lastshift = 0
                         if (f == 0) {
-                            FirstShift = ShiftsArray[0].StartShift;
+                            for (var i = 0; i < calendar.length; i++) {
+                                range = moment().range(calendar[i].start.format("YYYY-MM-DD"), calendar[i].end.format("YYYY-MM-DD"));
+                                date = moment(Guides[j].ShiftsSorted[f].StartShift.format("YYYY-MM-DD"));
+                                if (range.contains(date)) {
+                                    FirstShift = moment(calendar[i].start.format("YYYY-MM-DD")+ ' '+ '00:00');
+                                    Lastshift = moment(calendar[i].end.format("YYYY-MM-DD")+ ' '+ '23:59');
+                                }
+                            }
+                            //FirstShift = Guides[j].ShiftsSorted[f].StartShift.startOf('week');
                             Roshmish = Guides[j].ShiftsSorted[f].StartShift;
                             milisecond = moment.duration(Roshmish.diff(FirstShift));
                             BreakShift = milisecond.asHours();
@@ -849,7 +856,7 @@
                         }
                         if (f == Guides[j].ShiftsSorted.length - 1 && HasABreak == false) {
                             Sofmish = Guides[j].ShiftsSorted[f].EndHour;
-                            Lastshift = ShiftsArray[ShiftsArray.length - 1].EndShift;
+                            //Lastshift = Guides[j].ShiftsSorted[f].EndHour.endOf('week');
                             milisecond = moment.duration(Lastshift.diff(Sofmish));
                             BreakShift = milisecond.asHours();
                             if (BreakShift >= MaxRestHours) {
@@ -1013,6 +1020,7 @@
             userDiv = $("#Extra" + ID);
             userDiv.html(name + ": " + hours.toFixed(2));
         }
+
         sortByDateAsc = function (lhs, rhs) { return lhs.StartShift > rhs.StartShift ? 1 : lhs.StartShift < rhs.StartShift ? -1 : 0 }
     </script>
     <title>בניית סידור עבודה</title>
