@@ -48,6 +48,15 @@ namespace Tar1.Models
             DBservices dbs = new DBservices();
             return dbs.GetShiftList(id);
         }
-
+        public List<Shift> GetShiftsByPeriod(int Uid, DateTime SP)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetShifByPer(Uid,SP);
+        }
+        public void UpdateShiftInfo()
+        {
+            DBservices dbs = new DBservices();
+            dbs.updateSI(this);
+        }
     }
 }

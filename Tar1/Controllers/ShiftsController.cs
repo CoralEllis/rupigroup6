@@ -22,6 +22,13 @@ namespace AkimShifts.Controllers
            Shift s = new Shift();
            return s.GetShifts(id);
         }
+        [HttpGet]
+        [Route("api/Shifts/Per")]
+        public List<Shift> Get(int uid, DateTime startperiod)
+        {
+            Shift s = new Shift();
+            return s.GetShiftsByPeriod(uid, startperiod);
+        }
 
         // POST api/<controller>
         public void Post([FromBody]List<Shift> ShiftArr)
@@ -32,8 +39,9 @@ namespace AkimShifts.Controllers
         }
 
         // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        public void Put([FromBody]Shift Shift)
         {
+            Shift.UpdateShiftInfo();
         }
 
         // DELETE api/<controller>/5

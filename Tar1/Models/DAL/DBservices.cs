@@ -2002,9 +2002,9 @@ namespace Tar1.Models.DAL
                 throw (ex);
 
             }
-            string dateShif =os.Shiftdate.ToString("yyyy-MM-dd");
+            string dateShif = os.Shiftdate.ToString("yyyy-MM-dd");
             string cStr = "update OfficialShift_2020 SET UserId='" + os.Userid + "'";
-            cStr += " WHERE ShiftDate='" + dateShif + "' and ShiftType='" + os.Shifttype + "' and UserId='"+ idbefore+"'";
+            cStr += " WHERE ShiftDate='" + dateShif + "' and ShiftType='" + os.Shifttype + "' and UserId='" + idbefore + "'";
             cmd = CreateCommand(cStr, con);
             try
             {
@@ -2070,12 +2070,122 @@ namespace Tar1.Models.DAL
             string N_Guides = OrgU.Numofguides.ToString();
             string N_Res = OrgU.Numofresidents.ToString();
             string A_Type = OrgU.Unittype.ToString();
-            String prefix = "UPDATE OrganizeUnit_2020 SET [UnitName] = '" + OrgU.Unitname + "', [City] =  '" + OrgU.City + "', [Street_HNumber] = '"+ OrgU.Street_hnumber + "', [NumOfGuides] = '"+ N_Guides + "', [NumOfResidents] = '"+ N_Res + "', [UnitType] = '"+ A_Type + "' WHERE [UnitId] = " + id + "";
+            String prefix = "UPDATE OrganizeUnit_2020 SET [UnitName] = '" + OrgU.Unitname + "', [City] =  '" + OrgU.City + "', [Street_HNumber] = '" + OrgU.Street_hnumber + "', [NumOfGuides] = '" + N_Guides + "', [NumOfResidents] = '" + N_Res + "', [UnitType] = '" + A_Type + "' WHERE [UnitId] = " + id + "";
             return prefix;
 
         }
 
+        public List<Shift> GetShifByPer(int Uid, DateTime SPdate)
+        {
+            List<Shift> S = new List<Shift>();
+            SqlConnection con = null;
+            //string today = DateTime.Today.ToString("yyyy-MM-dd");
+            string unitId = Uid.ToString();
+            int day = SPdate.Day;
+            int month = SPdate.Month;
+            int year = SPdate.Year;
+            string startP = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
 
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = "select * from Shift_2020 where UnitId = " + unitId + " AND StartPeriod = '" + startP + "'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    Shift shist = new Shift();
+                    shist.Startperiod = Convert.ToDateTime(dr["StartPeriod"]).Date;
+                    shist.Endperiod = Convert.ToDateTime(dr["EndPeriod"]).Date;
+                    shist.Shiftdate = Convert.ToDateTime(dr["ShiftDate"]).Date;
+                    shist.Type = Convert.ToString(dr["ShiftType"]);
+                    shist.GuideNum1 = Convert.ToInt32(dr["NumOfGuides"]);
+                    shist.Uid = Convert.ToInt32(dr["NumOfGuides"]);
+                    TimeSpan myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("StartShift")));
+                    shist.Start = new DateTime(myTimeSpan.Ticks);
+                    myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("EndShift")));
+                    //shist.Start = TimeSpan(dr["StartShift"]);
+                    shist.End = new DateTime(myTimeSpan.Ticks);
+                    S.Add(shist);
+                }
+                return S;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        public void updateSI(Shift ShiftInfo)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            String cStr = BuildUpdateCommand(ShiftInfo);
+            cmd = CreateCommand(cStr, con);
+            try
+            {
+                cmd.ExecuteNonQuery(); // execute the command
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+        private String BuildUpdateCommand(Shift shift)
+        {
+            string Shiftdate;
+            //convert start date of period to string
+            int day = shift.Startperiod.Day;
+            int month = shift.Startperiod.Month;
+            int year = shift.Startperiod.Year;
+            string startsPD = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
+            //convert end date of period to string
+            int Eday = shift.Endperiod.Day;
+            int Emonth = shift.Endperiod.Month;
+            int Eyear = shift.Endperiod.Year;
+            string EndPD = Emonth.ToString() + "/" + Eday.ToString() + "/" + Eyear.ToString();
+            //convert start hour of shift to string
+            string s = shift.Start.ToString();
+            string[] DateTime = s.Split(' ');
+            string strH = DateTime[1];
+            //convert end hour of shift to string
+            string e = shift.End.ToString();
+            string[] DateTime1 = e.Split(' ');
+            string endH = DateTime1[1];
+            //convert unit id to string
+            string uid = shift.Uid.ToString();
+            //convert date of shift to string
+            day = shift.Shiftdate.Day;
+            month = shift.Shiftdate.Month;
+            year = shift.Shiftdate.Year;
+            Shiftdate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
+            //convert number of guides on shift to string
+            string num = shift.GuideNum1.ToString();
+
+            string str = "UPDATE Shift_2020 SET StartShift ='" + strH + "',EndShift ='" + endH + "',NumOfGuides ='" + num + "' WHERE ShiftType ='" + shift.Type + "' and UnitId = " + uid + " and StartPeriod = '" + startsPD + "' and EndPeriod = '" + EndPD + "' and ShiftDate = '" + Shiftdate + "'";
+            return str;
+        }
     }
-
 }

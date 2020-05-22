@@ -22,64 +22,97 @@
         ShiftsArray = [];
         Unitid = 2;
         again = false;
-        function GetSHifts() {
-            ajaxCall("GET", "../api/Shifts/" + Unitid, "", GetShiftS, GetShiftE);
+        SArray = [];
+        function ShowShifts() {
+            startdate = $("#start").val();
+            ajaxCall("GET", "../api/Shifts/Per?uid=" + Unitid + "&startperiod=" + startdate, "", GetShiftS, GetShiftE);
         }
+        sortByDateAsc = function (lhs, rhs) { return lhs.Shiftdate > rhs.Shiftdate ? 1 : lhs.Shiftdate < rhs.Shiftdate ? -1 : 0 }
         function GetShiftS(data) {
             alert("SABABA!");
-            if (data) {
-                Array = data;
+            if (data.length > 0) {
                 again = true;
+                for (var f = 0; f < data.length; f++) {
+                    console.log(data);
+                    startH = data[f].Start.split("T");
+                    EndH = data[f].End.split("T");
+                    startdate = data[f].Startperiod.split("T");
+                    enddate = data[f].Endperiod.split("T");
+                    shiftDateR = data[f].Shiftdate.split("T");
+                    SA = {
+                        "Type": data[f].Type,
+                        "Start": startH[1],
+                        "End": EndH[1],
+                        "Uid": data[f].Uid,
+                        "Startperiod": startdate[0],
+                        "Endperiod": enddate[0],
+                        "Shiftdate": shiftDateR[0],
+                        "GuideNum1": data[f].GuideNum1
+                    }
+                    SArray.push(SA);
+                }
             }
-            console.log(again);
-        }
-        function GetShiftE(error) {
-            alert("BASSA!");
-            console.log(error);
-        }
-
-        function ShowShifts() {
             startdate = $("#start").val();
             enddate = $("#end").val();
             str = "";
             $("#Placeholder").html(str);
+            var start = new Date(startdate);
+            var end = new Date(enddate);
             var loop = new Date(start);
+            i = 0;
             if (again == true) {
+                SArray.sort(sortByDateAsc);
                 if (document.getElementById("NightShift").checked == false) {
-                    for (var g = 0; g < Array.length; g++) {
+                    for (var g = 0; g < SArray.length; g++) {
                         m = loop.getMonth() + 1;
                         D = loop.getDate() + "/" + m + "/" + loop.getFullYear();
                         str += " <br /> <br /><div ><div class='row'><div class='col'>";
                         str += "</div><div class='col'><h4>משמרת בוקר </h4><br /></div><div class='col'><h4>משמרת ערב </h4><br />";
                         str += " </div></div><div class='row'><div class='col'><label style='font-size:25px; font-weight:bold' id='DayDate" + i + "'>" + D + "</label> </div>";
-                        str += "<div class='col'><span>שעות:</span> <input type='time' id='Mend" + i + "' value='" + Array[g].End + "'/><strong> - </strong><input type='time' id='Mstr" + i + "' value='" + Array[g].Start + "'/> <br />";
-                        str += " <span> מספר מדריכים:</span> <input type='number' id='Mnum" + i + "' value='" + Array[g].GuideNum1 + "'/> <br /> <br /></div > <div class='col'>";
+                        //EH = SArray[g].End.split("T");
+                        //SH = SArray[g].Start.split("T");
+                        str += "<div class='col'><span>שעות:</span> <input type='time' id='Mend" + i + "' value='" + SArray[g].End + "'/><strong> - </strong><input type='time' id='Mstr" + i + "' value='" + SArray[g].Start + "'/> <br />";
+                        str += " <span> מספר מדריכים:</span> <input type='number' id='Mnum" + i + "' value='" + SArray[g].GuideNum1 + "'/> <br /> <br /></div > <div class='col'>";
                         g++;
-                        str += "<span>שעות:</span> <input type='time'id='Eend" + i + "' value='" + Array[g].End + "'/> <strong> - </strong> <input type='time'  id='Estr" + i + "' value='" + Array[g].Start + "'/> <br /><span> מספר מדריכים:</span> <input type='number' id='Enum" + i + "' value='" + Array[g].GuideNum1 + "'/> <br /> <br /> </div >  <br /> <br /></div ></div>";
+                        //EH = SArray[g].End.split("T");
+                        //SH = SArray[g].Start.split("T");
+                        str += "<span>שעות:</span> <input type='time'id='Eend" + i + "' value='" + SArray[g].End + "'/> <strong> - </strong> <input type='time'  id='Estr" + i + "' value='" + SArray[g].Start + "'/> <br />";
+                        str += " <span> מספר מדריכים:</span > <input type='number' id='Enum" + i + "' value='" + SArray[g].GuideNum1 + "' /> <br /> <br /> </div > <br /> <br /></div ></div > ";
                         var newDate = loop.setDate(loop.getDate() + 1);
                         loop = new Date(newDate);
+                        i++;
+                        if (loop > end)
+                            break;
                     }
                     $("#AskPreparedness").html(" ");
                 }
                 else if (document.getElementById("NightShift").checked == true) {
-                    str = "";
-                    for (var g = 0; g < Array.length; g++) {
+                    for (var g = 0; g < SArray.length; g++) {
                         m = loop.getMonth() + 1;
                         D = loop.getDate() + "/" + m + "/" + loop.getFullYear();
                         str += "<br /> <br /><div><div class='row'><div class='col'></div><div class='col'><h4>משמרת בוקר </h4><br /></div><div class='col'>";
                         str += "<h4>משמרת ערב </h4><br /></div><div class='col'><h4>משמרת לילה </h4><br /></div>";
                         str += "</div > <div class='row'><div class='col'><label style='font-size:25px; font-weight:bold'  id='DayDate" + i + "'>" + D + "</label> </div>";
-                        str += " <div class='col'><span>שעות:</span> <input type='time' id='Mend" + i + "' value='" + Array[g].End + "'/> <strong> - </strong> <input type='time' id='Mstr" + i + "' value='" + Array[g].Start + "'/> <br />";
-                        str += "<span> מספר מדריכים:</span> <input type='number'  id='Mnum" + i + "' value='" + Array[g].GuideNum1 + "'/> <br /> <br /></div > <div class='col'>";
-                        g++;
-                        str += "<span>שעות:</span><input type='time' id='Eend" + i + "' value='" + Array[g].End + "'/> <strong> - </strong>  <input type='time' id='Estr" + i + "' value='" + Array[g].Start + "'/> <br /><span> מספר מדריכים:</span> <input type='number' id='Enum" + i + "' value='" + Array[g].GuideNum1 + "'/> <br /> <br />";
-                        g++;
-                        str += "</div> <div class='col'><span>שעות:</span>  <input type='time'  id='Nend" + i + "' value='" + Array[g].End + "'/><strong> - </strong> <input type='time'  id='Nstr" + i + "' value='" + Array[g].Start + "'/> <br /><span> מספר מדריכים:</span> <input type='number' id='Nnum" + i + "' value='" + Array[g].GuideNum1 + "'/> <br /> <br />";
+                        //EH = SArray[g].End.split("T");
+                        //SH = SArray[g].Start.split("T");
+                        str += " <div class='col'><span>שעות:</span> <input type='time' id='Mend" + i + "' value='" + SArray[g].End + "'/> <strong> - </strong> <input type='time' id='Mstr" + i + "' value='" + SArray[g].Start + "'/> <br />";
+                        str += "<span> מספר מדריכים:</span> <input type='number'  id='Mnum" + i + "' value='" + SArray[g].GuideNum1 + "'/> <br /> <br /></div > <div class='col'>";
+                        g += 2;
+                        //EH = SArray[g].End.split("T");
+                        //SH = SArray[g].Start.split("T");
+                        str += "<span>שעות:</span><input type='time' id='Eend" + i + "' value='" + SArray[g].End + "'/> <strong> - </strong>  <input type='time' id='Estr" + i + "' value='" + SArray[g].Start + "'/> <br /><span> מספר מדריכים:</span> <input type='number' id='Enum" + i + "' value='" + SArray[g].GuideNum1 + "'/> <br /> <br />";
+                        g -= 1;
+                        //EH = SArray[g].End.split("T");
+                        //SH = SArray[g].Start.split("T");
+                        str += "</div> <div class='col'><span>שעות:</span>  <input type='time'  id='Nend" + i + "' value='" + SArray[g].End + "'/><strong> - </strong> <input type='time'  id='Nstr" + i + "' value='" + SArray[g].Start + "'/> <br /><span> מספר מדריכים:</span> <input type='number' id='Nnum" + i + "' value='" + SArray[g].GuideNum1 + "'/> <br /> <br />";
                         str += " </div > <br /> <br /></div ></div >";
                         var newDate = loop.setDate(loop.getDate() + 1);
                         loop = new Date(newDate);
+                        if (loop > end)
+                            break;
+                        g++;
+                        i++;
                     }
-
                     strAks = "<label> האם המדריכים נשארים ערים במשמרת הלילה?</label><br />";
                     strAks += "<input type='radio' name='wakeup' value='True' /><label>כן</label><br />";
                     strAks += "<input type='radio' name='wakeup' value='false' /><label>לא</label><br />";
@@ -87,9 +120,6 @@
                 }
             }
             else if (again == false) {
-                var start = new Date(startdate);
-                var end = new Date(enddate);
-                i = 0;
                 if (document.getElementById("NightShift").checked == false) {
                     while (loop <= end) {
                         m = loop.getMonth() + 1;
@@ -134,25 +164,19 @@
             $("#Placeholder").html(str);
             $("#save").show();
         }
+        function GetShiftE(error) {
+            alert("BASSA!");
+            console.log(error);
+        }
+
         function PostPeriod() {
             ShiftsArray = [];
             startdate = $("#start").val();
             enddate = $("#end").val();
-            if (document.getElementById("NightShift").checked == true) {
-                arr = document.getElementsByName("wakeup");
-                if (arr[0].checked == true)
-                    Preparedness = true;
-                else if (arr[1].checked == true)
-                    Preparedness = false;
-            }
-            Period = {
-                "Startdate": startdate,
-                "Enddate": enddate,
-                "Unitid": 2,
-                "Preparedness1": Preparedness
-                /*user.Unitid*/
-            }
-            for (var k = 0; k < i; k++) {
+            r = SArray.length;
+            if (i > 0)
+                r = i;
+            for (var k = 0; k < r; k++) {
                 Shiftdate = document.getElementById("DayDate" + k).innerText;
                 var X = Shiftdate.split("/");
                 shiftDateR = X[2] + "-" + X[1] + "-" + X[0];
@@ -170,7 +194,6 @@
                     "GuideNum1": GuideNum
                 }
                 ShiftsArray.push(shift);
-
                 startH = $("#Estr" + k).val();
                 EndH = $("#Eend" + k).val();
                 GuideNum = $("#Enum" + k).val();
@@ -204,11 +227,38 @@
 
                 }
             }
-            ajaxCall("POST", "../api/Period", JSON.stringify(Period), PostPeriodS, PostPeriodE);
+            if (again == false) {
+                Preparedness = false;
+                if (document.getElementById("NightShift").checked == true) {
+                    arr = document.getElementsByName("wakeup");
+                    if (arr[0].checked == true)
+                        Preparedness = true;
+                    else if (arr[1].checked == true)
+                        Preparedness = false;
+                }
+                Period = {
+                    "Startdate": startdate,
+                    "Enddate": enddate,
+                    "Unitid": 2,
+                    "Preparedness1": Preparedness
+                    /*user.Unitid*/
+                }
+                ajaxCall("POST", "../api/Period", JSON.stringify(Period), PostPeriodS, PostPeriodE);
+                ajaxCall("POST", "../api/Shifts", JSON.stringify(ShiftsArray), PostShiftS, PostShiftE);
+            }
+            else if (again == true) {
+                for (var u = 0; u < ShiftsArray.length; u++) {
+                    for (var a = 0; a < SArray.length; a++) {
+                        if (ShiftsArray[u].Shiftdate == SArray[a].Shiftdate && ShiftsArray[u].Type == SArray[a].Type) {
+                            if (ShiftsArray[u].Start != SArray[a].Start || ShiftsArray[u].End == SArray[a].End || ShiftsArray[u].GuideNum1 == SArray[a].GuideNum1)
+                                ajaxCall("PUT", "../api/Shifts", JSON.stringify(ShiftsArray[u]), UpdateShiftS, UpdateShiftE);
+                        }
+                    }
+                }
+            }
         }
         function PostPeriodS(data) {
             alert("SABABA!");
-            ajaxCall("POST", "../api/Shifts", JSON.stringify(ShiftsArray), PostShiftS, PostShiftE);
         }
         function PostPeriodE(error) {
             alert("BASSA");
@@ -221,11 +271,18 @@
             alert("BASSA");
             console.log(error);
         }
+        function UpdateShiftS(data) {
+            alert("UpdateShiftS!");
+        }
+        function UpdateShiftE(error) {
+            alert("Update failed");
+            console.log(error);
+        }
 
     </script>
     <title></title>
 </head>
-<body dir="rtl" style="background-color:aliceblue" onload="GetSHifts()>
+<body dir="rtl" style="background-color:aliceblue">
     <!--onload="GetUser()"-->
     <img src="../Photos/LOGO.PNG" />
     <div class="container">
