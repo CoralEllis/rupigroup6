@@ -179,6 +179,10 @@
             for (var k = 0; k < r; k++) {
                 Shiftdate = document.getElementById("DayDate" + k).innerText;
                 var X = Shiftdate.split("/");
+                if (X[1].length == 1)
+                    X[1] = '0' + X[1];
+                if (X[0].length == 1)
+                    X[0] = '0' + X[0];
                 shiftDateR = X[2] + "-" + X[1] + "-" + X[0];
                 startH = $("#Mstr" + k).val();
                 EndH = $("#Mend" + k).val();
@@ -250,7 +254,7 @@
                 for (var u = 0; u < ShiftsArray.length; u++) {
                     for (var a = 0; a < SArray.length; a++) {
                         if (ShiftsArray[u].Shiftdate == SArray[a].Shiftdate && ShiftsArray[u].Type == SArray[a].Type) {
-                            if (ShiftsArray[u].Start != SArray[a].Start || ShiftsArray[u].End == SArray[a].End || ShiftsArray[u].GuideNum1 == SArray[a].GuideNum1)
+                            if (ShiftsArray[u].Start != SArray[a].Start || ShiftsArray[u].End != SArray[a].End || ShiftsArray[u].GuideNum1 != SArray[a].GuideNum1)
                                 ajaxCall("PUT", "../api/Shifts", JSON.stringify(ShiftsArray[u]), UpdateShiftS, UpdateShiftE);
                         }
                     }
