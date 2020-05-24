@@ -2187,5 +2187,53 @@ namespace Tar1.Models.DAL
             string str = "UPDATE Shift_2020 SET StartShift ='" + strH + "',EndShift ='" + endH + "',NumOfGuides ='" + num + "' WHERE ShiftType ='" + shift.Type + "' and UnitId = " + uid + " and StartPeriod = '" + startsPD + "' and EndPeriod = '" + EndPD + "' and ShiftDate = '" + Shiftdate + "'";
             return str;
         }
+
+       public List<Exceptions> GetSpecialExcep(DateTime start,DateTime end,int unitid)
+        {
+            List<Exceptions> S = new List<Exceptions>();
+            SqlConnection con = null;
+          
+            string unit = unitid.ToString();
+            //int day = SPdate.Day;
+            //int month = SPdate.Month;
+            //int year = SPdate.Year;
+            //string startP = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
+            string startP=start.ToString("yyyy-MM-dd"); 
+            string endp= end.ToString("yyyy-MM-dd");
+            try
+            {
+                con = connect("DBConnectionString");
+
+                String selectSTR = "select Exception_2020.ShiftDate,Exception_2020.ShiftType,TypeofException_2020.TypeofException,User_2020.FirstName,User_2020.LastName from Exception_2020 right join TypeofException_2020 on Exception_2020.TypeofExceptionId = TypeofException_2020.TypeofExceptionId inner";
+                selectSTR += " join User_2020 on Exception_2020.UserId = User_2020.UserId";
+                selectSTR += " where Exception_2020.UnitId = '"+ unit+"' and Exception_2020.ShiftDate between '"+ startP + "' and '" + endp + "'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    Exceptions EX = new Exceptions();
+                    EX.Name = Convert.ToString(dr["FirstName"]) + " " + Convert.ToString(dr["LastName"]);
+                    EX.ShiftDate= Convert.ToDateTime(dr["ShiftDate"]).Date;
+                    EX.ShiftType= Convert.ToString(dr["ShiftType"]);
+                    EX.Index= Convert.ToString(dr["TypeofException"]);
+           
+                    S.Add(EX);
+                }
+                return S;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+
+
+        }
     }
 }

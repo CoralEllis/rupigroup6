@@ -4,13 +4,34 @@ form {
     color: #005473;
     text-align: right;
 }
-#SaveB {
-    margin-right: 570PX;
-    background-color: #008CBA;
-    color: white;
-    font-family: Calibri;
-    font-size:20px;
+.container-fluid {
+    color: #005473;
+    direction:rtl !important;
+    font-family:Calibri;
+    font-size:30px;
 }
+
+
+.datadiv {
+    direction: rtl;
+    unicode-bidi: bidi-override !important;
+    direction: unset !important;
+    text-align: right;
+}
+    .datadiv > button {
+        margin-right: 50%;
+        margin-top: 30px;
+        color:whitesmoke
+    }
+
+
+    #SaveB {
+        margin-right: 570PX;
+        background-color: #008CBA;
+        color: white;
+        font-family: Calibri;
+        font-size: 20px;
+    }
 
 #UnitTable{
     color: #005473;
@@ -147,7 +168,7 @@ input[type=number] {
     width: 60px;
 }
 
-button, input[type=submit], button[type=button], #cancelSaveBTN, #saveBTN {
+button, input[type=submit], button[type=button], #cancelSaveBTN, #saveBTN, .container-fluid>button{
     background-color: #008CBA;
     color: white;
     font-family: Calibri;
@@ -346,7 +367,7 @@ img {
     margin-top: 5px;
 }
 
-h1, h2 {
+h1, h2, .container-fluid > h1, .container-fluid>h2 {
     text-align: center;
     color: #66CCFF;
     font-size: 70px !important;

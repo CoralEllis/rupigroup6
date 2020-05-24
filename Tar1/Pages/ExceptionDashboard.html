@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link href="../Style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <meta charset="utf-8" />
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script type="text/javascript"></script>
+    <script src="../Scripts/ajaxCalls.js"></script>
+    <script src="../Scripts/moment.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+    <script>
+        function gets() {
+               ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, error);
+        }
+        function GetOrganizeUnitS(data) {
+                 str = "<option>בחר יחידה ארגונית</option>";
+            for (var i = 0; i < data.length; i++) {
+                str += "<option value='" + data[i].Id + "'>" + data[i].Unitname + "</option>"
+            }
+            $("#SelectUnit").html(str);
+            $("#excepdiv").show();
+        }
+        function error(err){
+
+        }
+        function GetExcep() {
+
+            start = $("#start").val().toString();
+            end = $("#end").val().toString();
+            unit = $("#SelectUnit").val().toString();
+             ajaxCall("GET", "../api/Exception/Special?start=" + start+"&end="+end+"&unitid="+unit, "", GetExcepS, error)
+
+        }
+        function GetExcepS(data) {
+            console.log(data);
+        }
+    </script>
+    <title>דשבורד חריגות</title>
+</head>
+<body style="background-color:aliceblue" onload="gets()">
+    <img src="../Photos/LOGO.PNG" />
+    <div class="container-fluid">
+        <h1> דשבורד חריגות</h1>
+        <div class="datadiv" id="excepdiv" style="display:none">
+            <span> יש לבחור יחידה ארגונית</span>
+            <select id="SelectUnit"></select><br />
+            <span> יש לבחור טווח תאריכים בהם תרצי לראות נתוני חריגות</span>
+            <input type="date" id="end" /> <span>   -   </span> <input type="date" id="start" /><br />
+            <button onclick="GetExcep()">הראה לי את החריגות</button>
+        </div>
+        <h1> דשבורד שעות</h1>
+        <div class="datadiv" style="display:none">    
+            <span> יש לבחור טווח תאריכים בהם תרצי לראות נתוני השעות עבור המדריכים</span>
+            <input type="date" id="endH" /> <span>   -   </span> <input type="date" id="startH" /><br />
+            <button onclick="GetHOURS()">הראה לי את השעות</button>
+        </div>
+
+
+
+    </div>
+</body>
+</html>
