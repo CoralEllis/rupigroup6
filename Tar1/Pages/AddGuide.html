@@ -245,8 +245,8 @@
 </head>
 <body dir="rtl" style="background-color:aliceblue" onload="Gets()">
     <img src="../Photos/LOGO.PNG" />
-    <div class="container">
-        <h1>צפייה/עריכה פרטי מדריכים</h1><br />
+    <div class="container-fluid"><br />
+        <h1 >צפייה בפרטי מדריכים</h1><br />
         <p class="expl">בטבלה שלהלן מוצגים כל פרטי המדריכים. על מנת לערוך פרטי מדריך יש ללחוץ על כפתור "ערוך מדריך", לעדכן את פרטיו ולבסוף ללחוץ על שמור.</p>
         <br />
         <div class="row">
@@ -267,6 +267,8 @@
                     </thead>
                 </table>
                 <div id="editDiv">
+                    <h1 id="editDiv1">עריכת פרטי מדריכים</h1><br />
+
                     <div class="row">
                         <div>
                             <label class="editMyGuide">ת"ז:</label>
@@ -312,10 +314,10 @@
                     <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
                 </div>
                 <br /><hr />
-                <div id="addNewGuide">
+                <!--<div id="addNewGuide">-->
                     <h1>הוספת מדריך חדש</h1><br />
                     <p class="expl">על מנת להוסיף מדריך חדש, יש למלא את פרטיו ולבסוף ללחוץ על כפתור שמור.</p>
-                </div>
+                <!--</div>-->
 
                 <div class="col" id="formDiv" >
                     <select id="SelectUnit"></select><br />

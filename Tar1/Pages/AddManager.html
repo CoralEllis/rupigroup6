@@ -60,7 +60,7 @@
                             $("#SelectManagerStatus").val("false");
                         }
                         switch (myData[i].Role) {
-                            case "מנהל יחידה ארגונית": 
+                            case "מנהל יחידה ארגונית":
                                 $("#ManagerRole").val(1);
                                 break;
                             case "מנהל מערך הדיור":
@@ -86,7 +86,7 @@
                         break;
                     }
                 }
-                $("#editDiv :input").prop("disabled", false); 
+                $("#editDiv :input").prop("disabled", false);
                 markSelected(this);
                 $("#editDiv").show();
             });
@@ -137,8 +137,7 @@
                                         }
                                     }
                                 }
-                                else if (data == 0)
-                                {
+                                else if (data == 0) {
                                     return "-";
                                 }
                             }
@@ -235,7 +234,8 @@
                 Unitid: $("#SelectEdit option:selected").val(),
             }
             str = "abc";
-            ajaxCall("PUT", "../api/User/" + str, JSON.stringify(ManagertoSave), PutManagerS, PutManagerE);        }
+            ajaxCall("PUT", "../api/User/" + str, JSON.stringify(ManagertoSave), PutManagerS, PutManagerE);
+        }
         function PutManagerS(data) {
             alert("good");
         }
@@ -245,115 +245,118 @@
     </script>
 
 </head>
-    <body dir="rtl" style="background-color:aliceblue" >
+<body dir="rtl" style="background-color:aliceblue">
 
-        <img src="../Photos/LOGO.PNG" />
-        <div class="container">
-            <form id="pForm">
-                <h1> צפייה/עריכה מנהל</h1><br />
+    <img src="../Photos/LOGO.PNG" />
+    <div class="container-fluid">
+        <br />
+        <form id="pForm">
+            <h1> צפייה בפרטי מנהלים</h1><br />
+            <p class="expl">בטבלה מוצגים פרטי המנהלים. על מנת לערוך פרטי מנהל יש ללחוץ על כפתור "ערוך מנהל"</p>
+            <br />
+            <table id="managerTable" class="display nowrap" style="width:50%">
+                <thead>
+                    <tr>
+                        <th>ת"ז</th>
+                        <th>שם</th>
+                        <th>שם משפחה</th>
+                        <th>תאריך לידה</th>
+                        <th>מס' טלפון</th>
+                        <th>תפקיד</th>
+                        <th>סיסמה</th>
+                        <th>סטטוס</th>
+                        <th>יחידה ארגונית</th>
+                        <th>עריכת מנהל</th>
+                    </tr>
+                </thead>
+            </table>
+        </form>
+        <br />
+        <br />
+        <div id="editDiv">
+            <h1 id="editDiv1"> עריכת מנהל</h1><br />
+            <div id="managerEditDiv">
+                <div class="row">
+                    <div>
+                        <label class="editMyGuide">ת"ז:</label>
+                        <input type="text" id="ManagerId">
+                    </div>
+                    <span></span>
+                    <div>
+                        <label class="editMyGuide">שם:</label>
+                        <input type="text" id="ManagerName" required>
+                    </div>
+                    <span></span>
+                    <div>
+                        <label class="editMyGuide">שם משפחה:</label>
+                        <input type="text" id="ManagerLastName" required>
+                    </div>
 
-                <p class="expl">בטבלה מוצגים פרטי מנהל. על מנת לערוך פרטי מנהל יש ללחוץ על כפתור "ערוך מנהל"</p>
-                <br />
-                <table id="managerTable" class="display nowrap" style="width:50%">
-                    <thead>
-                        <tr>
-                            <th>ת"ז</th>
-                            <th>שם</th>
-                            <th>שם משפחה</th>
-                            <th>תאריך לידה</th>
-                            <th>מס' טלפון</th>
-                            <th>תפקיד</th>
-                            <th>סיסמה</th>
-                            <th>סטטוס</th>
-                            <th>יחידה ארגונית</th>
-                            <th>עריכת מנהל</th>
-                        </tr>
-                    </thead>
-                </table>
-            </form>
-            <br />
-            <br />
-                <div id="editDiv">
-                    <div class="row">
-                        <div>
-                            <label class="editMyGuide">ת"ז:</label>
-                            <input type="text" id="ManagerId">
-                        </div>
-                        <span></span>
-                        <div>
-                            <label class="editMyGuide">שם:</label>
-                            <input type="text" id="ManagerName" required>
-                        </div>
-                        <span></span>
-                        <div>
-                            <label class="editMyGuide">שם משפחה:</label>
-                            <input type="text" id="ManagerLastName" required>
-                        </div>
-                        
-                    </div>
-                    <div class="row">
-                        <div>
-                            <label class="editMyGuide">תאריך לידה:</label>
-                            <input type="text" id="ManagerBirth" required />
-                        </div>
-                        <span></span>
-                        <div>
-                            <label class="editMyGuide">טלפון:</label>
-                            <input type="text" id="ManagerTelephone" required>
-                        </div>
-                        <span></span>
-                        <div>
-                            <label class="editMyGuide">סיסמה:</label>
-                            <input type="text" id="ManagerPassword" required>
-                        </div>                        
-                    </div>
-                    <div class="row">
-                        <div>
-                            <label class="editMyGuide">תפקיד:</label>
-                            <select id="ManagerRole">
-                                <option value="1">מנהל יחידה ארגונית</option>
-                                <option value="2">מנהל מערך הדיור</option>
-                                <option value="3">סמנכל משאבי אנוש</option>
-                            </select>
-                        </div>
-                        <span></span>
-                        <div>
-                            <label class="editMyGuide">סטטוס:</label>
-                            <select id="SelectManagerStatus">
-                                <option value="false">לא פעיל</option>
-                                <option value="true">פעיל</option>
-                            </select>
-                        </div>
-                        <span></span>
-                        <div>
-                            <label class="editMyGuide">בחר יחידה ארגונית:</label>
-                            <select id="SelectEdit"></select>
-                        </div>
-                    </div>
-                    <br />
-                    <button type="button" class="btn btn-primary btn-lg" id="saveBTN" onclick="SaveChanges()">שמור</button>
-                    <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
                 </div>
-                <br /><hr />
-            <br />
-            <h1>  הוספת מנהל חדש</h1><br />
-            <div class="row">
-                <form dir="rtl" action="/action_page.php" method="post">
-                    <div class="col" id="formDiv">
-                        <select id="SelectUnit"></select><br />
-                        <span>ת"ז: </span><input type="text" id="id" pattern="^\d{9}$" required /><br />
-                        <span>שם פרטי: </span><input type="text" id="first" required /><br />
-                        <span>שם משפחה: </span><input type="text" id="last" required /><br />
-                        <span> תאריך לידה:</span><input type="date" id="bdate" required /><br />
-                        <span> טלפון:</span><input type="tel" id="tel" required /><br />
-                        <input type="radio" id="BigManager" name="Manager" value="bigManager" /><label> מנהל מערך הדיור?</label><br />
-                        <input type="radio" id="SmallManager" name="Manager" value="littleManager" /><label> מנהל יחידה ארגונית?</label><br />
-                        <span> סיסמא:</span><input type="text" id="pass" required /><br />
+                <div class="row">
+                    <div>
+                        <label class="editMyGuide">תאריך לידה:</label>
+                        <input type="text" id="ManagerBirth" required />
                     </div>
-                    <br /><input type="submit" value="שמור" onclick="InsertUser()" /><br />
-
-                </form>
+                    <span></span>
+                    <div>
+                        <label class="editMyGuide">טלפון:</label>
+                        <input type="text" id="ManagerTelephone" required>
+                    </div>
+                    <span></span>
+                    <div>
+                        <label class="editMyGuide">סיסמה:</label>
+                        <input type="text" id="ManagerPassword" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <label class="editMyGuide">תפקיד:</label>
+                        <select id="ManagerRole">
+                            <option value="1">מנהל יחידה ארגונית</option>
+                            <option value="2">מנהל מערך הדיור</option>
+                            <option value="3">סמנכל משאבי אנוש</option>
+                        </select>
+                    </div>
+                    <span></span>
+                    <div>
+                        <label class="editMyGuide">סטטוס:</label>
+                        <select id="SelectManagerStatus">
+                            <option value="false">לא פעיל</option>
+                            <option value="true">פעיל</option>
+                        </select>
+                    </div>
+                    <span></span>
+                    <div>
+                        <label class="editMyGuide">בחר יחידה ארגונית:</label>
+                        <select id="SelectEdit"></select>
+                    </div>
+                </div>
             </div>
+            <br />
+            <button type="button" class="btn btn-primary btn-lg" id="saveBTN" onclick="SaveChanges()">שמור</button>
+            <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
         </div>
-    </body>
+        <br /><hr />
+        <br />
+        <h1>  הוספת מנהל חדש</h1><br />
+        <div class="row">
+            <form dir="rtl" action="/action_page.php" method="post">
+                <div class="col" id="formDiv">
+                    <select id="SelectUnit"></select><br />
+                    <span>ת"ז: </span><input type="text" id="id" pattern="^\d{9}$" required /><br />
+                    <span>שם פרטי: </span><input type="text" id="first" required /><br />
+                    <span>שם משפחה: </span><input type="text" id="last" required /><br />
+                    <span> תאריך לידה:</span><input type="date" id="bdate" required /><br />
+                    <span> טלפון:</span><input type="tel" id="tel" required /><br />
+                    <input type="radio" id="BigManager" name="Manager" value="bigManager" /><label> מנהל מערך הדיור?</label><br />
+                    <input type="radio" id="SmallManager" name="Manager" value="littleManager" /><label> מנהל יחידה ארגונית?</label><br />
+                    <span> סיסמא:</span><input type="text" id="pass" required /><br />
+                </div>
+                <br /><input type="submit" value="שמור" id="SaveB" onclick="InsertUser()" /><br />
+
+            </form>
+        </div>
+    </div>
+</body>
 </html>

@@ -66,6 +66,8 @@
                 tbl = $('#SlevelTable').DataTable({
                     data: data,
                     columns: [
+                        { data: "Id" },
+                        { data: "Traininglevel" },
                         {
                             render: function (data, type, row, meta) {
                                 let dataS = "data-SlevelId='" + row.Id + "'";
@@ -74,8 +76,6 @@
                                 return editBtn;
                             }
                         },
-                        { data: "Traininglevel" },
-                        { data: "Id" },
                     ],
                 });
                 buttonEvents();
@@ -128,19 +128,17 @@
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid">
         <br />
-        <br />
-        <h1>צפייה/הוספה/עריכה רמות הכשרה למדריכים </h1>   
-            <br />
+        <h1>צפייה ברמות הכשרה למדריכים </h1>   
             <br />
             <form id="pForm">
-                <p class="expl">.בטבלה מוצגות כל רמות ההכשרה. על מנת לערוך שם רמת הכשרה, יש ללחוץ על הכפתור "ערוך רמת הכשרה" ולבסוף ללחוץ על כפתור עדכן</p>
+                <p class="expl">בטבלה מוצגות כל רמות ההכשרה. על מנת לערוך שם רמת הכשרה, יש ללחוץ על הכפתור "ערוך רמת הכשרה" ולבסוף ללחוץ על כפתור עדכן</p>
                 <br />
                 <table id="SlevelTable" class="display nowrap" style="width:50%">
                     <thead>
                         <tr>
-                            <th>עריכה</th>
-                            <th>רמת הכשרה</th>
                             <th>מספר</th>
+                            <th>רמת הכשרה</th>
+                            <th>עריכה</th>
                         </tr>
                     </thead>
                 </table>
@@ -159,9 +157,10 @@
             <div dir="rtl" style="text-align:right;font-size:20px;color:#005473">
                 <hr />
                 <br />
+                <h1>הוספת רמת הכשרה</h1>
                 <p class="expl">אם ברצונך להוסיף רמת הכשרה חדשה, יש לרשום את שמה ולבסוף ללחוץ על שמור.</p>
                 <br />
-                <span>הכנס רמת הכשרה חדשה: </span><input type="text" id="NameOfSpeicialLevel" />
+                <span id="newLevel">הכנס רמת הכשרה חדשה: </span><input type="text" id="NameOfSpeicialLevel" />
                 <input type="submit" value="שמור" onclick="PostSpicialLevel()" /><br />
             </div>
        <br />
