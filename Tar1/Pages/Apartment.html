@@ -65,6 +65,8 @@
                 tbl = $('#AparTable').DataTable({
                     data: data,
                     columns: [
+                        { data: "Id" },
+                        { data: "Apartmenttype" },
                         {
                             render: function (data, type, row, meta) {
                                 let dataA = "data-ConsId='" + row.ConstraintID + "'";
@@ -73,8 +75,6 @@
                                 return editBtn;
                             }
                         },
-                        { data: "Apartmenttype" },
-                        { data: "Id" },
                     ],
                 });
                 buttonEvents();
@@ -140,19 +140,17 @@
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid">
         <br />
+        <h1>צפייה בסוגי דירות</h1>
         <br />
-        <h1>צפייה/עריכה סוגי דירות</h1>
-        <br />
+        <p class="expl">בטבלה מוצגות כל סוגי הדירות. על מנת לערוך סוג דירה, יש ללחוץ על כפתור "ערוך סוג דירה" ולבסוף ללחוץ על כפתור עדכן.</p>
         <br />
         <form id="pForm">
-            <p class="expl">.בטבלה מוצגות כל סוגי הדירות. על מנת לערוך סוג דירה, יש ללחוץ על הכפתור "ערוך סוג דירה" ולבסוף ללחוץ על כפתור עדכן</p>
-            <br />
             <table id="AparTable" class="display nowrap" style="width:40%">
                 <thead>
                     <tr>
-                        <th>עריכה</th>
-                        <th>סוג דירה</th>
                         <th>מס' סוג דירה</th>
+                        <th>סוג דירה</th>
+                        <th>עריכה</th>
                     </tr>
                 </thead>
             </table>
@@ -167,9 +165,9 @@
             <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
 
         </div>
-
+        <br /><hr />
         <h1>הוספת סוג דירה</h1><br />
-        <p class="expl1">על מנת להוסיף סוג דירה, יש למלא את שם סוג הדירה ולבסוף ללחוץ על "שמור".</p>
+        <p class="expl">על מנת להוסיף סוג דירה, יש למלא את שם סוג הדירה ולבסוף ללחוץ על "שמור".</p>
         <br />
         <br />
         <div class="row" dir="rtl">
@@ -178,7 +176,9 @@
                     <span>שם סוג דירה: </span><input type="text" id="name" /><br />
                 </div>
             </form>
-            <br /><input type="submit" id="insAPT" value="שמור" onclick="InsertUnit()" /><br />
+            <br /><input type="submit" id="SaveB" value="שמור" onclick="InsertUnit()" /><br />
+            <!--<br /><input type="submit" id="insAPT" value="שמור" onclick="InsertUnit()" /><br />-->
+
         </div>
         <br />
         <br />

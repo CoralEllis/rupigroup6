@@ -287,14 +287,11 @@
 </head>
 <body dir="rtl" style="background-color:aliceblue">
     <img src="../Photos/LOGO.PNG" />
-    <div class="container">
-
-        <br />
+    <div class="container-fluid">
         <br />
         <h1>צפייה ביחידות ארגוניות </h1>
         <br />
-        <br />
-        <p class="expl">בטבלה שלהלן מוצגות כל היחידות הארגוניות.</p>
+        <p class="expl">בטבלה שלהלן מוצגות כל היחידות הארגוניות. על מנת לערוך יחידה ארגונית, יש ללחוץ על כפתור ערוך יחידה ולבסוף ללחוץ על כפתור שמור.</p>
         <br />
             <table id="UnitTable" class="display nowrap" style="width:50%">
                 <thead>
@@ -311,8 +308,9 @@
             </table>
         <form id="pForm">
 
-
             <div id="editDiv">
+                <h1 id="editDiv1">עריכת יחידה ארגונית</h1>
+                <br />
                 <div class="row">
                     <div>
                         <label class="editMyUnit">שם היחידה:</label>
@@ -326,13 +324,14 @@
                         <label class="editMyUnit">רחוב ומספר:</label>
                         <input type="text" id="UnitStreetNum" required>
                     </div>
+
+                </div>
+                <br />
+                <div class="row">
                     <div>
                         <label class="editMyUnit">מספר המדריכים:</label>
                         <input type="number" id="UnitNumGuides" required />
                     </div>
-                </div>
-                <br />
-                <div class="row">
                     <div>
                         <label class="editMyUnit">מספר הדיירים:</label>
                         <input type="number" id="UnitNumRes" required>
@@ -381,7 +380,7 @@
 
                 </div>
                 <!--<br /><input type="submit" value="שמור" onclick="InsertUnit()" /><br />-->
-                <br /><input type="submit" value="שמור" /><br />
+                <br /><input type="submit" id="SaveB" value="שמור" /><br />
 
             </form>
 

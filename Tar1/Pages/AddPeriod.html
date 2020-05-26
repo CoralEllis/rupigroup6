@@ -289,24 +289,20 @@
 <body dir="rtl" style="background-color:aliceblue">
     <!--onload="GetUser()"-->
     <img src="../Photos/LOGO.PNG" />
-    <div class="container">
+    <div class="container-fluid">
+        <br />
         <h1>  הוספת תקופת שיבוץ חדשה</h1><br />
         <form dir="rtl">
-            <div class="row">
-                <label><strong> בחר תאריכים: </strong></label>
-
-                <div class="col">
-                    <label> תאריך התחלה:</label><input type="date" id="start" />
-                </div>
-                <div class="col">
-                    <label> תאריך סיום:</label><input type="date" id="end" />
-                </div>
-                <div>  <input type="checkbox" id="NightShift" /> <span> יש משמרת לילה?</span></div>
+            <div class="row" id="newPeriod">
+                    <label><strong> בחר תאריכים: </strong></label><span></span>
+                    <label> תאריך התחלה:</label><input type="date" id="start" /><span></span>
+                    <label> תאריך סיום:</label><input type="date" id="end" /><span></span>
+                <div>  <input type="checkbox" id="NightShift" />  יש משמרת לילה?</div>
             </div>
         </form>
         <br />
 
-        <input type="submit" style="font-size:30px; margin-left:400px;" value="הצג משמרות בתקופת שיבוץ" onclick="ShowShifts()" /><br />
+        <input type="submit" id="PeriodButton"  value="הצג משמרות בתקופת שיבוץ" onclick="ShowShifts()" /><br />
 
         <form>
             <div id="Placeholder">
