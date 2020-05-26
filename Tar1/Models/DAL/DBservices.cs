@@ -2401,5 +2401,56 @@ namespace Tar1.Models.DAL
                 }
             }
         }
+
+        public List<OfficialShift> GetallShifts(DateTime start, DateTime end, int unit)
+        {
+            List<OfficialShift> OS = new List<OfficialShift>();
+            SqlConnection con = null;
+            string today = DateTime.Today.ToString("yyyy-MM-dd");
+           string start1 = start.ToString("yyyy-MM-dd");
+            string end1 = end.ToString("yyyy-MM-dd");
+            string unitid = unit.ToString();
+            try
+            {
+                con = connect("DBConnectionString");
+         
+                String selectSTR = "SELECT os.ShiftDate, sf.StartShift, sf.EndShift, os.ShiftType,os.UserId,U.FirstName,U.LastName";
+                selectSTR += " FROM Shift_2020 as sf inner join OfficialShift_2020 as os on sf.ShiftType = os.ShiftType and sf.ShiftDate = os.ShiftDate inner join User_2020 as U on os.UserId = U.UserId";
+                selectSTR += " WHERE('" + start1 + "'= sf.StartPeriod and '" + end1 + "' = sf.EndPeriod)";
+                selectSTR += " AND (sf.UnitId = '" + unitid + "')";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    OfficialShift realshift = new OfficialShift();
+                    realshift.Shiftdate = Convert.ToDateTime(dr["ShiftDate"]).Date;
+                    realshift.Shifttype = Convert.ToString(dr["ShiftType"]);
+                    TimeSpan myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("StartShift")));
+                    realshift.Startshifthour = new DateTime(myTimeSpan.Ticks);
+                    TimeSpan myTimeSpan2 = ((dr).GetTimeSpan(dr.GetOrdinal("EndShift")));
+                    realshift.Endshifthour = new DateTime(myTimeSpan2.Ticks);
+                    realshift.Userid = Convert.ToString(dr["UserId"]);
+                    realshift.Name= Convert.ToString(dr["FirstName"])+ " " + Convert.ToString(dr["LastName"]);
+                    OS.Add(realshift);
+                }
+                return OS;
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+
+
+
     }
 }

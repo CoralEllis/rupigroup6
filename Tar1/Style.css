@@ -24,7 +24,21 @@ form {
         color:whitesmoke
     }
 
-
+.bigshifts {
+    border:0.5px double #005473;
+    color: #005473;
+    font-family:Calibri;
+    font-size:25px;
+    text-align:center;
+    direction:rtl;
+    width:50%;
+    margin:15px;
+    margin-right:400px;
+}
+    .bigshifts > button {
+        color: whitesmoke;
+        margin-top:10px;
+    }
     #SaveB {
         margin-right: 570PX;
         background-color: #008CBA;

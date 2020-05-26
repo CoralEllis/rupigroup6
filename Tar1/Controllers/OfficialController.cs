@@ -32,7 +32,14 @@ namespace Tar1.Controllers
             OfficialShift OS = new OfficialShift();
             return OS.GetEmptyOfficial(Unitid,arr[0],arr[1]);
         }
-    
+        [HttpGet]
+        [Route("api/Official/AllRelavnt")]
+        public List<OfficialShift> Get(DateTime start, DateTime end,int unit)
+        {
+          
+            OfficialShift OS = new OfficialShift();
+            return OS.GetallShifts(start,end,unit);
+        }
 
         // POST api/<controller>
         public void Post([FromBody]List<OfficialShift> OffShiftArr)

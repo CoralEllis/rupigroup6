@@ -16,6 +16,7 @@ namespace Tar1.Models
         string shifttype;
         DateTime shiftdate;
         int numofguides;
+        String name;
 
         public string Userid { get => userid; set => userid = value; }
         public DateTime Startshifthour { get => startshifthour; set => startshifthour = value; }
@@ -24,9 +25,10 @@ namespace Tar1.Models
         public string Shifttype { get => shifttype; set => shifttype = value; }
         public DateTime Shiftdate { get => shiftdate; set => shiftdate = value; }
         public int Numofguides { get => numofguides; set => numofguides = value; }
+        public string Name { get => name; set => name = value; }
 
         public OfficialShift() { }
-        public OfficialShift(string user,DateTime start, DateTime end,int unit, string type, DateTime date, int num)
+        public OfficialShift(string user,DateTime start, DateTime end,int unit, string type, DateTime date, int num,string _name)
         {
             Userid = user;
             Startshifthour = start;
@@ -35,6 +37,7 @@ namespace Tar1.Models
             Shifttype = type;
             Shiftdate = date;
             Numofguides = num;
+            Name = _name;
         }
         public void InsertOffShift(List<OfficialShift> OSArr)
         {
@@ -68,6 +71,16 @@ namespace Tar1.Models
             DBservices dbs = new DBservices();
              dbs.PutMish(this, idbefore);
         }
+
+        public List<OfficialShift> GetallShifts(DateTime start, DateTime end, int unit)
+        {
+            DBservices dbs = new DBservices();
+          return  dbs.GetallShifts(start, end, unit);
+
+
+        }
+       
+
 
     }
 }

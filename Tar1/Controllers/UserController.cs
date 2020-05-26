@@ -53,7 +53,6 @@ namespace AkimShifts.Controllers
             User u = new User();
             return u.GetUnitUsers(unit, Date);
         }
-
         [HttpGet]
         [Route("api/User/WorkUnit/{start}/{end}/{unitid}")]
         public List<User> Get(DateTime start, DateTime end, int unitid)
@@ -71,7 +70,7 @@ namespace AkimShifts.Controllers
         // PUT api/<controller>/5
         public void Put(string id, [FromBody]User u)
         {
-            if(id == "abc")
+            if (id == "abc")
             {
                 u.updateManager();
             }
@@ -79,7 +78,7 @@ namespace AkimShifts.Controllers
         }
 
 
-       
+
 
         // DELETE api/<controller>/5
         public void Delete(int id)
