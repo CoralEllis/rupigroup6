@@ -483,3 +483,16 @@ span:before {
     background-color: cadetblue;
     border: none;
 }
+.bigshifts {
+    direction: rtl;
+    text-align: center;
+    border-width: 0.5px;
+    border-style: solid;
+    border-color: #005473;
+    width:50%;
+    margin-right:500px;
+    }
+.bigshifts>button {
+ margin:10px;
+ color:whitesmoke;
+}
