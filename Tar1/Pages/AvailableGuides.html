@@ -205,7 +205,8 @@
                 "Endshifthour": ShiftsArray[index].EndShift.format("HH:mm"),
                 "Startshifthour": ShiftsArray[index].StartShift.format("HH:mm"),
                 "Shiftdate": ShiftsArray[index].StartShift.format("YYYY-MM-DD"),
-                "Shifttype": ShiftsArray[index].Type
+                "Shifttype": ShiftsArray[index].Type,
+                 "Unitid":unit
             }
 
             ajaxCall("POST", "../api/Official/CheckHours", JSON.stringify(offics), succesBreak, error);

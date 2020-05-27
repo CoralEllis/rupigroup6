@@ -21,7 +21,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
-    
+
     <title> שינוי נתוני משמרות קודמות</title>
     <script>
         embed = true;
@@ -31,6 +31,7 @@
         MonthNormalHours = 0;//hours per month
         ExtraHours = 0;//extra hours per month
         HoursPerWeek = 0;//number of hours that worker can work in 1 week
+        SNightShiftHours = 0;
         offics = 0;
         index = 0;
         GuideIndex = 0;
@@ -38,7 +39,7 @@
         guides = [];
         Exceptions = [];
         queue = [];
-        tbl = "";
+        Preperness = false;
         //user='';
         //function GetUser() {
         //    x = localStorage.getItem("User");
@@ -50,12 +51,20 @@
             unit = id.toString();
             ajaxCall("GET", "../api/Period/Id?id=" + unit, "", GETPeriodsS, error);
 
+            ajaxCall("GET", "../api/Period/" + id, "", GETPrepernessS, error);
+        }
+        function GETPrepernessS(data) {
+
         }
         function GETConstraintSuccess(data) {
             HoursPerWeek = data[0].ConstraintValue;
             MonthNormalHours = data[1].ConstraintValue;
             ExtraHours = data[2].ConstraintValue;
             MaxRestHours = data[3].ConstraintValue;
+            LongerShift = data[4].ConstraintValue;
+            HoursBetweenShifts = data[5].ConstraintValue;
+            Regularshifthours = data[6].ConstraintValue;
+            SNightShiftHours = data[7].ConstraintValue;
         }
         function error(err) {
             console.log(err);
@@ -109,9 +118,11 @@
         }
         function ShowShift() {
             $("#bigshift").html(" ");
+            $("#period").attr('disabled', 'disabled');
+             $("#shifts").attr('disabled', 'disabled');
             i = $("#shifts").val();
             index = i;
-            userid = +ShiftsArray[i].Userid;
+            userid = ShiftsArray[i].Userid;
             str = $("#shifts option:selected").text();
             str += "<br /><span>שעת התחלה למשמרת:   </span><input type='time' value='" + ShiftsArray[i].StartShift.format("HH:mm") + "' disabled='disabled' id='starthour' /><br /><span>שעת סיום למשמרת:   </span><input type='time' disabled='disabled' value='" + ShiftsArray[i].EndShift.format("HH:mm") + "' id='Endhour' />";
             str += "<br /><span>מדריך משובץ:  </span><div id='nameof'>" + ShiftsArray[i].Name + "</div><br /><button onclick='editShift(this)'>ערוך משמרת</button>";
@@ -120,6 +131,8 @@
 
         }
         function editShift(button) {
+
+
 
             if (button.innerText == "ערוך משמרת") {
                 button.innerText = "שמור שינויים";
@@ -132,15 +145,61 @@
             }
             else {
                 button.innerText = "ערוך משמרת";
-                document.getElementById("starthour").disabled = true;
-                document.getElementById("Endhour").disabled = true;
+                start = document.getElementById("starthour");
+                start.disabled = true;
+                end = document.getElementById("Endhour");
+                end.disabled = true;
+                Mstart = moment(start.value, 'HH:mm A');
+                Mend = moment(end.value, 'HH:mm A');
+                milisecond = moment.duration(Mend.diff(Mstart));
+                ShiftDuration = milisecond.asHours();
+                if (ShiftDuration < 0) {
+                    ShiftDuration = 24 + ShiftDuration;
+                }
                 newguides = $("#guideslist").val();
-
-
+                if (newguides != ShiftsArray[i].Userid) {
+                    if (Preperness == true && ShiftsArray[index].Type == "לילה") {
+                        if (ShiftDuration > SNightShiftHours) {
+                            guides[GuideIndex].MonthlyHours = guides[GuideIndex].MonthlyHours + SNightShiftHours;
+                            guides[GuideIndex].MonthlyExtraHours = guides[GuideIndex].MonthlyExtraHours + ShiftDuration - SNightShiftHours;
+                            guides[GuideIndex].Weeklyhours = guides[GuideIndex].Weeklyhours + ShiftDuration;
+                        }
+                        else {
+                            guides[GuideIndex].MonthlyHours = guides[GuideIndex].MonthlyHours + ShiftDuration;
+                            guides[GuideIndex].Weeklyhours = guides[GuideIndex].Weeklyhours + ShiftDuration;
+                        }
+                    }
+                    else {
+                        if (ShiftDuration > Regularshifthours) {
+                            guides[GuideIndex].MonthlyHours = guides[GuideIndex].MonthlyHours + Regularshifthours;
+                            guides[GuideIndex].MonthlyExtraHours = guides[GuideIndex].MonthlyExtraHours + ShiftDuration - Regularshifthours;
+                            guides[GuideIndex].Weeklyhours = guides[GuideIndex].Weeklyhours + ShiftDuration;
+                        }
+                        else {
+                            guides[GuideIndex].MonthlyHours = guides[GuideIndex].MonthlyHours + ShiftDuration;
+                            guides[GuideIndex].Weeklyhours = guides[GuideIndex].Weeklyhours + ShiftDuration;
+                        }
+                    }
+                     }
+                else {
+                    beforeStart = moment(ShiftsArray[i].StartShift, 'HH:mm A');
+                    beforeEnd = moment(ShiftsArray[i].EndShift, 'HH:mm A');
+                    milisecond = moment.duration(Mend.diff(Mstart));
+                    beforeShiftDuration = milisecond.asHours();
+                    HowmuchHoursChanged = ShiftDuration - beforeShiftDuration;
+                    guides[GuideIndex].MonthlyHours = guides[GuideIndex].MonthlyHours + HowmuchHoursChanged;
+                    guides[GuideIndex].Weeklyhours = guides[GuideIndex].Weeklyhours + HowmuchHoursChanged;
+                }
+                
+                    CheckGuide(newguides, guides[GuideIndex].MonthlyExtraHours, guides[GuideIndex].Weeklyhours, guides[GuideIndex].MonthlyHours, Mstart, Mend);
+              
             }
         }
         function GETGuideS(data) {
             guides = data;
+            guides[0].Weeklyhours = 62;
+            guides[0].MonthlyHours = 201;
+            guides[0].MonthlyExtraHours = 62;
             Guideinthelist = false;
             str = "<select id='guideslist' onchange='changeindex(this)'><option value=' '> בחר מדריך לשיבוץ</option>";
             for (var i = 0; i < data.length; i++) {
@@ -184,10 +243,12 @@
             }
         }
         sortByDateAsc = function (lhs, rhs) { return lhs.StartShift > rhs.StartShift ? 1 : lhs.StartShift < rhs.StartShift ? -1 : 0 }
-        function CheckGuide(button, extra, weekly, monthly) {
+        function CheckGuide(id, extra, weekly, monthly, start, end) {
+            i = $("#shifts").val();
+           
             if (extra > ExtraHours) {
                 queue.push("extraModal");
-
+                id
             }
             if (weekly > HoursPerWeek) {
                 queue.push("WeeklyModal");
@@ -197,16 +258,17 @@
                 queue.push("MonthlyModal");
 
             }
-            uesrid = button.id;
+
             index = $("#shifts").children(":selected").attr("id");
             offics = {
-                "Userid": uesrid,
-                "Endshifthour": ShiftsArray[index].EndShift.format("HH:mm"),
-                "Startshifthour": ShiftsArray[index].StartShift.format("HH:mm"),
-                "Shiftdate": ShiftsArray[index].StartShift.format("YYYY-MM-DD"),
-                "Shifttype": ShiftsArray[index].Type
+                "Userid": id,
+                "Endshifthour": end.format("HH:mm"),
+                "Startshifthour": start.format("HH:mm"),
+                "Shiftdate": ShiftsArray[i].StartShift.format("YYYY-MM-DD"),
+                "Shifttype": ShiftsArray[i].Type,
+                "Unitid":unit
             }
-
+           
             ajaxCall("POST", "../api/Official/CheckHours", JSON.stringify(offics), succesBreak, error);
         }
         function succesBreak(data) {
@@ -222,91 +284,89 @@
 
         }
         function changeindex() {
-          GuideIndex=  $("#guideslist").children(":selected").attr("id");
+            GuideIndex = $("#guideslist").children(":selected").attr("id");
         }
+        function whatisthechiose(button, str) {
+            ButtonText = (button).innerText;
+            if (ButtonText == "המשך") {
+                embed = true;
+                switch (str) {
+                    case 'extra': {
 
-        //function whatisthechiose(button, str) {
-        //    ButtonText = (button).innerText;
-        //    if (ButtonText == "המשך") {
-        //        embed = true;
-        //        switch (str) {
-        //            case 'extra': {
+                        Excpt = {
+                            "User": offics.Userid,
+                            "Unit": unit,
+                            "Index": "חריגה ממספר שעות עבודה נוספות חודשיות",
+                            "ShiftType": offics.Shifttype,
+                            "ShiftDate": offics.Shiftdate,
+                        }
+                        Exceptions.push(Excpt);
+                        break;
+                    }
+                    case 'weekly':
+                        {
+                            Excpt = {
+                                "User": offics.Userid,
+                                "Unit": unit,
+                                "Index": "חריגה משעות עבודה שבועיות",
+                                "ShiftType": offics.Shifttype,
+                                "ShiftDate": offics.Shiftdate,
+                            }
+                            Exceptions.push(Excpt);
+                            break;
+                        }
+                    case 'monthly': {
+                        Excpt = {
+                            "User": offics.Userid,
+                            "Unit": unit,
+                            "Index": "חריגה ממספר שעות עבודה חודשיות",
+                            "ShiftType": offics.Shifttype,
+                            "ShiftDate": offics.Shiftdate,
+                        }
+                        Exceptions.push(Excpt);
+                        break;
+                    }
+                }
+            }
+            else if (ButtonText == "בטל") {
+                embed = false;
+                return null;
+            }
+        }
+        function succesPut(data) {
+            alert("הנתונים נשמרו בהצלחה");
 
-        //                Excpt = {
-        //                    "User": offics.Userid,
-        //                    "Unit": unit,
-        //                    "Index": "חריגה ממספר שעות עבודה נוספות חודשיות",
-        //                    "ShiftType": offics.Shifttype,
-        //                    "ShiftDate": offics.Shiftdate,
-        //                }
-        //                Exceptions.push(Excpt);
-        //                break;
-        //            }
-        //            case 'weekly':
-        //                {
-        //                    Excpt = {
-        //                        "User": offics.Userid,
-        //                        "Unit": unit,
-        //                        "Index": "חריגה משעות עבודה שבועיות",
-        //                        "ShiftType": offics.Shifttype,
-        //                        "ShiftDate": offics.Shiftdate,
-        //                    }
-        //                    Exceptions.push(Excpt);
-        //                    break;
-        //                }
-        //            case 'monthly': {
-        //                Excpt = {
-        //                    "User": offics.Userid,
-        //                    "Unit": unit,
-        //                    "Index": "חריגה ממספר שעות עבודה חודשיות",
-        //                    "ShiftType": offics.Shifttype,
-        //                    "ShiftDate": offics.Shiftdate,
-        //                }
-        //                Exceptions.push(Excpt);
-        //                break;
-        //            }
-        //        }
-        //    }
-        //    else if (ButtonText == "בטל") {
-        //        embed = false;
-        //        return null;
-        //    }
+        }
+        function PostExceptionS(data) {
+            alert("האילוצים נשמרו בהצלחה")
 
-
-        //}
-        //function succesPut(data) {
-        //    alert("הנתונים נשמרו בהצלחה");
-        //    tbl
-        //        .clear()
-        //        .draw();
-
-        //}
-        //function PostExceptionS(data) {
-        //    console.log("האילוצים נשמרו בהצלחה")
-
-
-        //}
-        //function realPut(button) {
-        //    ButtonText = (button).innerText;
-        //    if (ButtonText == "שבץ") {
-        //        if (embed == true) {
-        //            index = $("#shifts").children(":selected").attr("id");
-        //            ShiftsArray[index].Userid;
-        //            ajaxCall("Put", "../api/Official/CheckHours?idbefore=" + ShiftsArray[index].Userid, JSON.stringify(offics), succesPut, error);
-        //            ajaxCall("POST", "../api/Exception", JSON.stringify(Exceptions), PostExceptionS, error);
-        //            offics = 0;
-        //            Exceptions = [];
-        //            queue = [];
-        //        }
-        //    }
-        //    else if (ButtonText == "בטל") {
-        //        offics = 0;
-        //        Exceptions = [];
-        //        queue = [];
-        //    }
+        }
+        function realPut(button) {
+           index = $("#shifts").val();
+            ButtonText = (button).innerText;
+            if (ButtonText == "שבץ") {
+                if (embed == true) {
+                    index = $("#shifts").children(":selected").attr("id");
+                    ShiftsArray[index].Userid;
+                    //ajaxCall("Put", "../api/Official/CheckHours?idbefore=" + ShiftsArray[index].Userid, JSON.stringify(offics), succesPut, error);
+                    if (Exceptions.length != 0) {
+                        ajaxCall("POST", "../api/Exception", JSON.stringify(Exceptions), PostExceptionS, error);
+                    }
+                    offics = 0;
+                    Exceptions = [];
+                    queue = [];
+                    $("#period").prop('disabled', false);
+                    $("#shifts").prop('disabled', false);
+                }
+            }
+            else if (ButtonText == "בטל") {
+                offics = 0;
+                Exceptions = [];
+                queue = [];
+            }
 
 
-        //}
+        }
     </script>
 </head>
 <body dir="rtl" style="background-color:aliceblue" onload="gets()">

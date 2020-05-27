@@ -1991,19 +1991,26 @@ namespace Tar1.Models.DAL
 
         public void PutMish(OfficialShift os, string idbefore)
         {
+            checkExcep(os, idbefore);
             SqlConnection con;
             SqlCommand cmd;
             try
             {
-                con = connect("DBConnectionString"); // create the connection
+                con = connect("DBConnectionString"); 
             }
             catch (Exception ex)
             {
                 throw (ex);
 
             }
+            string s = os.Startshifthour.ToString();
+            string[] DateTime = s.Split(' ');
+            string strH = DateTime[1];
+            string s1 = os.Endshifthour.ToString();
+            string[] DateTime1 = s.Split(' ');
+            string endH = DateTime1[1];
             string dateShif = os.Shiftdate.ToString("yyyy-MM-dd");
-            string cStr = "update OfficialShift_2020 SET UserId='" + os.Userid + "'";
+            string cStr = "update OfficialShift_2020 SET UserId='" + os.Userid + "' , StartShift='"+ strH + "', EndShift='"+ endH + "'";
             cStr += " WHERE ShiftDate='" + dateShif + "' and ShiftType='" + os.Shifttype + "' and UserId='" + idbefore + "'";
             cmd = CreateCommand(cStr, con);
             try
@@ -2449,7 +2456,41 @@ namespace Tar1.Models.DAL
             }
         }
 
+        private void checkExcep(OfficialShift os, string idbefore)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            try
+            {
+                con = connect("DBConnectionString");
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
 
+            }
+            string dateShif = os.Shiftdate.ToString("yyyy-MM-dd");
+            string unit = os.Unitid.ToString();
+
+            string cStr =" DELETE FROM Exception_2020 WHERE  UserId = '"+ idbefore+"' and UnitId = '"+ unit + "' and ShiftDate = '"+ dateShif+"' and ShiftType = '"+os.Shifttype+"'";
+          cmd = CreateCommand(cStr, con);
+            try
+            {
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
 
 
     }
