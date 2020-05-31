@@ -206,7 +206,7 @@
                 "Startshifthour": ShiftsArray[index].StartShift.format("HH:mm"),
                 "Shiftdate": ShiftsArray[index].StartShift.format("YYYY-MM-DD"),
                 "Shifttype": ShiftsArray[index].Type,
-                 "Unitid":unit
+                "Unitid": unit
             }
 
             ajaxCall("POST", "../api/Official/CheckHours", JSON.stringify(offics), succesBreak, error);
@@ -284,6 +284,29 @@
 
 
         }
+        function whatisthechioseBreak(button) {
+            ButtonText = (button).innerText;
+            if (ButtonText == "המשך") {
+                embed = true;
+                Excpt = {
+                    "User": offics.Userid,
+                    "Unit": unit,
+                    "Index": "אי קבלת מנוחה שבועית",
+                    "ShiftType": offics.Shifttype,
+                    "ShiftDate": offics.Shiftdate,
+                }
+                Exceptions.push(Excpt);
+
+            }
+
+            else if (ButtonText == "בטל") {
+                embed = false;
+                return null;
+            }
+
+        }
+
+
         function realPut(button) {
             ButtonText = (button).innerText;
             if (ButtonText == "שבץ") {
@@ -291,16 +314,18 @@
                     index = $("#shifts").children(":selected").attr("id");
                     ShiftsArray[index].Userid;
                     ajaxCall("Put", "../api/Official/CheckHours?idbefore=" + ShiftsArray[index].Userid, JSON.stringify(offics), succesPut, error);
-                    ajaxCall("POST", "../api/Exception", JSON.stringify(Exceptions), PostExceptionS, error);
+                    if (Exceptions.length != 0) {
+                        ajaxCall("POST", "../api/Exception", JSON.stringify(Exceptions), PostExceptionS, error);
+                    }
                     offics = 0;
                     Exceptions = [];
                     queue = [];
                 }
+                else alert("לא ניתן לשבץ במידה את המדריך כיוון שלחצת על בטל באחת מהודעות החריגה, נסה שנית לשבץ את המדריך כאשר אתה לוחץ על המשך בכל ההודעות החריגה שמופיעות לך")
             }
             else if (ButtonText == "בטל") {
                 offics = 0;
                 Exceptions = [];
-                queue = [];
             }
 
 

@@ -1903,6 +1903,8 @@ namespace Tar1.Models.DAL
         {
             string sunday = o1.Shiftdate.AddDays(-(int)o1.Shiftdate.DayOfWeek).ToString("yyyy-MM-dd");
             string saturday = o1.Shiftdate.AddDays(DayOfWeek.Saturday - o1.Shiftdate.DayOfWeek).ToString("yyyy-MM-dd");
+            List<Constraint> ConstList = getConstraintM();
+         double BreakTime = ConstList[3].ConstraintValue;
             bool HasABreak = false;
             List<OfficialShift> shifts = new List<OfficialShift>();
             SqlConnection con = null;
@@ -1939,7 +1941,7 @@ namespace Tar1.Models.DAL
                         sunday1 = new DateTime(sunday1.Year, sunday1.Month, sunday1.Day, 00, 00, 00);
                         TimeSpan interval = shifts[i].Startshifthour - sunday1;
                         x = interval.TotalHours;
-                        if (x >= 36)
+                        if (x >= BreakTime)
                         {
                             HasABreak = true;
                             return HasABreak;
@@ -1950,10 +1952,11 @@ namespace Tar1.Models.DAL
                     {
                         TimeSpan interval = shifts[i + 1].Startshifthour - shifts[i].Endshifthour;
                         x = interval.TotalHours;
-                        if (x >= 36)
+                        if (x >= BreakTime)
                         {
                             HasABreak = true;
                             return HasABreak;
+                            
                         }
                     }
                     else if (i == (shifts.Count) - 1)
@@ -1962,7 +1965,7 @@ namespace Tar1.Models.DAL
                         saturday1 = new DateTime(saturday1.Year, saturday1.Month, saturday1.Day, 23, 59, 00);
                         TimeSpan interval = saturday1 - shifts[i].Endshifthour;
                         x = interval.TotalHours;
-                        if (x >= 36)
+                        if (x >= BreakTime)
                         {
                             HasABreak = true;
                             return HasABreak;
