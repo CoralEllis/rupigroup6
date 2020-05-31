@@ -1999,7 +1999,7 @@ namespace Tar1.Models.DAL
             SqlCommand cmd;
             try
             {
-                con = connect("DBConnectionString"); 
+                con = connect("DBConnectionString");
             }
             catch (Exception ex)
             {
@@ -2013,7 +2013,7 @@ namespace Tar1.Models.DAL
             string[] DateTime1 = s.Split(' ');
             string endH = DateTime1[1];
             string dateShif = os.Shiftdate.ToString("yyyy-MM-dd");
-            string cStr = "update OfficialShift_2020 SET UserId='" + os.Userid + "' , StartShift='"+ strH + "', EndShift='"+ endH + "'";
+            string cStr = "update OfficialShift_2020 SET UserId='" + os.Userid + "' , StartShift='" + strH + "', EndShift='" + endH + "'";
             cStr += " WHERE ShiftDate='" + dateShif + "' and ShiftType='" + os.Shifttype + "' and UserId='" + idbefore + "'";
             cmd = CreateCommand(cStr, con);
             try
@@ -2257,7 +2257,7 @@ namespace Tar1.Models.DAL
                 selectSTR += "  from Exception_2020 inner join TypeofException_2020 on Exception_2020.TypeofExceptionId = TypeofException_2020.TypeofExceptionId";
                 selectSTR += " where Exception_2020.UnitId = '" + unit + "' and Exception_2020.ShiftDate between '" + startP + "' and '" + endp + "'";
                 selectSTR += " GROUP BY TypeofException_2020.TypeofException";
-               SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (dr.Read())
                 {
@@ -2290,11 +2290,11 @@ namespace Tar1.Models.DAL
             List<User> G = new List<User>();
             SqlConnection con = null;
             string unitid = unit.ToString();
-  
+
             try
             {
                 con = connect("DBConnectionString");
-                String selectSTR = "select * from User_2020 where UserRole = 'מדריך' and Active='1' and UnitId='"+unitid+"'";
+                String selectSTR = "select * from User_2020 where UserRole = 'מדריך' and Active='1' and UnitId='" + unitid + "'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (dr.Read())
@@ -2305,7 +2305,7 @@ namespace Tar1.Models.DAL
                     u.Telephone = Convert.ToString(dr["Telephone"]);
                     //u.Role = Convert.ToString(dr["TrainingLevel"]);
                     bool p = GetPer(unit);
-                    User u1 = GuideInfoByDates(u.Userid, p,start,end);
+                    User u1 = GuideInfoByDates(u.Userid, p, start, end);
                     u.MonthlyHours = u1.MonthlyHours;
                     u.MonthlyExtraHours = u1.MonthlyExtraHours;
 
@@ -2348,7 +2348,7 @@ namespace Tar1.Models.DAL
 
                 con = connect("DBConnectionString");
 
-                String selectSTR = "select * from OfficialShift_2020 where UserId = '"+Userid+"' and ShiftDate between '"+ startP + "' and '"+ endp + "'";
+                String selectSTR = "select * from OfficialShift_2020 where UserId = '" + Userid + "' and ShiftDate between '" + startP + "' and '" + endp + "'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (dr.Read())
@@ -2417,13 +2417,13 @@ namespace Tar1.Models.DAL
             List<OfficialShift> OS = new List<OfficialShift>();
             SqlConnection con = null;
             string today = DateTime.Today.ToString("yyyy-MM-dd");
-           string start1 = start.ToString("yyyy-MM-dd");
+            string start1 = start.ToString("yyyy-MM-dd");
             string end1 = end.ToString("yyyy-MM-dd");
             string unitid = unit.ToString();
             try
             {
                 con = connect("DBConnectionString");
-         
+
                 String selectSTR = "SELECT os.ShiftDate, sf.StartShift, sf.EndShift, os.ShiftType,os.UserId,U.FirstName,U.LastName";
                 selectSTR += " FROM Shift_2020 as sf inner join OfficialShift_2020 as os on sf.ShiftType = os.ShiftType and sf.ShiftDate = os.ShiftDate inner join User_2020 as U on os.UserId = U.UserId";
                 selectSTR += " WHERE('" + start1 + "'= sf.StartPeriod and '" + end1 + "' = sf.EndPeriod)";
@@ -2440,7 +2440,7 @@ namespace Tar1.Models.DAL
                     TimeSpan myTimeSpan2 = ((dr).GetTimeSpan(dr.GetOrdinal("EndShift")));
                     realshift.Endshifthour = new DateTime(myTimeSpan2.Ticks);
                     realshift.Userid = Convert.ToString(dr["UserId"]);
-                    realshift.Name= Convert.ToString(dr["FirstName"])+ " " + Convert.ToString(dr["LastName"]);
+                    realshift.Name = Convert.ToString(dr["FirstName"]) + " " + Convert.ToString(dr["LastName"]);
                     OS.Add(realshift);
                 }
                 return OS;
@@ -2475,12 +2475,11 @@ namespace Tar1.Models.DAL
             string dateShif = os.Shiftdate.ToString("yyyy-MM-dd");
             string unit = os.Unitid.ToString();
 
-            string cStr =" DELETE FROM Exception_2020 WHERE  UserId = '"+ idbefore+"' and UnitId = '"+ unit + "' and ShiftDate = '"+ dateShif+"' and ShiftType = '"+os.Shifttype+"'";
-          cmd = CreateCommand(cStr, con);
+            string cStr = " DELETE FROM Exception_2020 WHERE  UserId = '" + idbefore + "' and UnitId = '" + unit + "' and ShiftDate = '" + dateShif + "' and ShiftType = '" + os.Shifttype + "'";
+            cmd = CreateCommand(cStr, con);
             try
             {
                 cmd.ExecuteNonQuery();
-
             }
             catch (Exception ex)
             {
@@ -2494,7 +2493,119 @@ namespace Tar1.Models.DAL
                 }
             }
         }
+        public List<Exceptions> GetExceptions(int unitid, DateTime dt)
+        {
+            List<Exceptions> EXC = new List<Exceptions>();
+            SqlConnection con = null;
 
-
+            string unit = unitid.ToString();
+            string startP = dt.ToString("yyyy-MM-dd");
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = "select Exception_2020.TypeofExceptionId, Exception_2020.ShiftDate, Exception_2020.ShiftType, Exception_2020.UnitId, Exception_2020.UserId";
+                selectSTR += " from Exception_2020 left join Shift_2020 on Exception_2020.ShiftDate = Shift_2020.ShiftDate and Exception_2020.ShiftType = Shift_2020.ShiftType";
+                selectSTR += " where Exception_2020.UnitId = '" + unit + "' and Exception_2020.ShiftDate >= '" + startP + "'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    Exceptions EX = new Exceptions();
+                    EX.User = Convert.ToInt32(dr["UserId"]);
+                    EX.ShiftDate = Convert.ToDateTime(dr["ShiftDate"]).Date;
+                    EX.ShiftType = Convert.ToString(dr["ShiftType"]);
+                    EX.Index = Convert.ToString(dr["TypeofException"]);
+                    EXC.Add(EX);
+                }
+                return EXC;
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+        public void DeleteException(Exceptions Excpt)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            try
+            {
+                con = connect("DBConnectionString");
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            string date = Excpt.ShiftDate.ToString("yyyy-MM-dd");
+            string unit = Excpt.ToString();
+            string us = Excpt.User.ToString();
+            string index = Excpt.Index.ToString();
+            string cStr = "DELETE FROM Exception_2020 WHERE  UserId = '" + us + "' and UnitId = '" + unit + "' and ShiftDate = '" + date + "' and ShiftType = '" + Excpt.ShiftType + "' and TypeofExceptionId = '" + index + "'";
+            cmd = CreateCommand(cStr, con);
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+        public void UpdateException(Exceptions Excpt)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            string ShiftDate = "";
+            string UsId = Excpt.User.ToString();
+            string Unid = Excpt.Unit.ToString();
+            int indx = GetExceptionType(Excpt.Index);
+            string index = indx.ToString();
+            if (Excpt.ShiftDate != null)
+            {
+                int day = Excpt.ShiftDate.Day;
+                int month = Excpt.ShiftDate.Month;
+                int year = Excpt.ShiftDate.Year;
+                ShiftDate = month.ToString() + "/" + day.ToString() + "/" + year.ToString();
+            }
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            string cStr = "UPDATE Exception_2020 SET UserId =" + UsId + ",TypeofExceptionId ='" + index + "' WHERE UnitId ='" + Unid + "' and ShiftDate = '" + ShiftDate + "' and ShiftType = '" + Excpt.ShiftType + "'";
+            cmd = CreateCommand(cStr, con);
+            try
+            {
+                cmd.ExecuteNonQuery(); // execute the command
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
     }
 }

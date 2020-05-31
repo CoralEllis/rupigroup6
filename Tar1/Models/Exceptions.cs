@@ -41,20 +41,28 @@ namespace Tar1.Models
 
         public List<Exceptions> GetSpecialExcep(DateTime start, DateTime end,int unitid)
         {
-
             DBservices dbs = new DBservices();
-         return  dbs.GetSpecialExcep(start,end,unitid);
-
+            return  dbs.GetSpecialExcep(start,end,unitid);
         }
-
-            public List<Exceptions> GetExceptionsNum(DateTime start, DateTime end, int unitid)
+        public List<Exceptions> GetExceptionsNum(DateTime start, DateTime end, int unitid)
         {
-
             DBservices dbs = new DBservices();
             return dbs.GetExceptionsNum(start, end, unitid);
         }
-
-
+        public List<Exceptions> GetEx(int unitid, DateTime dt)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetExceptions(unitid, dt);
+        }
+        public void DelException()
+        {
+            DBservices dbs = new DBservices();
+            dbs.DeleteException(this);
+        }
+        public void UpdateEx()
+        {
+            DBservices dbs = new DBservices();
+            dbs.UpdateException(this);
+        }
     }
-
 }

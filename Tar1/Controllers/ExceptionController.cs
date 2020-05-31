@@ -16,18 +16,20 @@ namespace AkimShifts.Controllers
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/<controller>/5
-        public string Get(int id)
+        [HttpGet]
+        [Route("api/Exception/per")]
+        public List<Exceptions> Get(int Unit, DateTime Date)
         {
-            return "value";
+            Exceptions ex = new Exceptions();
+            return ex.GetEx(Unit, Date);
         }
-               
+
         [HttpGet]
         [Route("api/Exception/Special")]
         public List<Exceptions> Get(DateTime start, DateTime end, int unitid)
         {
             Exceptions e = new Exceptions();
-           return e.GetSpecialExcep(start,end,unitid);
+            return e.GetSpecialExcep(start, end, unitid);
         }
 
         [HttpGet]
@@ -46,13 +48,17 @@ namespace AkimShifts.Controllers
         }
 
         // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        public void Put([FromBody]Exceptions Ex)
         {
+            Ex.UpdateEx();
         }
 
         // DELETE api/<controller>/5
-        public void Delete(int id)
+        public void Delete([FromBody] Exceptions Ex)
         {
+            //Exceptions e = new Exceptions();
+            //e.DelException(Ex);
+            Ex.DelException();
         }
     }
 }
