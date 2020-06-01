@@ -13,14 +13,13 @@
     <script type="text/javascript"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
     <script src="../Scripts/moment.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         //user;
         //function GetUser() {
         //    x = localStorage.getItem("User");
         //    user = JSON.parse(x);
         //}
-
         ShiftsArray = [];
         BlockShifts = [];
         ApplyShift = [];
@@ -58,15 +57,12 @@
                 }
             }
             UserInfo = "2,9438";
-            ajaxCall("GET", "../api/ApplyShift/" +  UserInfo, "", GetAgainS, GetAgainE);
+            ajaxCall("GET", "../api/ApplyShift/" + UserInfo, "", GetAgainS, GetAgainE);
         }
         function GETShiftE(error) {
-            alert("BASSA");
-            console.log(error);
+        swal("הייתה בעיה בטעינת הנתונים", "", "error");         
         }
         function GetAgainS(data) {
-            console.log(data);
-            alert("Hi");
             for (var j = 0; j < data.length; j++) {
                 if (data[j].Isaplly1 == false) {
                     again = true;
@@ -93,8 +89,7 @@
                 }
             }
         }
-        function GetAgainE(error) {
-            console.log(error);
+        function GetAgainE(error) {      
         }
         function ChangeShiftPref(id, x) {
             if (x.value == 'לחץ לחסימה') {
@@ -149,18 +144,16 @@
             }
         }
         function PostAShiftS(data) {
-            Swal.fire('המשמרות הוגשו בהצלחה!', '', 'success')
+            swal("המשמרות הוגשו בהצלחה!", "", "success");
         }
         function PostAShiftE(error) {
-            alert("BASSA");
-            console.log(error);
+            swal("ישנה בעיה בהגשת המשמרות", "בדוק את הנתונים היטב ונסה שנית", "error");
         }
         function PutShiftS(data) {
-            Swal.fire('המשמרות עודכנו בהצלחה!', '', 'success')
+            swal("המשמרות עודכנו בהצלחה!", "", "success");
         }
         function PutShiftE(error) {
-            alert("BASSA");
-            console.log(error);
+            swal("השינויים לא נשמרו", "בדוק את הנתונים היטב ונסה שנית", "error");
         }
         sortByDateAsc = function (lhs, rhs) { return lhs.StartShift > rhs.StartShift ? 1 : lhs.StartShift < rhs.StartShift ? -1 : 0 }
 

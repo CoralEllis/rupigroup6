@@ -24,17 +24,14 @@
     <script src="../Scripts/ajaxCalls.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
-
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         var myData;
-        // will run when the document is ready
         $(document).ready(function () {
             $("#cancelSaveBTN").on("click", function () {
                 $("#editDiv").hide();
@@ -42,25 +39,22 @@
             ajaxCall("GET", "../api/ApartmentType", "", getSuccess, error);
             $("#editDiv").hide();
         });
-        // wire all the buttons to their functions
         function buttonEvents() {
             $(document).on("click", ".editBtn", function () {
                 markSelected(this);
                 str = "<span>עדכן סוג דירה:</span><input type='text' class='inputTL' id='cons" + this.id + "' value='" + this.name + "' ><br />";
                 $("#editApType").html(str);
                 $("#editDiv").show();
-                $("#editDiv :input").prop("disabled", false); // edit mode: enable all controls in the form
+                $("#editDiv :input").prop("disabled", false);
             });
         }
-        // mark the selected row
         function markSelected(btn) {
-            $("#ConsTable tr").removeClass("selected"); // remove seleced class from rows that were selected before
-            row = (btn.parentNode).parentNode; // button is in TD which is in Row
-            row.className = 'selected'; // mark as selected
+            $("#ConsTable tr").removeClass("selected");
+            row = (btn.parentNode).parentNode;
+            row.className = 'selected';
         }
-        // this function is activated in case of a success
         function getSuccess(data) {
-            myData = data; // keep the cars array in a global variable;
+            myData = data;
             try {
                 tbl = $('#AparTable').DataTable({
                     data: data,
@@ -79,16 +73,13 @@
                 });
                 buttonEvents();
             }
-
             catch (err) {
-                alert(err);
+                swal("ישנה בעיה בטעינת הטבלה", "אנא נסה לטעון את העמוד מחדש", "warning");
             }
         }
-        // this function is activated in case of a failure
         function error(err) {
             swal("Error: " + err);
         }
-
         function save() {
             x = document.getElementById("editApType").childNodes[1].id;
             y = document.getElementById("editApType").childNodes[1].value;
@@ -102,20 +93,17 @@
             ajaxCall("PUT", "../api/ApartmentType/" + x, JSON.stringify(ApartmenTypeJ), PutSuccess, PutError);
         }
         function PutSuccess(data) {
-            alert("great");
+            swal("סוג הדירה עודכנה בהצלחה", "", "success");
         }
         function PutError(error) {
-            alert("bad");
-            console.log(error);
+            swal("השינויים לא נשמרו", "בדוק את הנתונים היטב ונסה שנית", "error");
 
         }
-
         function InsertUnit() {
             name = $("#name").val();
             for (var i = 0; i < myData.length; i++) {
                 if (myData[i].Unitname == name) {
-                    //Swal('כבר קיימת יחידה ארגונית במערכת בשם זה', '', 'error');
-                    alert("כבר קיים סוג דירה במערכת בשם זה");
+                    swal("כבר קיים סוג דירה במערכת בשם זה", "נא לשנות את שם סוג הדירה", "warning");
                     return;
                 }
             }
@@ -124,15 +112,11 @@
             }
             ajaxCall("POST", "../api/ApartmentType", JSON.stringify(APNewType), PostAPNewTypeS, PostAPNewTypeE);
         }
-
         function PostAPNewTypeS(data) {
-            console.log(data);
-            alert("gooodddd");
+            swal("סוג הדירה נשמרה בהצלחה", "", "error");
         }
-
         function PostAPNewTypeE(error) {
-            console.log(error);
-            alert("badddd");
+            swal("הייתה בעיה בהכנסת סוג הדירה", "בדוק את הנתונים היטב ונסה שנית", "error");
         }
     </script>
 </head>

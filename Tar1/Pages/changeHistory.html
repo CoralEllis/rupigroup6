@@ -21,7 +21,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
-
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <title> שינוי נתוני משמרות קודמות</title>
     <script>
         embed = true;
@@ -50,7 +50,6 @@
             id = 2;// in the futur take from localstorage
             unit = id.toString();
             ajaxCall("GET", "../api/Period/Id?id=" + unit, "", GETPeriodsS, error);
-
             ajaxCall("GET", "../api/Period/" + id, "", GETPrepernessS, error);
         }
         function GETPrepernessS(data) {
@@ -67,7 +66,7 @@
             SNightShiftHours = data[7].ConstraintValue;
         }
         function error(err) {
-            console.log(err);
+              swal("ישנה בעיה", "נסה לבצע את הפעולה שעשית בשנית", "error");
         }
         function GETPeriodsS(data) {
             str = "<option value=''> בחר תקופת שיבוץ</option>";
@@ -329,15 +328,13 @@
             }
         }
         function succesPut(data) {
-            alert("הנתונים נשמרו בהצלחה");
-
+            swal("המשמרת אויישה בהצלחה", "", "success");
         }
         function PostExceptionS(data) {
-            alert("האילוצים נשמרו בהצלחה")
+            swal("החריגות נשמרו בהצלחה", "", "success");
 
         }
         function realPut(button) {
-
             ButtonText = (button).innerText;
             if (ButtonText == "שבץ") {
                 if (embed == true) {
@@ -353,8 +350,7 @@
                     $("#shifts").prop('disabled', false);
                 }
 
-                else alert("לא ניתן לשבץ במידה את המדריך כיוון שלחצת על בטל באחת מהודעות החריגה, נסה שנית לשבץ את המדריך כאשר אתה לוחץ על המשך בכל ההודעות החריגה שמופיעות לך")
-
+                else swal("לא ניתן לשבץ את המדריך", "במידה ולחצת בטל על אחת מהודעות החריגה לא ניתן לשבץ את המדריך, נסה לשבץ שוב וללחוץ על המשך כאשר הן מופיעות, במידה ואינך רוצה שיישמרו חריגות שבץ מדריך אחר", "warning");
             }
             else if (ButtonText == "בטל") {
                 offics = 0;
@@ -375,7 +371,6 @@
                     Exceptions.push(Excpt);
 
                 }
-
                 else if (ButtonText == "בטל") {
                     embed = false;
                     return null;

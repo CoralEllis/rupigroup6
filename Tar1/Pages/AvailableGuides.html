@@ -21,7 +21,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
-
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <title> מדריכים פנויים לאיוש משמרות</title>
     <script>
         embed = true;
@@ -56,7 +56,7 @@
             $("#SelectUnit").html(str);
         }
         function error(err) {
-            console.log(err);
+             swal("ישנה בעיה", "נסה לבצע את הפעולה שעשית בשנית", "error");
         }
         function GetWorkSchedule(select) {
             id = select.options[select.selectedIndex].value;
@@ -181,7 +181,7 @@
             }
 
             catch (err) {
-                alert(err);
+                swal("ישנה בעיה בטעינת הטבלה", "אנא נסה לטעון את העמוד מחדש", "warning");
             }
         }
         sortByDateAsc = function (lhs, rhs) { return lhs.StartShift > rhs.StartShift ? 1 : lhs.StartShift < rhs.StartShift ? -1 : 0 }
@@ -273,7 +273,8 @@
 
         }
         function succesPut(data) {
-            alert("הנתונים נשמרו בהצלחה");
+            swal("המשמרת עודכנה בהצלחה", "", "success");
+
             tbl
                 .clear()
                 .draw();
@@ -305,8 +306,6 @@
             }
 
         }
-
-
         function realPut(button) {
             ButtonText = (button).innerText;
             if (ButtonText == "שבץ") {
@@ -321,14 +320,13 @@
                     Exceptions = [];
                     queue = [];
                 }
-                else alert("לא ניתן לשבץ במידה את המדריך כיוון שלחצת על בטל באחת מהודעות החריגה, נסה שנית לשבץ את המדריך כאשר אתה לוחץ על המשך בכל ההודעות החריגה שמופיעות לך")
+                else  swal("לא ניתן לשבץ את המדריך", "במידה ולחצת בטל על אחת מהודעות החריגה לא ניתן לשבץ את המדריך, נסה לשבץ שוב וללחוץ על המשך כאשר הן מופיעות, במידה ואינך רוצה שיישמרו חריגות שבץ מדריך אחר", "warning");
+                 
             }
             else if (ButtonText == "בטל") {
                 offics = 0;
                 Exceptions = [];
             }
-
-
         }
     </script>
 </head>

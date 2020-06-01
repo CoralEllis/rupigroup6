@@ -12,6 +12,7 @@
             crossorigin="anonymous"></script>
     <script type="text/javascript"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         //user;
         //function GetUser() {
@@ -29,7 +30,6 @@
         }
         sortByDateAsc = function (lhs, rhs) { return lhs.Shiftdate > rhs.Shiftdate ? 1 : lhs.Shiftdate < rhs.Shiftdate ? -1 : 0 }
         function GetShiftS(data) {
-            alert("SABABA!");
             if (data.length > 0) {
                 again = true;
                 for (var f = 0; f < data.length; f++) {
@@ -165,7 +165,7 @@
             $("#save").show();
         }
         function GetShiftE(error) {
-            alert("BASSA!");
+            swal("הייתה בעיה בטעינת המשמרות", "", "error");
             console.log(error);
         }
 
@@ -269,17 +269,17 @@
             console.log(error);
         }
         function PostShiftS(data) {
-            alert("SABABA!");
+            swal("המשמרות נשמרו בהצלחה", "", "success");
         }
         function PostShiftE(error) {
-            alert("BASSA");
+            swal("המשמרות לא נשמרו", "בדוק את הנתונים שהכנסת היטב ונסה שנית", "error");
             console.log(error);
         }
         function UpdateShiftS(data) {
-            alert("UpdateShiftS!");
+            swal("המשמרות עודכנו בהצלחה", "", "success");
         }
         function UpdateShiftE(error) {
-            alert("Update failed");
+            swal("השינויים לא נשמרו", "בדוק את הנתונים היטב ונסה שנית", "error");
             console.log(error);
         }
 
@@ -294,15 +294,15 @@
         <h1>  הוספת תקופת שיבוץ חדשה</h1><br />
         <form dir="rtl">
             <div class="row" id="newPeriod">
-                    <label><strong> בחר תאריכים: </strong></label><span></span>
-                    <label> תאריך התחלה:</label><input type="date" id="start" /><span></span>
-                    <label> תאריך סיום:</label><input type="date" id="end" /><span></span>
+                <label><strong> בחר תאריכים: </strong></label><span></span>
+                <label> תאריך התחלה:</label><input type="date" id="start" /><span></span>
+                <label> תאריך סיום:</label><input type="date" id="end" /><span></span>
                 <div>  <input type="checkbox" id="NightShift" />  יש משמרת לילה?</div>
             </div>
         </form>
         <br />
 
-        <input type="submit" id="PeriodButton"  value="הצג משמרות בתקופת שיבוץ" onclick="ShowShifts()" /><br />
+        <input type="submit" id="PeriodButton" value="הצג משמרות בתקופת שיבוץ" onclick="ShowShifts()" /><br />
 
         <form>
             <div id="Placeholder">

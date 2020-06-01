@@ -12,18 +12,16 @@
             crossorigin="anonymous"></script>
     <script type="text/javascript"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         UsersArray = [];
         function GetUsers() {
             ajaxCall("GET", "../api/User", "", GetUserS, GetUserE);
         }
         function GetUserS(data) {
-            alert("SABABA");
             UsersArray = data;
         }
         function GetUserE(error) {
-            console.log(error);
-            alert("BASSA");
         }
         function check() {
             id = $("#id").val();
@@ -57,12 +55,10 @@
             }
 
             if (idisright == 1)
-                alert("הסיסמא לא נכונה, אנא הכנס סיסמא בשנית");
+                swal("הסיסמא שהוזנה לא נכונה", "אנא הכנס סיסמא בשנית, במידה ואינך זוכר את סיסמתך אנא פנה למנהל שלך", "warning");
 
             else if (idisright == 0)
-
-                alert("שם המשתמש שהוזן לא קיים במערכת, אנא הכנס שם משתמש בשנית");
-
+                swal("שם המשתמש שהוזן לא קיים במערכת", "אנא הכנס שם משתמש בשנית", "warning");
         }
 
     </script>

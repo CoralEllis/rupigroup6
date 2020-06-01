@@ -24,17 +24,14 @@
     <script src="../Scripts/ajaxCalls.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
-
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         var myData;
-        // will run when the document is ready
         $(document).ready(function () {
             $("#cancelSaveBTN").on("click", function () {
                 $("#editDiv").hide();
@@ -42,7 +39,6 @@
             ajaxCall("GET", "../api/Constraint", "", getSuccess, error);
             $("#editDiv").hide();
         });
-        // wire all the buttons to their functions
         function buttonEvents() {
             $(document).on("click", ".editBtn", function () {
                 markSelected(this);
@@ -50,18 +46,16 @@
                 str += "<span>עדכן ערך אילוץ:</span><input type='number' class='inputTL' value='" + this.value + "' >";
                 $("#editCons").html(str);
                 $("#editDiv").show();
-                $("#editDiv :input").prop("disabled", false); // edit mode: enable all controls in the form
+                $("#editDiv :input").prop("disabled", false);
             });
         }
-        // mark the selected row
         function markSelected(btn) {
-            $("#ConsTable tr").removeClass("selected"); // remove seleced class from rows that were selected before
-            row = (btn.parentNode).parentNode; // button is in TD which is in Row
-            row.className = 'selected'; // mark as selected
+            $("#ConsTable tr").removeClass("selected");
+            row = (btn.parentNode).parentNode;
+            row.className = 'selected';
         }
-        // this function is activated in case of a success
         function getSuccess(data) {
-            myData = data; // keep the cars array in a global variable;
+            myData = data;
             try {
                 tbl = $('#ConsTable').DataTable({
                     data: data,
@@ -74,7 +68,7 @@
                                 return editBtn;
                             }
                         },
-                        { data: "ConstraintValue"},
+                        { data: "ConstraintValue" },
                         { data: "ConstraintName" },
                         { data: "ConstraintID" },
                     ],
@@ -86,18 +80,16 @@
                 alert(err);
             }
         }
-        // this function is activated in case of a failure
         function error(err) {
             swal("Error: " + err);
         }
-   
         function save() {
             x = document.getElementById("editCons").childNodes[1].id;
             y = document.getElementById("editCons").childNodes[1].value;
             z = document.getElementById("editCons").childNodes[4].value;
             res = x.split("s");
             x = res[1];
-            console.log(x,y,z);
+            console.log(x, y, z);
             constraint = {
                 "ConstraintID": x,
                 "ConstraintName": y,
@@ -106,12 +98,10 @@
             ajaxCall("PUT", "../api/Constraint/" + x, JSON.stringify(constraint), PutSuccess, PutError);
         }
         function PutSuccess(data) {
-            alert("great");
+            swal("האילוצים עודכנו בהצלחה", "", "success");
         }
         function PutError(error) {
-            alert("bad");
-            console.log(error);
-            
+            swal("השינויים לא נשמרו", "בדוק את הנתונים היטב ונסה שנית", "error");
         }
     </script>
 </head>

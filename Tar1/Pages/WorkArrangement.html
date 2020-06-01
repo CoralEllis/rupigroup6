@@ -15,10 +15,10 @@
     <script type="text/javascript"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="../Scripts/moment.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/moment@2.22.2/moment.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment-range/4.0.1/moment-range.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <style>
         select, div {
             font-family: fontAwesome
@@ -835,7 +835,7 @@
         }
         function DeleteS(data) {
             alert("Delete Success");
-        } 
+        }
         function DeleteE(err) {
             alert("Delete Failed");
             console.log(err);
@@ -864,8 +864,8 @@
                                 range = moment().range(calendar[i].start.format("YYYY-MM-DD"), calendar[i].end.format("YYYY-MM-DD"));
                                 date = moment(Guides[j].ShiftsSorted[f].StartShift.format("YYYY-MM-DD"));
                                 if (range.contains(date)) {
-                                    FirstShift = moment(calendar[i].start.format("YYYY-MM-DD")+ ' '+ '00:00');
-                                    Lastshift = moment(calendar[i].end.format("YYYY-MM-DD")+ ' '+ '23:59');
+                                    FirstShift = moment(calendar[i].start.format("YYYY-MM-DD") + ' ' + '00:00');
+                                    Lastshift = moment(calendar[i].end.format("YYYY-MM-DD") + ' ' + '23:59');
                                 }
                             }
                             //FirstShift = Guides[j].ShiftsSorted[f].StartShift.startOf('week');
