@@ -48,6 +48,13 @@ namespace Tar1.Models
 
         }
 
+        public List<Period> GetHistoryPeriod(int unit)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetHistoryPeriod(unit);
+
+        }
+       
 
     }
 }

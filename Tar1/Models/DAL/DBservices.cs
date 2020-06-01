@@ -2607,5 +2607,46 @@ namespace Tar1.Models.DAL
                 }
             }
         }
+        public List<Period> GetHistoryPeriod(int unit)
+        {
+            List<Period> P = new List<Period>();
+            SqlConnection con = null;
+            int todayMonth = DateTime.Today.Month - 2;
+            string day = "01";
+            string month = todayMonth.ToString("00");
+            int year = DateTime.Today.Year;
+            string TwoMonthBefore = year.ToString() + "-" + month + "-" + day;
+            string today = DateTime.Today.ToString("yyyy-MM-dd");
+            string unitid = unit.ToString();
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = "select * from SchedulingPeriod_2020 where StartPeriod > '"+ TwoMonthBefore + "' and EndPeriod<'"+ today + "' and UnitId='" + unitid+"'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    Period period = new Period();
+                    period.Startdate = Convert.ToDateTime(dr["StartPeriod"]).Date;
+                    period.Enddate = Convert.ToDateTime(dr["EndPeriod"]).Date;
+                    P.Add(period);
+                }
+                return P;
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+
+
+        }
     }
 }

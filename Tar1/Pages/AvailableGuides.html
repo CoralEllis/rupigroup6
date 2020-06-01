@@ -31,13 +31,16 @@
         MonthNormalHours = 0;//hours per month
         ExtraHours = 0;//extra hours per month
         HoursPerWeek = 0;//number of hours that worker can work in 1 week
+        SNightShiftHours = 0;
+        Regularshifthours = 0;
         offics = 0;
         Exceptions = [];
         queue = [];
         tbl = "";
+        Preperness = false;
+        guides = [];
         function gets() {
             ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, error);
-
             ajaxCall("GET", "../api/Constraint", "", GETConstraintSuccess, error);
         }
         function GETConstraintSuccess(data) {
@@ -45,8 +48,8 @@
             MonthNormalHours = data[1].ConstraintValue;
             ExtraHours = data[2].ConstraintValue;
             MaxRestHours = data[3].ConstraintValue;
-
-
+            Regularshifthours = data[6].ConstraintValue;
+            SNightShiftHours = data[7].ConstraintValue;
         }
         function GetOrganizeUnitS(data) {
             str = "<option>בחר יחידה ארגונית</option>";
@@ -56,16 +59,19 @@
             $("#SelectUnit").html(str);
         }
         function error(err) {
-             swal("ישנה בעיה", "נסה לבצע את הפעולה שעשית בשנית", "error");
+            swal("ישנה בעיה", "נסה לבצע את הפעולה שעשית בשנית", "error");
         }
         function GetWorkSchedule(select) {
             id = select.options[select.selectedIndex].value;
             unit = id.toString();
             ajaxCall("GET", "../api/Period/Id?id=" + unit, "", GETPeriodsS, error);
+            ajaxCall("GET", "../api/Period/" + unit, "", GETPrepernessS, error);
 
         }
+        function GETPrepernessS(data) {
+            Preperness = data;
+        }
         function GETPeriodsS(data) {
-
             str = "<option value=''> בחר תקופת שיבוץ</option>";
             for (var i = 0; i < data.length; i++) {
                 end = data[i].Enddate.split("T");
@@ -141,6 +147,7 @@
             }
         }
         function SuccessUser(data) {
+            guides = data;
             $("#guidestbl").show();
             try {
                 tbl = $('#GTable').DataTable({
@@ -172,7 +179,7 @@
                         {
                             render: function (data, type, row, meta) {
 
-                                editBtn = "<button  id='" + row.Userid + "' class = 'editBtn btn btn-success' onclick='CheckGuide(this," + row.MonthlyExtraHours + "," + row.Weeklyhours + "," + row.MonthlyHours + ")'> בדוק זמינות של מדריך </button>";
+                                editBtn = "<button  id='" + row.Userid + "' class = 'editBtn btn btn-success' onclick='CheckGuide(this," + row.MonthlyExtraHours + "," + row.Weeklyhours + "," + row.MonthlyHours + ")'>שבץ מדריך </button>";
                                 return editBtn;
                             }
                         },
@@ -274,16 +281,12 @@
         }
         function succesPut(data) {
             swal("המשמרת עודכנה בהצלחה", "", "success");
-
             tbl
                 .clear()
                 .draw();
-
         }
         function PostExceptionS(data) {
             console.log("האילוצים נשמרו בהצלחה")
-
-
         }
         function whatisthechioseBreak(button) {
             ButtonText = (button).innerText;
@@ -320,8 +323,8 @@
                     Exceptions = [];
                     queue = [];
                 }
-                else  swal("לא ניתן לשבץ את המדריך", "במידה ולחצת בטל על אחת מהודעות החריגה לא ניתן לשבץ את המדריך, נסה לשבץ שוב וללחוץ על המשך כאשר הן מופיעות, במידה ואינך רוצה שיישמרו חריגות שבץ מדריך אחר", "warning");
-                 
+                else swal("לא ניתן לשבץ את המדריך", "במידה ולחצת בטל על אחת מהודעות החריגה לא ניתן לשבץ את המדריך, נסה לשבץ שוב וללחוץ על המשך כאשר הן מופיעות, במידה ואינך רוצה שיישמרו חריגות שבץ מדריך אחר", "warning");
+
             }
             else if (ButtonText == "בטל") {
                 offics = 0;
