@@ -163,6 +163,10 @@
             first = $("#first").val();
             last = $("#last").val();
             bdate = $("#bdate").val();
+            if (moment(moment()).isBefore(bdate)) {
+                swal("תאריך לידה גדול מהיום", "אנא הכנס טווח תאריכים תקני", "warning");
+                return null;
+            }
             tel = $("#tel").val();
             pass = $("#pass").val();
             unit = $("#SelectUnit").val();
@@ -200,6 +204,10 @@
         function SaveChanges() {
             birthFormat = moment($("#GuideBirth").val());
             birth = birthFormat.format('YYYY-DD-MM');
+            if (moment(moment()).isBefore(birth)) {
+                swal("תאריך לידה גדול מהיום", "אנא הכנס טווח תאריכים תקני", "warning");
+                return null;
+            }
             console.log(birth);
             GuidetoSave = {
                 Userid: $("#GuideId").val(),

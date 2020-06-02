@@ -179,6 +179,10 @@
             first = $("#first").val();
             last = $("#last").val();
             bdate = $("#bdate").val();
+            if (moment(moment()).isBefore(bdate)) {
+                swal("תאריך לידה גדול מהיום", "אנא הכנס טווח תאריכים תקני", "warning");
+                return null;
+            }
             tel = $("#tel").val();
             pass = $("#pass").val();
             um = document.getElementById("SmallManager").checked;
@@ -217,6 +221,10 @@
         function SaveChanges() {
             birthFormat = moment($("#ManagerBirth").val());
             birth = birthFormat.format('YYYY-DD-MM');
+            if (moment(end).isBefore(birth)) {
+                swal("תאריך סיום גדול מתאריך התחלה", "אנא הכנס טווח תאריכים תקני", "warning");
+                return null;
+            }
             console.log(birth);
             ManagertoSave = {
                 Userid: $("#ManagerId").val(),
