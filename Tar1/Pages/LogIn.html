@@ -19,63 +19,59 @@
             ajaxCall("GET", "../api/User", "", GetUserS, GetUserE);
         }
         function GetUserS(data) {
-            UsersArray = data;
+            if (data.Userid == null) {
+                swal("שם המשתמש או הסיסמא שהזנת שגויים", " אנא הכנס את פרטיך בשנית במידה וישנה בעיה חוזרת אנא פנה למנהל שלך לקבלת הפרטים", "warning");
+            }
+
+            localStorage.setItem("User", JSON.stringify(data));
+            switch (data.Role) {
+                case "מדריך":
+                    window.location.href = "GuideHomePage.html";
+                    return null;
+                case "מנהל יחידה ארגונית":
+                    window.location.href = "UnitManagerHomePage.html";
+                    return null;
+                case "מנהל מערך הדיור":
+                    window.location.href = "BigManagerHomePage.html";
+                    return null;
+                case 'סמנכלית':
+                    window.location.href = "LibatHomePage.html";
+                    return null;
+            }
         }
         function GetUserE(error) {
         }
         function check() {
-            id = $("#id").val();
-            pass = $("#pass").val();
-            idisright = 0;
-            for (var i = 0; i < UsersArray.length; i++) {
-                if (id == UsersArray[i].Userid) {
-                    idisright = 1;
-                    if (pass == UsersArray[i].Password) {
-                        localStorage.setItem("User", JSON.stringify(UsersArray[i]))
-                        switch (UsersArray[i].Role) {
-                            case "מדריך":
-                                window.location.href = "GuideHomePage.html";
-                                return;
-                            case "מנהל יחידה ארגונית":
-                                window.location.href = "UnitManagerHomePage.html";
-                                return;
-                            case "מנהל מערך הדיור":
-                                window.location.href = "BigManagerHomePage.html";
-                                return;
-                            case 'סמנכלית משאבי אנוש':
-                                window.location.href = "LibatHomePage.html";
-                                return;
-                            default:
-                                alert("נסה שנית להיכנס למערכת")
-
-                        }
-                    }
-                }
-
-            }
-
-            if (idisright == 1)
-                swal("הסיסמא שהוזנה לא נכונה", "אנא הכנס סיסמא בשנית, במידה ואינך זוכר את סיסמתך אנא פנה למנהל שלך", "warning");
-
-            else if (idisright == 0)
-                swal("שם המשתמש שהוזן לא קיים במערכת", "אנא הכנס שם משתמש בשנית", "warning");
+            id = $("#id").val().toString();
+            pass = $("#pass").val().toString();
+            ajaxCall("GET", "../api/User/" + id + "/" + pass, "", GetUserS, GetUserE);
         }
+        function showpass() {
 
+            var x = document.getElementById("pass");
+            if (x.type == "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+        }
     </script>
     <title></title>
 </head>
-<body dir="rtl" style="background-color:aliceblue" onload="GetUsers()">
+<body dir="rtl" style="background-color:aliceblue">
     <img src="../Photos/LOGO.PNG" />
     <div class="container">
         <h1> כניסה למערכת</h1><br />
         <div class="row">
-            <form dir="rtl">
+            <form dir="rtl" onsubmit="return false">
                 <div class="col">
-                    <span>ת"ז: </span><input type="text" id="id" value="" /><br />
-                    <span> סיסמא:</span><input type="text" id="pass" value="" /><br />
+                    <span>תעודת זהות: </span><input type="text" id="id" value="" /><br />
+                    <span> סיסמא:</span><input type="password" id="pass" value="" /><br />
+                    <input type="checkbox" onclick="showpass()"><span> חשוף את הסיסמא</span>
+                    <br /><input type="submit" value="כניסה למערכת" onclick="check()"  style="margin-right:100%;"/><br />
                 </div>
             </form>
-            <br /><input type="submit" value="הכנס אותי" onclick="check()" /><br />
+         
         </div>
     </div>
 </body>

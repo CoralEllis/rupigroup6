@@ -42,7 +42,7 @@ namespace Tar1.Models
         public double Weeklyhours { get => weeklyhours; set => weeklyhours = value; }
 
         public User() { }
-        public User(string id, string pass,string first, string last, DateTime bdate, string tel, string _role, bool um, bool bm, int Uid,double monthhour,double exmonthhour, int numofP, int _trainingLevelId, bool _isactive, double _weeklyhours)
+        public User(string id, string pass, string first, string last, DateTime bdate, string tel, string _role, bool um, bool bm, int Uid, double monthhour, double exmonthhour, int numofP, int _trainingLevelId, bool _isactive, double _weeklyhours)
         {
             Userid = id;
             Password = pass;
@@ -67,12 +67,10 @@ namespace Tar1.Models
             dbs.InsertUser(this);
         }
 
-        public List<User> GetUsers()
+        public User GetUsers(string id, string password)
         {
-
             DBservices dbs = new DBservices();
-            List<User> U = dbs.GetUser();
-            return U;
+            return dbs.GetUser(id, password);
         }
 
         public List<User> GetUnitUsers(int Un, DateTime date)
@@ -108,8 +106,8 @@ namespace Tar1.Models
         public List<User> GetAvailableGuides(string shift)
         {
             DBservices dbs = new DBservices();
-          return dbs.GetAvailableGuides(shift);
-            
+            return dbs.GetAvailableGuides(shift);
+
         }
 
         public List<User> GetGuidesHours(DateTime start, DateTime end, int unit)

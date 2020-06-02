@@ -458,35 +458,38 @@ namespace Tar1.Models.DAL
                 return command;
             }
         }
-        public List<User> GetUser()
+        public User GetUser(string id, string password)
         {
-            List<User> U = new List<User>();
+            User U = new User();
             SqlConnection con = null;
             try
             {
                 con = connect("DBConnectionString");
-                String selectSTR = "SELECT * FROM User_2020 where Active ='1'";
+                String selectSTR = "SELECT * FROM User_2020 where Active = '1' and UserId = '" + id + "' and UPassword = '" + password + "'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-                while (dr.Read())
+                dr.Read();
+                if (dr.HasRows)
                 {
-                    User us = new User();
-                    us.Firstname = (string)dr["FirstName"];
-                    us.Lastname = (string)dr["LastName"];
-                    us.Password = (string)dr["UPassword"];
-                    us.Userid = (string)dr["UserId"];
-                    us.Role = (string)dr["UserRole"];
-                    if (us.Role == "מנהל מערך הדיור" || us.Role == "סמנכלית"||  us.Firstname == "מדריך")
+                    U.Firstname = (string)dr["FirstName"];
+                    U.Lastname = (string)dr["LastName"];
+                    U.Password = (string)dr["UPassword"];
+                    U.Userid = (string)dr["UserId"];
+                    U.Role = (string)dr["UserRole"];
+                    if (U.Role == "מנהל מערך הדיור" || U.Role == "סמנכלית")
                     {
-                        us.Unitid = 0;
+                        U.Unitid = 0;
                     }
                     else
                     {
-                        us.Unitid = Convert.ToInt32(dr["UnitId"]);
+                        U.Unitid = Convert.ToInt32(dr["UnitId"]);
                     }
-                    U.Add(us);
+                    return U;
                 }
-                return U;
+                else
+                {
+                    return U;
+                }
             }
             catch (Exception ex)
             {
@@ -1903,7 +1906,7 @@ namespace Tar1.Models.DAL
             string sunday = o1.Shiftdate.AddDays(-(int)o1.Shiftdate.DayOfWeek).ToString("yyyy-MM-dd");
             string saturday = o1.Shiftdate.AddDays(DayOfWeek.Saturday - o1.Shiftdate.DayOfWeek).ToString("yyyy-MM-dd");
             List<Constraint> ConstList = getConstraintM();
-         double BreakTime = ConstList[3].ConstraintValue;
+            double BreakTime = ConstList[3].ConstraintValue;
             bool HasABreak = false;
             List<OfficialShift> shifts = new List<OfficialShift>();
             SqlConnection con = null;
@@ -1955,7 +1958,7 @@ namespace Tar1.Models.DAL
                         {
                             HasABreak = true;
                             return HasABreak;
-                            
+
                         }
                     }
                     else if (i == (shifts.Count) - 1)
@@ -2620,7 +2623,7 @@ namespace Tar1.Models.DAL
             try
             {
                 con = connect("DBConnectionString");
-                String selectSTR = "select * from SchedulingPeriod_2020 where StartPeriod > '"+ TwoMonthBefore + "' and EndPeriod<'"+ today + "' and UnitId='" + unitid+"'";
+                String selectSTR = "select * from SchedulingPeriod_2020 where StartPeriod > '" + TwoMonthBefore + "' and EndPeriod<'" + today + "' and UnitId='" + unitid + "'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (dr.Read())

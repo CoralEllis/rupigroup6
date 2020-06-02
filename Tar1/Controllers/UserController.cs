@@ -12,28 +12,22 @@ namespace AkimShifts.Controllers
     {
         // GET api/<controller>
 
-        public List<User> Get()
-        {
-            User u = new User();
-            List<User> U = u.GetUsers();
-            return U;
-        }
 
         // GET api/<controller>/5
+        [HttpGet]
+        [Route("api/User/{id}/{password}")]
+        public User Get(string id, string password)
+        {
+            User u = new User();
+            return u.GetUsers(id, password);
 
+        }
         [HttpGet]
         [Route("api/User/{id:int}")]
         public List<User> Get(int id)
         {
             User u = new User();
-
-            if (id == 0)
-            {
-                return u.getManager();
-            }
-            //else
-            //return u.GetUnitUsers(id);
-            return null;
+            return u.getManager();
         }
 
         [HttpGet]
