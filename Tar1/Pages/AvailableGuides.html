@@ -193,6 +193,41 @@
         }
         sortByDateAsc = function (lhs, rhs) { return lhs.StartShift > rhs.StartShift ? 1 : lhs.StartShift < rhs.StartShift ? -1 : 0 }
         function CheckGuide(button, extra, weekly, monthly) {
+            uesrid = button.id;
+            index = $("#shifts").children(":selected").attr("id");     
+                milisecond = moment.duration(ShiftsArray[index].EndShift.diff(ShiftsArray[index].StartShift));
+                ShiftDuration = milisecond.asHours();
+                if (ShiftDuration < 0) {
+                    ShiftDuration = 24 + ShiftDuration;
+                }
+            for (var i = 0; i <guides.length; i++) {
+                if (uesrid == guides[i].Userid) {
+                      if (Preperness == true && ShiftsArray[index].Type == "לילה") {
+                        if (ShiftDuration > SNightShiftHours) {
+                           guides[i].MonthlyHours = guides[i].MonthlyHours + SNightShiftHours;
+                            guides[i].MonthlyExtraHours = guides[i].MonthlyExtraHours + ShiftDuration - SNightShiftHours;
+                            guides[i].Weeklyhours =guides[i].Weeklyhours + ShiftDuration;
+                        }
+                        else {
+                           guides[i].MonthlyHours = guides[i].MonthlyHours + ShiftDuration;
+                           guides[i].Weeklyhours = guides[i].Weeklyhours + ShiftDuration;
+                        }
+                    }
+                    else {
+                        if (ShiftDuration > Regularshifthours) {
+                           guides[i].MonthlyHours = guides[i].MonthlyHours + Regularshifthours;
+                            guides[i].MonthlyExtraHours = guides[i].MonthlyExtraHours + ShiftDuration - Regularshifthours;
+                            guides[i].Weeklyhours = guides[i].Weeklyhours + ShiftDuration;
+                        }
+                        else {
+                            guides[i].MonthlyHours = guides[i].MonthlyHours + ShiftDuration;
+                            guides[i].Weeklyhours = guides[i].Weeklyhours + ShiftDuration;
+                        }
+                    }
+
+                    break;
+                }
+            }
             if (extra > ExtraHours) {
                 queue.push("extraModal");
 
@@ -205,8 +240,8 @@
                 queue.push("MonthlyModal");
 
             }
-            uesrid = button.id;
-            index = $("#shifts").children(":selected").attr("id");
+
+           
             offics = {
                 "Userid": uesrid,
                 "Endshifthour": ShiftsArray[index].EndShift.format("HH:mm"),

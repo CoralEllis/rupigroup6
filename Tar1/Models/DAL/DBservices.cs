@@ -476,7 +476,7 @@ namespace Tar1.Models.DAL
                     us.Password = (string)dr["UPassword"];
                     us.Userid = (string)dr["UserId"];
                     us.Role = (string)dr["UserRole"];
-                    if (us.Role == "מנהל מערך הדיור")
+                    if (us.Role == "מנהל מערך הדיור" || us.Role == "סמנכלית"||  us.Firstname == "מדריך")
                     {
                         us.Unitid = 0;
                     }
