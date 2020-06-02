@@ -15,10 +15,10 @@
     <script type="text/javascript"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="../Scripts/moment.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/moment@2.22.2/moment.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment-range/4.0.1/moment-range.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <style>
         select, div {
             font-family: fontAwesome
@@ -35,6 +35,7 @@
         OfficialShifts = [];
         Guides = [];
         Exceptions = [];
+        OldExceptions = [];
         calendar = [];
         CheckEightHours = false;
         MaxRestHours = 0;// the rest hours that worker need to get evry week
@@ -164,7 +165,7 @@
                                     document.getElementById(rf).childNodes[0].innerHTML += "<span id='" + SaveShifts[a].Userid + "embed" + rf + "' class='row' style='margin:auto'>" + SaveShifts[a].UserName + "</span>";
                                     continue loop2;
                                 }
-                                else if (SaveShifts[a].Userid == "666666666" && SaveShifts[a].Userid == "777777777" && SaveShifts[a].Userid == "888888888" && SaveShifts[a].Userid == "999999999") {
+                                else if (SaveShifts[a].Userid == "666666666" || SaveShifts[a].Userid == "777777777" || SaveShifts[a].Userid == "888888888" || SaveShifts[a].Userid == "999999999") {
                                     SaveShifts[a].Done = true;
                                     OfficialShift = {
                                         "Userid": SaveShifts[a].Userid,
@@ -178,7 +179,7 @@
                                     s = OfficialShifts.length - 1;
                                     MultipleGuides = {
                                         "NumInArray": s,
-                                        "Occupied": false
+                                        "Occupied": true
                                     }
                                     ShiftsArray[i].NuminOfficialShift.push(MultipleGuides);
                                     rf = SaveShifts[a].Shiftdate + "|" + SaveShifts[a].Shifttype;
@@ -239,7 +240,7 @@
                                 document.getElementById(rf).innerHTML += "<i class='fa fa-thumbs-up' style='font-size:36px; margin:auto'></i>";
                                 continue loop1;
                             }
-                            else if (SaveShifts[a].Userid == "666666666" && SaveShifts[a].Userid == "777777777" && SaveShifts[a].Userid == "888888888" && SaveShifts[a].Userid == "999999999") {
+                            else if (SaveShifts[a].Userid == "666666666" || SaveShifts[a].Userid == "777777777" || SaveShifts[a].Userid == "888888888" || SaveShifts[a].Userid == "999999999") {
                                 OfficialShift = {
                                     "Userid": SaveShifts[a].Userid,
                                     "Startshifthour": SaveShifts[a].Startshifthour,
@@ -252,7 +253,7 @@
                                 s = OfficialShifts.length - 1;
                                 MultipleGuides = {
                                     "NumInArray": s,
-                                    "Occupied": false
+                                    "Occupied": true
                                 }
                                 ShiftsArray[i].NuminOfficialShift.push(MultipleGuides);
                                 rf = SaveShifts[a].Shiftdate + "|" + SaveShifts[a].Shifttype;
@@ -329,7 +330,6 @@
                 Guides.push(Guide);
             }
             $("#ExtraHours").html(ExtraDiv);
-
             ajaxCall("GET", "../api/Constraint", "", GETConstraintSuccess, GETConstraintError);
         }
         function GETConstraintSuccess(data) {
@@ -341,7 +341,13 @@
             HoursBetweenShifts = data[5].ConstraintValue;
             Regularshifthours = data[6].ConstraintValue;
             SNightShiftHours = data[7].ConstraintValue;
-
+        }
+        function GETExceptionS(data) {
+            console.log(data);
+            OldExceptions = data;
+        }
+        function GETExceptionE(err) {
+            console.log(err);
         }
         function SetWeeks() {
             year = ShiftsArray[0].StartShift.year();
@@ -381,6 +387,7 @@
             Unitid = 2;//in the future get it from localstorage
             unitDate = ShiftsArray[0].StartShift.format("YYYY-MM-DD");
             ajaxCall("GET", "../api/User/WorkUnit?unit=" + Unitid + "&Date=" + unitDate, "", GETGuideS, GETGuideE);
+            ajaxCall("GET", "../api/Exception/per?Unit=" + Unitid + "&Date=" + unitDate, "", GETExceptionS, GETExceptionE);
         }
         function GETConstraintError(error) {
             console.log(error);
@@ -610,7 +617,7 @@
         function HowManyEmbed(NuminArr, len) {
             embed = 0;
             for (var i = 0; i < len; i++) {
-                if (ShiftsArray[NuminArr].NuminOfficialShift[i].Occupied == true)
+                if (ShiftsArray[NuminArr].NuminOfficialShift[i].Occupied == true && OfficialShifts[ShiftsArray[NuminArr].NuminOfficialShift[i].NumInArray].Userid != "666666666" && OfficialShifts[ShiftsArray[NuminArr].NuminOfficialShift[i].NumInArray].Userid != "777777777" && OfficialShifts[ShiftsArray[NuminArr].NuminOfficialShift[i].NumInArray].Userid != "888888888" && OfficialShifts[ShiftsArray[NuminArr].NuminOfficialShift[i].NumInArray].Userid != "999999999")
                     embed++;
             }
             return embed;
@@ -700,7 +707,17 @@
                 }
                 if (id == "666666666" || id == "777777777" || id == "888888888" || id == "999999999")
                     document.getElementById(id + "embed" + rf).remove();
-
+                info = rf.split("|");
+                for (var j = 0; j < Exceptions.length; j++) {
+                    if (Exceptions[j].User == id && Exceptions[j].ShiftDate == info[0] && Exceptions[j].ShiftType == info[1])
+                        Exceptions.splice(j, 1);
+                }
+                for (var d = 0; d < OldExceptions.length; d++) {
+                    if (OldExceptions[d].User == id && OldExceptions[d].ShiftDate == info[0] && OldExceptions[d].ShiftType == info[1]) {
+                        OldExceptions.splice(d, 1);
+                        ajaxCall("DELETE", "../api/Exception", JSON.stringify(OldExceptions[d]), DeleteS, DeleteE)
+                    }
+                }
             }
             dateShift = OfficialShifts[ShiftsArray[num].NuminOfficialShift[0].NumInArray].Shiftdate;
             type = OfficialShifts[ShiftsArray[num].NuminOfficialShift[0].NumInArray].Shifttype;
@@ -811,11 +828,17 @@
                             }
                             Exceptions.push(Excpt);
                         }
-
                         break;
                     }
                 }
             }
+        }
+        function DeleteS(data) {
+            alert("Delete Success");
+        }
+        function DeleteE(err) {
+            alert("Delete Failed");
+            console.log(err);
         }
         function newNumber(x) {
             x = x.toString();
@@ -841,8 +864,8 @@
                                 range = moment().range(calendar[i].start.format("YYYY-MM-DD"), calendar[i].end.format("YYYY-MM-DD"));
                                 date = moment(Guides[j].ShiftsSorted[f].StartShift.format("YYYY-MM-DD"));
                                 if (range.contains(date)) {
-                                    FirstShift = moment(calendar[i].start.format("YYYY-MM-DD")+ ' '+ '00:00');
-                                    Lastshift = moment(calendar[i].end.format("YYYY-MM-DD")+ ' '+ '23:59');
+                                    FirstShift = moment(calendar[i].start.format("YYYY-MM-DD") + ' ' + '00:00');
+                                    Lastshift = moment(calendar[i].end.format("YYYY-MM-DD") + ' ' + '23:59');
                                 }
                             }
                             //FirstShift = Guides[j].ShiftsSorted[f].StartShift.startOf('week');
@@ -979,13 +1002,16 @@
                     if (OfficialShifts[i].Userid != "666666666" && OfficialShifts[i].Userid != "777777777" && OfficialShifts[i].Userid != "888888888" && OfficialShifts[i].Userid != "999999999")
                         ajaxCall("PUT", "../api/Official", JSON.stringify(OfficialShifts[i]), PostShiftAgainS, PostShiftAgainE);
                 }
+                for (var e = 0; e < Exceptions.length; e++) {
+                    for (var a = 0; a < OldExceptions.length; a++) {
+                        if (Exceptions[e].ShiftType == OldExceptions[a].ShiftType && Exceptions[e].ShiftDate == OldExceptions[a].ShiftDate && Exceptions[e].Unit == OldExceptions[a].Unit)
+                            ajaxCall("PUT", "../api/Exception", JSON.stringify(Exceptions[e]), PostExAgainS, PostExAgainE);
+                    }
+                }
             }
             else {
                 ajaxCall("POST", "../api/Official", JSON.stringify(OfficialShifts), PostShiftS, PostShiftE);
             }
-            console.log(Exceptions);
-            ajaxCall("POST", "../api/Exception", JSON.stringify(Exceptions), PostExceptionS, PostExceptionE);
-
         }
         function PostShiftAgainS(data) {
             alert("The Shift was Update");
@@ -1003,9 +1029,17 @@
             alert("No Exceptions");
             console.log(error);
         }
+        function PostExAgainS(data) {
+            alert("Exception update");
+            console.log(data);
+        }
+        function PostExAgainE(error) {
+            alert("Exception update failed");
+            console.log(error);
+        }
         function PostShiftS(data) {
             alert("post Shift");
-            console.log(data);
+            ajaxCall("POST", "../api/Exception", JSON.stringify(Exceptions), PostExceptionS, PostExceptionE);
         }
         function PostShiftE(error) {
             alert("Bi");

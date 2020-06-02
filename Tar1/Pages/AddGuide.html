@@ -20,6 +20,7 @@
     <script src="../Scripts/ajaxCalls.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="../Scripts/moment.js"></script>
 
@@ -34,8 +35,6 @@
         TLarray = [];
         function buttonEvents() {
             $(document).on("click", ".editBtn", function () {
-                console.log(this.id);
-
                 markSelected(this);
                 $("#editDiv").show();
                 for (var i = 0; i < myData.length; i++) {
@@ -126,11 +125,14 @@
             }
 
             catch (err) {
-                alert(err);
+
+                swal("ישנה בעיה בטעינת הטבלה", "אנא נסה לטעון את העמוד מחדש", "warning");
+
             }
         }
         function GETGuideE(error) {
-            alert(error);
+            swal("המערכת לא הצליחה לטעון את רשימת המדריכים", "אנא נסה לטעון את העמוד מחדש", "error");
+
         }
         function GetTrianingS(data) {
             TLarray = data;
@@ -165,7 +167,6 @@
             pass = $("#pass").val();
             unit = $("#SelectUnit").val();
             role = "מדריך";
-
             User = {
                 "Userid": id,
                 "Password": pass,
@@ -177,36 +178,24 @@
                 "Unitid": unit,
                 "Isactive": 1,
             }
-            console.log(User);
-
             ajaxCall("POST", "../api/User", JSON.stringify(User), PostUserS, PostUserE);
-
-
         }
         function PostUserS(data) {
-            alert("SABABA");
+            swal("המדריך נוסף בהצלחה", "", "success");
             id = $("#id").val();
-
             trl = $("#SelectTraining").val();
-
             SpicialLevel = {
                 "Id": trl,
             }
-
-
             ajaxCall("PUT", "../api/TrainingLevel/" + id, JSON.stringify(SpicialLevel), PutTrianingS, PutTrianingE);
         }
         function PostUserE(error) {
-            console.log(error);
-            alert("BASA");
+            swal("הייתה בעיה בהכנסת המדריך", "בדוק את הנתונים היטב ונסה שנית", "error");
+
         }
         function PutTrianingS(data) {
-            alert("good");
-
         }
         function PutTrianingE(error) {
-            console.log(error);
-
         }
         function SaveChanges() {
             birthFormat = moment($("#GuideBirth").val());
@@ -231,27 +220,27 @@
             //ajaxCall("PUT", "../api/TrainingLevel/" + id, JSON.stringify(SpicialLevel), PutTrianingS, PutTrianingE);
         }
         function PutGuideS(data) {
-            alert("SABABA");
+            swal("המדריך עודכן בהצלחה", "", "success");
+
             return false;
 
         }
         function PutGuideE(error) {
-            console.log(error);
-            alert("BASA");
+       swal("השינויים לא נשמרו", "בדוק את הנתונים היטב ונסה שנית", "error");
             return false;
         }
     </script>
     <title></title>
-
 </head>
 <body dir="rtl" style="background-color:aliceblue" onload="Gets()">
     <img src="../Photos/LOGO.PNG" />
-    <div class="container-fluid"><br />
-        <h1 >צפייה בפרטי מדריכים</h1><br />
+    <div class="container-fluid">
+        <br />
+        <h1>צפייה בפרטי מדריכים</h1><br />
         <p class="expl">בטבלה שלהלן מוצגים כל פרטי המדריכים. על מנת לערוך פרטי מדריך יש ללחוץ על כפתור "ערוך מדריך", לעדכן את פרטיו ולבסוף ללחוץ על שמור.</p>
         <br />
         <div class="row">
-            <form dir="rtl" action="/action_page.php" method="post" >
+            <form dir="rtl" action="/action_page.php" method="post">
                 <table id="GuidesTable" class="display nowrap">
                     <thead>
                         <tr>
@@ -315,63 +304,23 @@
                     <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
                 </div>
                 <br /><hr />
-                <div>
-                    <h1 class="col-100">הוספת מדריך חדש</h1><br />
-                    <p class="expl">על מנת להוסיף מדריך חדש, יש למלא את פרטיו ולבסוף ללחוץ על כפתור שמור.</p>
-                    <div id="formDiv" class="col-100">
-                        <div class="row">
-                            <div class="col-100">
-                                <span>בחר יחידה ארגונית:</span>
-                                <select id="SelectUnit"></select><br />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-100">
-                                <span>ת"ז: </span>
-                                <input type="text" id="id" pattern="^\d{9}$" required /><br />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-100">
-                                <span>שם פרטי: </span>
-                                <input type="text" id="first" required /><br />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-100">
-                                <span>שם משפחה: </span>
-                                <input type="text" id="last" required /><br />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-100">
-                                <span> תאריך לידה:</span>
-                                <input type="date" id="bdate" required /><br />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-100">
-                                <span> טלפון:</span>
-                                <input type="tel" id="tel" /><br required />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-25">
-                                <span>    רמת הכשרה:    </span>
-                            </div>
-                            <div class="col-75">
-                                <select id="SelectTraining" required></select><br />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-100">
-                                <span> סיסמא:</span>
-                                <input type="text" id="pass" required /><br />
-                            </div>
-                        </div>
-                        <br /><input type="submit" class="btn btn-warning btn-lg" id="SaveB" value="שמור" onclick="InsertUser()" /><br />
+                <!--<div id="addNewGuide">-->
+                <h1>הוספת מדריך חדש</h1><br />
+                <p class="expl">על מנת להוסיף מדריך חדש, יש למלא את פרטיו ולבסוף ללחוץ על כפתור שמור.</p>
+                <!--</div>-->
 
-                    </div>
+                <div class="col" id="formDiv">
+                    <select id="SelectUnit"></select><br />
+                    <span>ת"ז: </span><input type="text" id="id" pattern="^\d{9}$" required /><br />
+                    <span>שם פרטי: </span><input type="text" id="first" required /><br />
+                    <span>שם משפחה: </span><input type="text" id="last" required /><br />
+                    <span> תאריך לידה:</span><input type="date" id="bdate" required /><br />
+                    <span> טלפון:</span><input type="tel" id="tel" /><br required />
+                    <span>    רמת הכשרה:    </span>
+                    <select id="SelectTraining" required></select><br />
+                    <span> סיסמא:</span><input type="text" id="pass" required /><br />
+                    <br /><input type="submit" class="btn btn-warning btn-lg" id="SaveB" value="שמור" onclick="InsertUser()" /><br />
+
                 </div>
             </form>
         </div>

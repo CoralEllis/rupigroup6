@@ -24,17 +24,15 @@
     <script src="../Scripts/ajaxCalls.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <script>
         var myData;
-        // will run when the document is ready
         $(document).ready(function () {
             $("#cancelSaveBTN").on("click", function () {
                 Slevel = null;
@@ -43,25 +41,22 @@
             ajaxCall("GET", "../api/TrainingLevel", "", getSuccess, error);
             $("#editDiv").hide();
         });
-        // wire all the buttons to their functions
         function buttonEvents() {
             $(document).on("click", ".editBtn", function () {
-                markSelected(this);             
+                markSelected(this);
                 str = "<span>שנה רמת הכשרה:</span><input type='text' class='inputTL' id='" + this.id + "' value='" + this.name + "' required>";
                 $("#edittt").html(str);
                 $("#editDiv").show();
-                $("#editDiv :input").prop("disabled", false); // edit mode: enable all controls in the form
+                $("#editDiv :input").prop("disabled", false);
             });
         }
-        // mark the selected row
         function markSelected(btn) {
-            $("#SlevelTable tr").removeClass("selected"); // remove seleced class from rows that were selected before
-            row = (btn.parentNode).parentNode; // button is in TD which is in Row
-            row.className = 'selected'; // mark as selected
+            $("#SlevelTable tr").removeClass("selected");
+            row = (btn.parentNode).parentNode;
+            row.className = 'selected';
         }
-        // this function is activated in case of a success
         function getSuccess(data) {
-            myData = data; // keep the cars array in a global variable;
+            myData = data;
             try {
                 tbl = $('#SlevelTable').DataTable({
                     data: data,
@@ -82,30 +77,24 @@
             }
 
             catch (err) {
-                alert(err);
+                swal("ישנה בעיה בטעינת הטבלה", "אנא נסה לטעון את העמוד מחדש", "warning");
             }
         }
-        // this function is activated in case of a failure
         function error(err) {
-            swal("Error: " + err);
+            swal("ישנה בעיה בטעינת הנתונים", "אנא נסה לטעון את העמוד מחדש", "warning");
         }
         function PostSpicialLevel() {
             str = $("#NameOfSpeicialLevel").val();
             SpicialLevel = {
                 "Traininglevel": str,
             }
-
             ajaxCall("POST", "../api/TrainingLevel", JSON.stringify(SpicialLevel), PostSpicialLevelS, PostSpicialLevelE);
-
         }
         function PostSpicialLevelS(data) {
-            alert("good");
-            console.log(data);
-
+            swal("רמת ההכשרה נוספה בהצלחה", "", "success");
         }
         function PostSpicialLevelE(error) {
-            alert("error");
-            console.log(error);
+            swal("הייתה בעיה בהכנסת רמת ההכשרה", "בדוק את הנתונים היטב ונסה שנית", "error");
         }
         function save() {
             x = document.getElementById("edittt").childNodes[1].id;
@@ -116,11 +105,11 @@
             ajaxCall("PUT", "../api/TrainingLevel/" + x, JSON.stringify(TrainingNewName), PutSuccess, PutError);
         }
         function PutSuccess(data) {
-            alert("great");
+            swal("רמת ההכשרה עודכנה בהצלחה", "", "success");
         }
         function PutError(error) {
-            alert("bad");
-            console.log(error);
+            swal("השינויים לא נשמרו", "בדוק את הנתונים היטב ונסה שנית", "error");
+
         }
     </script>
 </head>
@@ -128,42 +117,42 @@
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid">
         <br />
-        <h1>צפייה ברמות הכשרה למדריכים </h1>   
+        <h1>צפייה ברמות הכשרה למדריכים </h1>
+        <br />
+        <form id="pForm">
+            <p class="expl">בטבלה מוצגות כל רמות ההכשרה. על מנת לערוך שם רמת הכשרה, יש ללחוץ על הכפתור "ערוך רמת הכשרה" ולבסוף ללחוץ על כפתור עדכן</p>
             <br />
-            <form id="pForm">
-                <p class="expl">בטבלה מוצגות כל רמות ההכשרה. על מנת לערוך שם רמת הכשרה, יש ללחוץ על הכפתור "ערוך רמת הכשרה" ולבסוף ללחוץ על כפתור עדכן</p>
-                <br />
-                <table id="SlevelTable" class="display nowrap" style="width:50%">
-                    <thead>
-                        <tr>
-                            <th>מספר</th>
-                            <th>רמת הכשרה</th>
-                            <th>עריכה</th>
-                        </tr>
-                    </thead>
-                </table>
-            </form>
-            <br />
-            <br />
-            <div id="editDiv" class="row">
-                <div id="edittt">
-                </div>
-               
-                    <button type="submit" class="btn btn-primary btn-lg" id="saveBTN" onclick="save()">עדכן</button>
-                    <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
-                
+            <table id="SlevelTable" class="display nowrap" style="width:50%">
+                <thead>
+                    <tr>
+                        <th>מספר</th>
+                        <th>רמת הכשרה</th>
+                        <th>עריכה</th>
+                    </tr>
+                </thead>
+            </table>
+        </form>
+        <br />
+        <br />
+        <div id="editDiv" class="row">
+            <div id="edittt">
             </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" id="saveBTN" onclick="save()">עדכן</button>
+            <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
+
+        </div>
+        <br />
+        <div dir="rtl" style="text-align:right;font-size:20px;color:#005473">
+            <hr />
             <br />
-            <div dir="rtl" style="text-align:right;font-size:20px;color:#005473">
-                <hr />
-                <br />
-                <h1>הוספת רמת הכשרה</h1>
-                <p class="expl">אם ברצונך להוסיף רמת הכשרה חדשה, יש לרשום את שמה ולבסוף ללחוץ על שמור.</p>
-                <br />
-                <span id="newLevel">הכנס רמת הכשרה חדשה: </span><input type="text" id="NameOfSpeicialLevel" />
-                <input type="submit" value="שמור" onclick="PostSpicialLevel()" /><br />
-            </div>
-       <br />
+            <h1>הוספת רמת הכשרה</h1>
+            <p class="expl">אם ברצונך להוסיף רמת הכשרה חדשה, יש לרשום את שמה ולבסוף ללחוץ על שמור.</p>
+            <br />
+            <span id="newLevel">הכנס רמת הכשרה חדשה: </span><input type="text" id="NameOfSpeicialLevel" />
+            <input type="submit" value="שמור" onclick="PostSpicialLevel()" /><br />
+        </div>
+        <br />
         <br />
     </div>
 </body>

@@ -24,7 +24,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="../Scripts/moment.js"></script>
-
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
@@ -156,12 +155,11 @@
             }
 
             catch (err) {
-                alert(err);
+                swal("ישנה בעיה בטעינת הטבלה", "אנא נסה לטעון את העמוד מחדש", "warning");
             }
         }
         function error(err) {
-            console.log(err);
-            //swal("Error: " + err);
+            swal("חלה שגיאה", "אנא נסה לטעון את העמוד מחדש ולבצע מחדש את הפעולה", "error");
         }
         function GetOrganizeUnitS(data) {
             UnitArray = data;
@@ -211,12 +209,10 @@
 
         }
         function PostUserS(data) {
-            alert("SABABA");
-
+            swal("המשתמש נוסף בהצלחה", "", "success");
         }
         function PostUserE(error) {
-            console.log(error);
-            alert("BASA");
+            swal("הייתה בעיה בהכנסת המדריך", "בדוק את הנתונים היטב ונסה שנית", "error");
         }
         function SaveChanges() {
             birthFormat = moment($("#ManagerBirth").val());
@@ -237,10 +233,10 @@
             ajaxCall("PUT", "../api/User/" + str, JSON.stringify(ManagertoSave), PutManagerS, PutManagerE);
         }
         function PutManagerS(data) {
-            alert("good");
+            swal("המשתמש עודכן בהצלחה", "", "success");
         }
         function PutManagerE(error) {
-            console.log(error);
+            swal("השינויים לא נשמרו", "בדוק את הנתונים היטב ונסה שנית", "error");
         }
     </script>
 

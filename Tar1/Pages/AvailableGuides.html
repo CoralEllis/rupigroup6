@@ -21,7 +21,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
-
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <title> מדריכים פנויים לאיוש משמרות</title>
     <script>
         embed = true;
@@ -31,13 +31,16 @@
         MonthNormalHours = 0;//hours per month
         ExtraHours = 0;//extra hours per month
         HoursPerWeek = 0;//number of hours that worker can work in 1 week
+        SNightShiftHours = 0;
+        Regularshifthours = 0;
         offics = 0;
         Exceptions = [];
         queue = [];
         tbl = "";
+        Preperness = false;
+        guides = [];
         function gets() {
             ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, error);
-
             ajaxCall("GET", "../api/Constraint", "", GETConstraintSuccess, error);
         }
         function GETConstraintSuccess(data) {
@@ -45,8 +48,8 @@
             MonthNormalHours = data[1].ConstraintValue;
             ExtraHours = data[2].ConstraintValue;
             MaxRestHours = data[3].ConstraintValue;
-
-
+            Regularshifthours = data[6].ConstraintValue;
+            SNightShiftHours = data[7].ConstraintValue;
         }
         function GetOrganizeUnitS(data) {
             str = "<option>בחר יחידה ארגונית</option>";
@@ -56,16 +59,19 @@
             $("#SelectUnit").html(str);
         }
         function error(err) {
-            console.log(err);
+            swal("ישנה בעיה", "נסה לבצע את הפעולה שעשית בשנית", "error");
         }
         function GetWorkSchedule(select) {
             id = select.options[select.selectedIndex].value;
             unit = id.toString();
             ajaxCall("GET", "../api/Period/Id?id=" + unit, "", GETPeriodsS, error);
+            ajaxCall("GET", "../api/Period/" + unit, "", GETPrepernessS, error);
 
         }
+        function GETPrepernessS(data) {
+            Preperness = data;
+        }
         function GETPeriodsS(data) {
-
             str = "<option value=''> בחר תקופת שיבוץ</option>";
             for (var i = 0; i < data.length; i++) {
                 end = data[i].Enddate.split("T");
@@ -141,6 +147,7 @@
             }
         }
         function SuccessUser(data) {
+            guides = data;
             $("#guidestbl").show();
             try {
                 tbl = $('#GTable').DataTable({
@@ -172,7 +179,7 @@
                         {
                             render: function (data, type, row, meta) {
 
-                                editBtn = "<button  id='" + row.Userid + "' class = 'editBtn btn btn-success' onclick='CheckGuide(this," + row.MonthlyExtraHours + "," + row.Weeklyhours + "," + row.MonthlyHours + ")'> בדוק זמינות של מדריך </button>";
+                                editBtn = "<button  id='" + row.Userid + "' class = 'editBtn btn btn-success' onclick='CheckGuide(this," + row.MonthlyExtraHours + "," + row.Weeklyhours + "," + row.MonthlyHours + ")'>שבץ מדריך </button>";
                                 return editBtn;
                             }
                         },
@@ -181,7 +188,7 @@
             }
 
             catch (err) {
-                alert(err);
+                swal("ישנה בעיה בטעינת הטבלה", "אנא נסה לטעון את העמוד מחדש", "warning");
             }
         }
         sortByDateAsc = function (lhs, rhs) { return lhs.StartShift > rhs.StartShift ? 1 : lhs.StartShift < rhs.StartShift ? -1 : 0 }
@@ -206,7 +213,7 @@
                 "Startshifthour": ShiftsArray[index].StartShift.format("HH:mm"),
                 "Shiftdate": ShiftsArray[index].StartShift.format("YYYY-MM-DD"),
                 "Shifttype": ShiftsArray[index].Type,
-                 "Unitid":unit
+                "Unitid": unit
             }
 
             ajaxCall("POST", "../api/Official/CheckHours", JSON.stringify(offics), succesBreak, error);
@@ -273,15 +280,33 @@
 
         }
         function succesPut(data) {
-            alert("הנתונים נשמרו בהצלחה");
+            swal("המשמרת עודכנה בהצלחה", "", "success");
             tbl
                 .clear()
                 .draw();
-
         }
         function PostExceptionS(data) {
             console.log("האילוצים נשמרו בהצלחה")
+        }
+        function whatisthechioseBreak(button) {
+            ButtonText = (button).innerText;
+            if (ButtonText == "המשך") {
+                embed = true;
+                Excpt = {
+                    "User": offics.Userid,
+                    "Unit": unit,
+                    "Index": "אי קבלת מנוחה שבועית",
+                    "ShiftType": offics.Shifttype,
+                    "ShiftDate": offics.Shiftdate,
+                }
+                Exceptions.push(Excpt);
 
+            }
+
+            else if (ButtonText == "בטל") {
+                embed = false;
+                return null;
+            }
 
         }
         function realPut(button) {
@@ -291,19 +316,20 @@
                     index = $("#shifts").children(":selected").attr("id");
                     ShiftsArray[index].Userid;
                     ajaxCall("Put", "../api/Official/CheckHours?idbefore=" + ShiftsArray[index].Userid, JSON.stringify(offics), succesPut, error);
-                    ajaxCall("POST", "../api/Exception", JSON.stringify(Exceptions), PostExceptionS, error);
+                    if (Exceptions.length != 0) {
+                        ajaxCall("POST", "../api/Exception", JSON.stringify(Exceptions), PostExceptionS, error);
+                    }
                     offics = 0;
                     Exceptions = [];
                     queue = [];
                 }
+                else swal("לא ניתן לשבץ את המדריך", "במידה ולחצת בטל על אחת מהודעות החריגה לא ניתן לשבץ את המדריך, נסה לשבץ שוב וללחוץ על המשך כאשר הן מופיעות, במידה ואינך רוצה שיישמרו חריגות שבץ מדריך אחר", "warning");
+
             }
             else if (ButtonText == "בטל") {
                 offics = 0;
                 Exceptions = [];
-                queue = [];
             }
-
-
         }
     </script>
 </head>

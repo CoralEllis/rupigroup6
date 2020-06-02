@@ -22,14 +22,11 @@
     <script src="../Scripts/ajaxCalls.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
-
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
@@ -62,22 +59,21 @@
         //}
 
         //function buttonEvents(NameOfUnit, City, Street_hn, Numguides, Numresidents, ApartmentT) {
-            function buttonEvents(button, id) {
+        function buttonEvents(button, id) {
             $("#editDiv").show();
-                markSelected(button);
-                console.log()
-                for (var i = 0; i < myData.length; i++) {
-                    if (myData[i].Id == id) {
-                        IdOfUnit = id;
-                        $("#UnitName").val(myData[i].Unitname);
-                        $("#UnitCity").val(myData[i].City);
-                        $("#UnitStreetNum").val(myData[i].Street_hnumber);
-                        $("#UnitNumGuides").val(myData[i].Numofguides);
-                        $("#UnitNumRes").val(myData[i].Numofresidents);
-                        $("#SelectUnitType").val(myData[i].ApartmentType1);
-                        break;
-                    }
+            markSelected(button);
+            for (var i = 0; i < myData.length; i++) {
+                if (myData[i].Id == id) {
+                    IdOfUnit = id;
+                    $("#UnitName").val(myData[i].Unitname);
+                    $("#UnitCity").val(myData[i].City);
+                    $("#UnitStreetNum").val(myData[i].Street_hnumber);
+                    $("#UnitNumGuides").val(myData[i].Numofguides);
+                    $("#UnitNumRes").val(myData[i].Numofresidents);
+                    $("#SelectUnitType").val(myData[i].ApartmentType1);
+                    break;
                 }
+            }
         }
 
 
@@ -138,11 +134,11 @@
             }
 
             catch (err) {
-                alert(err);
+                swal("ישנה בעיה בטעינת הטבלה", "אנא נסה לטעון את העמוד מחדש", "warning");
             }
         }
         function error(err) {
-            swal("Error: " + err);
+            swal("הייתה בעיה בטעינת נתוני היחידות הארגוניות", "טען את העמוד בשנית", "error");
         }
         function validateForm() {
             var Uname = document.forms["myForm"]["name1"].value;
@@ -153,35 +149,39 @@
             var UResNum = document.forms["myForm"]["UResNum1"].value;
             var SUnitType = document.forms["myForm"]["SUnitType1"].value;
             if (Uname == "") {
-                alert("חובה למלא שדה שם יחידה");
+                swal("חובה למלא שדה שם יחידה", "", "error");
                 return;
             }
             if (Ucity == "") {
-                alert("חובה למלא שדה עיר");
+                swal("חובה למלא שדה עיר", "", "error");
                 return;
             }
             if (Ustreet == "") {
+                  swal("חובה למלא שדה רחוב", "", "error");
                 alert("חובה למלא שדה רחוב");
                 return;
             }
             else if (Unumber == "") {
-                alert("חובה למלא שדה מספר בית");
+                  swal("חובה למלא שדה מספר בית", "", "error");
+        
                 return;
             }
             if (GuideNum == "") {
-                alert("חובה למלא שדה מספר מדריכים");
+                  swal("שים לב שדה מספר מדריכים ריק", "", "error");
+                //alert("חובה למלא שדה מספר מדריכים");
                 return;
             }
             if (UResNum == "") {
-                alert("חובה למלא שדה מספר דיירים");
+                  swal("שים לב שדה מספר דיירים ריק", "", "error");
+                //alert("חובה למלא שדה מספר דיירים");
                 return;
             }
             if (SUnitType == "") {
-                alert("חובה למלא שדה סוג דירה");
+                  swal("שים לב עבור דירה חובה למלא סוג דירה", "", "error");               
                 return;
             }
             else {
-                alert("goodddd");
+                swal("כל הנתונים שהוכנסו תקינים", "", "success");
                 InsertUnit();
                 return false;
             }
@@ -190,8 +190,7 @@
             name = $("#name").val();
             for (var i = 0; i < myData.length; i++) {
                 if (myData[i].Unitname == name) {
-                    //Swal('כבר קיימת יחידה ארגונית במערכת בשם זה', '', 'error');
-                    alert("כבר קיימת יחידה ארגונית במערכת בשם זה");
+                    swal("כבר קיימת יחידה ארגונית במערכת בשם זה", "", "warning");
                     return;
                 }
             }
@@ -206,8 +205,6 @@
                         id = ApartmentTypeA[i].Id;
                 }
             }
-
-
             Unit = {
                 "Unitname": name,
                 "Numofresidents": Numofresidents,
@@ -217,18 +214,14 @@
                 "Unittype": Unittype,
                 "ApartmentType1": id,
             }
-
-
             ajaxCall("POST", "../api/OrganizeUnit", JSON.stringify(Unit), PostUnitS, PostUnitE);
-
-
         }
         function PostUnitS(data) {
-            alert("goood!");
+            swal("היחידה נוספה בהצלחה", "", "success");
             return false;
         }
         function PostUnitE(error) {
-            console.log(error);
+            swal("היחידה לא הוכנסה", "", "error");
             return false;
         }
         function GetApartmentType() {
@@ -250,10 +243,8 @@
             ApartmentTypeA = data;
         }
         function GetTypeE(error) {
-            console.log(error);
         }
         function SaveChanges() {
-
             x = $("#SelectUnitType option:selected").val();
             if (x == 0) {
                 unitType = "הוסטל";
@@ -261,8 +252,6 @@
             else {
                 unitType = "דירה";
             }
-
-
             UnitToSave = {
                 "Id": IdOfUnit,
                 "Unitname": $("#UnitName").val(),
@@ -273,14 +262,13 @@
                 "ApartmentType1": x,
                 "Unittype": unitType,
             }
-
-            console.log(UnitToSave);
-            ajaxCall("PUT", "../api/OrganizeUnit/" + IdOfUnit  , JSON.stringify(UnitToSave), PutUnitS, PutUnitE);        }
+            ajaxCall("PUT", "../api/OrganizeUnit/" + IdOfUnit, JSON.stringify(UnitToSave), PutUnitS, PutUnitE);
+        }
         function PutUnitS(data) {
-            alert("good");
+            swal("היחידה הארגונית עודכנה בהצלחה", "", "success");
         }
         function PutUnitE(error) {
-            console.log(error);
+            swal("הייתה בעיה בעדכון הנתונים עבור היחידה הארגונית", "בדוק את הנתונים היטב ונסה שנית", "error");
         }
     </script>
 
@@ -293,21 +281,20 @@
         <br />
         <p class="expl">בטבלה שלהלן מוצגות כל היחידות הארגוניות. על מנת לערוך יחידה ארגונית, יש ללחוץ על כפתור ערוך יחידה ולבסוף ללחוץ על כפתור שמור.</p>
         <br />
-            <table id="UnitTable" class="display nowrap" style="width:50%">
-                <thead>
-                    <tr>
-                        <th>שם היחידה</th>
-                        <th>עיר</th>
-                        <th>רחוב ומספר</th>
-                        <th>מספר מדריכים</th>
-                        <th>מספר דיירים</th>
-                        <th>סוג יחידה</th>
-                        <th>עריכה</th>
-                    </tr>
-                </thead>
-            </table>
+        <table id="UnitTable" class="display nowrap" style="width:50%">
+            <thead>
+                <tr>
+                    <th>שם היחידה</th>
+                    <th>עיר</th>
+                    <th>רחוב ומספר</th>
+                    <th>מספר מדריכים</th>
+                    <th>מספר דיירים</th>
+                    <th>סוג יחידה</th>
+                    <th>עריכה</th>
+                </tr>
+            </thead>
+        </table>
         <form id="pForm">
-
             <div id="editDiv">
                 <h1 id="editDiv1">עריכת יחידה ארגונית</h1>
                 <br />
@@ -324,7 +311,6 @@
                         <label class="editMyUnit">רחוב ומספר:</label>
                         <input type="text" id="UnitStreetNum" required>
                     </div>
-
                 </div>
                 <br />
                 <div class="row">
@@ -350,7 +336,6 @@
                 <button type="button" class="btn btn-primary btn-lg" id="saveBTN" onclick="SaveChanges()">שמור</button>
                 <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
             </div>
-
         </form>
         <br />
         <br />
@@ -358,12 +343,9 @@
 
         <h1>  הוספת יחידה ארגונית חדשה</h1><br />
         <p class="expl">על מנת להוסיף יחידה ארגונית חדשה, יש למלא את פרטיה ולבסוף ללחוץ על כפתור "שמור".</p>
-
         <div class="row">
-
             <form dir="rtl" name="myForm" action="/action_page.php" onsubmit="return validateForm()" method="post">
                 <div class="col" id="insertUnit">
-
                     <span>שם היחידה: </span><input type="text" id="name" name="name1" required /><br />
                     <span>עיר: </span><input type="text" id="city" name="city1" required /><br />
                     <span> רחוב:</span><input type="text" id="street" name="street1" required /> <br />
@@ -375,15 +357,10 @@
                         <option value="דירה"> דירה</option>
                         <option value="הוסטל"> הוסטל</option>
                     </select><br /><div id="apartmenttype">
-
                     </div>
-
                 </div>
-                <!--<br /><input type="submit" value="שמור" onclick="InsertUnit()" /><br />-->
                 <br /><input type="submit" id="SaveB" value="שמור" /><br />
-
             </form>
-
         </div>
     </div>
 </body>

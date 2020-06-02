@@ -18,6 +18,14 @@ namespace AkimShifts.Controllers
 
         // GET api/<controller>/5
         [HttpGet]
+        [Route("api/Period/History")]
+        public List<Period> GetHistory(int id)
+        {
+          
+            Period period = new Period();
+            return period.GetHistoryPeriod(id);
+        }
+        [HttpGet]
         [Route("api/Period/Id")]
         public List<Period> Get(string id)
         {
@@ -32,8 +40,8 @@ namespace AkimShifts.Controllers
             Period p = new Period();
            return p.GetPer(id);
         }
-    
 
+  
         // POST api/<controller>
         public void Post([FromBody]Period p)
         {

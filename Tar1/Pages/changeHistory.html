@@ -21,7 +21,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
-
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <title> שינוי נתוני משמרות קודמות</title>
     <script>
         embed = true;
@@ -32,6 +32,7 @@
         ExtraHours = 0;//extra hours per month
         HoursPerWeek = 0;//number of hours that worker can work in 1 week
         SNightShiftHours = 0;
+        Regularshifthours = 0;
         offics = 0;
         index = 0;
         GuideIndex = 0;
@@ -49,28 +50,25 @@
             ajaxCall("GET", "../api/Constraint", "", GETConstraintSuccess, error);
             id = 2;// in the futur take from localstorage
             unit = id.toString();
-            ajaxCall("GET", "../api/Period/Id?id=" + unit, "", GETPeriodsS, error);
-
-            ajaxCall("GET", "../api/Period/" + id, "", GETPrepernessS, error);
+            //ajaxCall("GET", "../api/Period/Id?id=" + unit, "", GETPeriodsS, error);
+            ajaxCall("GET", "../api/Period/History?id=" + id, "", GETPeriodsS, error);
+           ajaxCall("GET", "../api/Period/" + id, "", GETPrepernessS, error);
         }
         function GETPrepernessS(data) {
-
+            Preperness = data;
         }
         function GETConstraintSuccess(data) {
             HoursPerWeek = data[0].ConstraintValue;
             MonthNormalHours = data[1].ConstraintValue;
             ExtraHours = data[2].ConstraintValue;
             MaxRestHours = data[3].ConstraintValue;
-            LongerShift = data[4].ConstraintValue;
-            HoursBetweenShifts = data[5].ConstraintValue;
             Regularshifthours = data[6].ConstraintValue;
             SNightShiftHours = data[7].ConstraintValue;
         }
         function error(err) {
-            console.log(err);
+              swal("ישנה בעיה", "נסה לבצע את הפעולה שעשית בשנית", "error");
         }
         function GETPeriodsS(data) {
-
             str = "<option value=''> בחר תקופת שיבוץ</option>";
             for (var i = 0; i < data.length; i++) {
                 end = data[i].Enddate.split("T");
@@ -86,7 +84,6 @@
         function getshifts(select) {
             id = select.options[select.selectedIndex].value;
             mahrozet = id.split('|');
-            console.log(mahrozet);
             ajaxCall("GET", "../api/Official/AllRelavnt?start=" + mahrozet[0] + "&end=" + mahrozet[1] + "&unit=" + unit, "", GETOfficialS, error);
         }
         function GETOfficialS(data) {
@@ -119,7 +116,7 @@
         function ShowShift() {
             $("#bigshift").html(" ");
             $("#period").attr('disabled', 'disabled');
-             $("#shifts").attr('disabled', 'disabled');
+            $("#shifts").attr('disabled', 'disabled');
             i = $("#shifts").val();
             index = i;
             userid = ShiftsArray[i].Userid;
@@ -131,12 +128,8 @@
 
         }
         function editShift(button) {
-
-
-
             if (button.innerText == "ערוך משמרת") {
                 button.innerText = "שמור שינויים";
-
                 document.getElementById("starthour").disabled = false;
                 document.getElementById("Endhour").disabled = false;
                 unitDate = ShiftsArray[index].StartShift.format("YYYY-MM-DD");
@@ -180,7 +173,7 @@
                             guides[GuideIndex].Weeklyhours = guides[GuideIndex].Weeklyhours + ShiftDuration;
                         }
                     }
-                     }
+                }
                 else {
                     beforeStart = moment(ShiftsArray[i].StartShift, 'HH:mm A');
                     beforeEnd = moment(ShiftsArray[i].EndShift, 'HH:mm A');
@@ -190,9 +183,9 @@
                     guides[GuideIndex].MonthlyHours = guides[GuideIndex].MonthlyHours + HowmuchHoursChanged;
                     guides[GuideIndex].Weeklyhours = guides[GuideIndex].Weeklyhours + HowmuchHoursChanged;
                 }
-                
-                    CheckGuide(newguides, guides[GuideIndex].MonthlyExtraHours, guides[GuideIndex].Weeklyhours, guides[GuideIndex].MonthlyHours, Mstart, Mend);
-              
+
+                CheckGuide(newguides, guides[GuideIndex].MonthlyExtraHours, guides[GuideIndex].Weeklyhours, guides[GuideIndex].MonthlyHours, Mstart, Mend);
+
             }
         }
         function GETGuideS(data) {
@@ -244,8 +237,8 @@
         }
         sortByDateAsc = function (lhs, rhs) { return lhs.StartShift > rhs.StartShift ? 1 : lhs.StartShift < rhs.StartShift ? -1 : 0 }
         function CheckGuide(id, extra, weekly, monthly, start, end) {
-            i = $("#shifts").val();
-           
+            index = $("#shifts").val();
+
             if (extra > ExtraHours) {
                 queue.push("extraModal");
                 id
@@ -259,16 +252,16 @@
 
             }
 
-            index = $("#shifts").children(":selected").attr("id");
+
             offics = {
                 "Userid": id,
                 "Endshifthour": end.format("HH:mm"),
                 "Startshifthour": start.format("HH:mm"),
-                "Shiftdate": ShiftsArray[i].StartShift.format("YYYY-MM-DD"),
-                "Shifttype": ShiftsArray[i].Type,
-                "Unitid":unit
+                "Shiftdate": ShiftsArray[index].StartShift.format("YYYY-MM-DD"),
+                "Shifttype": ShiftsArray[index].Type,
+                "Unitid": unit
             }
-           
+
             ajaxCall("POST", "../api/Official/CheckHours", JSON.stringify(offics), succesBreak, error);
         }
         function succesBreak(data) {
@@ -289,6 +282,7 @@
         function whatisthechiose(button, str) {
             ButtonText = (button).innerText;
             if (ButtonText == "המשך") {
+                index = $("#shifts").val();
                 embed = true;
                 switch (str) {
                     case 'extra': {
@@ -334,21 +328,18 @@
             }
         }
         function succesPut(data) {
-            alert("הנתונים נשמרו בהצלחה");
-
+            swal("המשמרת אויישה בהצלחה", "", "success");
         }
         function PostExceptionS(data) {
-            alert("האילוצים נשמרו בהצלחה")
+            swal("החריגות נשמרו בהצלחה", "", "success");
 
         }
         function realPut(button) {
-           index = $("#shifts").val();
             ButtonText = (button).innerText;
             if (ButtonText == "שבץ") {
                 if (embed == true) {
-                    index = $("#shifts").children(":selected").attr("id");
-                    ShiftsArray[index].Userid;
-                    //ajaxCall("Put", "../api/Official/CheckHours?idbefore=" + ShiftsArray[index].Userid, JSON.stringify(offics), succesPut, error);
+                    index = $("#shifts").val();
+                    ajaxCall("Put", "../api/Official/CheckHours?idbefore=" + ShiftsArray[index].Userid, JSON.stringify(offics), succesPut, error);
                     if (Exceptions.length != 0) {
                         ajaxCall("POST", "../api/Exception", JSON.stringify(Exceptions), PostExceptionS, error);
                     }
@@ -358,13 +349,34 @@
                     $("#period").prop('disabled', false);
                     $("#shifts").prop('disabled', false);
                 }
+
+                else swal("לא ניתן לשבץ את המדריך", "במידה ולחצת בטל על אחת מהודעות החריגה לא ניתן לשבץ את המדריך, נסה לשבץ שוב וללחוץ על המשך כאשר הן מופיעות, במידה ואינך רוצה שיישמרו חריגות שבץ מדריך אחר", "warning");
             }
             else if (ButtonText == "בטל") {
                 offics = 0;
                 Exceptions = [];
                 queue = [];
             }
+            function whatisthechioseBreak(button) {
+                ButtonText = (button).innerText;
+                if (ButtonText == "המשך") {
+                    embed = true;
+                    Excpt = {
+                        "User": offics.Userid,
+                        "Unit": unit,
+                        "Index": "אי קבלת מנוחה שבועית",
+                        "ShiftType": offics.Shifttype,
+                        "ShiftDate": offics.Shiftdate,
+                    }
+                    Exceptions.push(Excpt);
 
+                }
+                else if (ButtonText == "בטל") {
+                    embed = false;
+                    return null;
+                }
+
+            }
 
         }
     </script>
