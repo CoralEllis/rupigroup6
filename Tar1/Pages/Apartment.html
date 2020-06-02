@@ -42,7 +42,7 @@
         function buttonEvents() {
             $(document).on("click", ".editBtn", function () {
                 markSelected(this);
-                str = "<span>עדכן סוג דירה:</span><input type='text' class='inputTL' id='cons" + this.id + "' value='" + this.name + "' ><br />";
+                str = "<span>עדכן סוג דירה:</span><input type='text' maxlength='10' class='inputTL' id='cons" + this.id + "' value='" + this.name + "' ><br />";
                 $("#editApType").html(str);
                 $("#editDiv").show();
                 $("#editDiv :input").prop("disabled", false);
@@ -157,7 +157,7 @@
         <div class="row" dir="rtl">
             <form>
                 <div class="col" id="insertAPT">
-                    <span>שם סוג דירה: </span><input type="text" id="name" /><br />
+                    <span>שם סוג דירה: </span><input type="text"  maxlength="30"  id="name" /><br />
                 </div>
             </form>
             <br /><input type="submit" id="SaveB" value="שמור" onclick="InsertUnit()" /><br />

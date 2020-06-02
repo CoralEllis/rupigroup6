@@ -42,7 +42,7 @@
         function buttonEvents() {
             $(document).on("click", ".editBtn", function () {
                 markSelected(this);
-                str = "<span>עדכן שם אילוץ:</span><input type='text' class='inputTL' id='cons" + this.id + "' value='" + this.name + "' ><br />";
+                str = "<span>עדכן שם אילוץ:</span><input type='text' maxlength='100' class='inputTL' id='cons" + this.id + "' value='" + this.name + "' ><br />";
                 str += "<span>עדכן ערך אילוץ:</span><input type='number' class='inputTL' value='" + this.value + "' >";
                 $("#editCons").html(str);
                 $("#editDiv").show();

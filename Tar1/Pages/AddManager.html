@@ -65,7 +65,7 @@
                             case "מנהל מערך הדיור":
                                 $("#ManagerRole").val(2);
                                 break;
-                            case 'סמנכל משאבי אנוש':
+                            case 'סמנכלית':
                                 $("#ManagerRole").val(3);
                                 break;
                         }
@@ -275,34 +275,34 @@
                 <div class="row">
                     <div>
                         <label class="editMyGuide">ת"ז:</label>
-                        <input type="text" id="ManagerId">
+                        <input type="text" maxlength="9" id="ManagerId">
                     </div>
                     <span></span>
                     <div>
                         <label class="editMyGuide">שם:</label>
-                        <input type="text" id="ManagerName" required>
+                        <input type="text" maxlength="30" id="ManagerName" required>
                     </div>
                     <span></span>
                     <div>
                         <label class="editMyGuide">שם משפחה:</label>
-                        <input type="text" id="ManagerLastName" required>
+                        <input type="text" maxlength="30" id="ManagerLastName" required>
                     </div>
 
                 </div>
                 <div class="row">
                     <div>
                         <label class="editMyGuide">תאריך לידה:</label>
-                        <input type="text" id="ManagerBirth" required />
+                        <input type="date" id="ManagerBirth" required />
                     </div>
                     <span></span>
                     <div>
                         <label class="editMyGuide">טלפון:</label>
-                        <input type="text" id="ManagerTelephone" required>
+                        <input type="text" maxlength="10" id="ManagerTelephone" required>
                     </div>
                     <span></span>
                     <div>
                         <label class="editMyGuide">סיסמה:</label>
-                        <input type="text" id="ManagerPassword" required>
+                        <input type="text" maxlength="30" id="ManagerPassword" required>
                     </div>
                 </div>
                 <div class="row">
@@ -340,14 +340,14 @@
             <form dir="rtl" action="/action_page.php" method="post">
                 <div class="col" id="formDiv">
                     <select id="SelectUnit"></select><br />
-                    <span>ת"ז: </span><input type="text" id="id" pattern="^\d{9}$" required /><br />
-                    <span>שם פרטי: </span><input type="text" id="first" required /><br />
-                    <span>שם משפחה: </span><input type="text" id="last" required /><br />
+                    <span>ת"ז: </span><input type="text" maxlength="9" id="id"  required /><br />
+                    <span>שם פרטי: </span><input type="text" maxlength="30" id="first" required /><br />
+                    <span>שם משפחה: </span><input type="text" maxlength="30" id="last" required /><br />
                     <span> תאריך לידה:</span><input type="date" id="bdate" required /><br />
-                    <span> טלפון:</span><input type="tel" id="tel" required /><br />
+                    <span> טלפון:</span><input type="tel" maxlength="10" id="tel" required /><br />
                     <input type="radio" id="BigManager" name="Manager" value="bigManager" /><label> מנהל מערך הדיור?</label><br />
                     <input type="radio" id="SmallManager" name="Manager" value="littleManager" /><label> מנהל יחידה ארגונית?</label><br />
-                    <span> סיסמא:</span><input type="text" id="pass" required /><br />
+                    <span> סיסמא:</span><input type="text" maxlength="30" id="pass" required /><br />
                 </div>
                 <br /><input type="submit" value="שמור" id="SaveB" onclick="InsertUser()" /><br />
 

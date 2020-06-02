@@ -1528,8 +1528,7 @@ namespace Tar1.Models.DAL
             try
             {
                 con = connect("DBConnectionString");
-                //in the future dont forget to add Libat!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                String selectSTR = "select * from User_2020 where UserRole = 'מנהל יחידה ארגונית' or UserRole = 'מנהל מערך הדיור' ";
+                String selectSTR = "select * from User_2020 where UserRole = 'מנהל יחידה ארגונית' or UserRole = 'מנהל מערך הדיור' or UserRole = 'סמנכלית' ";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (dr.Read())
@@ -1543,7 +1542,7 @@ namespace Tar1.Models.DAL
                     us.Telephone = (string)dr["Telephone"];
                     us.Isactive = Convert.ToBoolean(dr["Active"]);
                     us.Birthdate = Convert.ToDateTime(dr["Birthdate"]).Date;
-                    if (us.Role == "מנהל מערך הדיור")//in the future add libat!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    if (us.Role == "מנהל מערך הדיור" || us.Role == "סמנכלית")
                     {
                         us.Unitid = 0;
                     }

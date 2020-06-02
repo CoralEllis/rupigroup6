@@ -262,30 +262,30 @@
                     <div class="row">
                         <div>
                             <label class="editMyGuide">ת"ז:</label>
-                            <input type="text" id="GuideId">
+                            <input type="text" maxlength="9" id="GuideId">
                         </div>
                         <div>
                             <label class="editMyGuide">שם:</label>
-                            <input type="text" id="GuideName" required>
+                            <input type="text" maxlength="30" id="GuideName" required>
                         </div>
                         <div>
                             <label class="editMyGuide">שם משפחה:</label>
-                            <input type="text" id="GuideLastName" required>
+                            <input type="text" maxlength="30" id="GuideLastName" required>
                         </div>
                         <div>
                             <label class="editMyGuide">תאריך לידה:</label>
-                            <input type="text" id="GuideBirth" required />
+                            <input type="date" id="GuideBirth" required />
                         </div>
                     </div>
                     <br />
                     <div class="row">
                         <div>
                             <label class="editMyGuide">טלפון:</label>
-                            <input type="text" id="GuideTelephone" required>
+                            <input type="text" maxlength="10" id="GuideTelephone" required>
                         </div>
                         <div>
                             <label class="editMyGuide">סיסמה:</label>
-                            <input type="text" id="GuidePassword" required>
+                            <input type="text" maxlength="30" id="GuidePassword" required>
                         </div>
                         <div>
                             <label class="editMyGuide">רמת הכשרה:</label>
@@ -311,14 +311,14 @@
 
                 <div class="col" id="formDiv">
                     <select id="SelectUnit"></select><br />
-                    <span>ת"ז: </span><input type="text" id="id" pattern="^\d{9}$" required /><br />
-                    <span>שם פרטי: </span><input type="text" id="first" required /><br />
-                    <span>שם משפחה: </span><input type="text" id="last" required /><br />
+                    <span>ת"ז: </span><input type="text"  maxlength="9" id="id"  required /><br />
+                    <span>שם פרטי: </span><input type="text" maxlength="30" id="first" required /><br />
+                    <span>שם משפחה: </span><input type="text" maxlength="30" id="last" required /><br />
                     <span> תאריך לידה:</span><input type="date" id="bdate" required /><br />
-                    <span> טלפון:</span><input type="tel" id="tel" /><br required />
+                    <span> טלפון:</span><input type="tel" maxlength="10" id="tel" /><br required />
                     <span>    רמת הכשרה:    </span>
                     <select id="SelectTraining" required></select><br />
-                    <span> סיסמא:</span><input type="text" id="pass" required /><br />
+                    <span> סיסמא:</span><input type="text" maxlength="30" id="pass" required /><br />
                     <br /><input type="submit" class="btn btn-warning btn-lg" id="SaveB" value="שמור" onclick="InsertUser()" /><br />
 
                 </div>
