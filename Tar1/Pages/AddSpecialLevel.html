@@ -44,7 +44,7 @@
         function buttonEvents() {
             $(document).on("click", ".editBtn", function () {
                 markSelected(this);
-                str = "<span>שנה רמת הכשרה:</span><input type='text' class='inputTL' id='" + this.id + "' value='" + this.name + "' required>";
+                str = "<span>שנה רמת הכשרה:</span><input type='text' maxlength='70' class='inputTL' id='" + this.id + "' value='" + this.name + "' required>";
                 $("#edittt").html(str);
                 $("#editDiv").show();
                 $("#editDiv :input").prop("disabled", false);
@@ -149,7 +149,7 @@
             <h1>הוספת רמת הכשרה</h1>
             <p class="expl">אם ברצונך להוסיף רמת הכשרה חדשה, יש לרשום את שמה ולבסוף ללחוץ על שמור.</p>
             <br />
-            <span id="newLevel">הכנס רמת הכשרה חדשה: </span><input type="text" id="NameOfSpeicialLevel" />
+            <span id="newLevel">הכנס רמת הכשרה חדשה: </span><input type="text" maxlength='70' id="NameOfSpeicialLevel" />
             <input type="submit" value="שמור" onclick="PostSpicialLevel()" /><br />
         </div>
         <br />

@@ -25,7 +25,12 @@
         again = false;
         SArray = [];
         function ShowShifts() {
-            startdate = $("#start").val();
+            startdate = $("#start").val().toString();
+            end_date = $("end").val().toString();
+            if (moment(end_date).isBefore(startdate)) {
+                swal("תאריך סיום גדול מתאריך התחלה", "אנא הכנס טווח תאריכים תקני", "warning");
+                return null;
+            }
             ajaxCall("GET", "../api/Shifts/Per?uid=" + Unitid + "&startperiod=" + startdate, "", GetShiftS, GetShiftE);
         }
         sortByDateAsc = function (lhs, rhs) { return lhs.Shiftdate > rhs.Shiftdate ? 1 : lhs.Shiftdate < rhs.Shiftdate ? -1 : 0 }

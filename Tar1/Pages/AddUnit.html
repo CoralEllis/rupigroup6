@@ -301,15 +301,15 @@
                 <div class="row">
                     <div>
                         <label class="editMyUnit">שם היחידה:</label>
-                        <input type="text" id="UnitName">
+                        <input type="text" maxlength="30" id="UnitName">
                     </div>
                     <div>
                         <label class="editMyUnit">עיר:</label>
-                        <input type="text" id="UnitCity" required>
+                        <input type="text" maxlength="40" id="UnitCity" required>
                     </div>
                     <div>
                         <label class="editMyUnit">רחוב ומספר:</label>
-                        <input type="text" id="UnitStreetNum" required>
+                        <input type="text" maxlength="30" id="UnitStreetNum" required>
                     </div>
                 </div>
                 <br />
@@ -346,12 +346,12 @@
         <div class="row">
             <form dir="rtl" name="myForm" action="/action_page.php" onsubmit="return validateForm()" method="post">
                 <div class="col" id="insertUnit">
-                    <span>שם היחידה: </span><input type="text" id="name" name="name1" required /><br />
-                    <span>עיר: </span><input type="text" id="city" name="city1" required /><br />
-                    <span> רחוב:</span><input type="text" id="street" name="street1" required /> <br />
+                    <span>שם היחידה: </span><input type="text" id="name" maxlength="30" name="name1" required /><br />
+                    <span>עיר: </span><input type="text" id="city" maxlength="40" name="city1" required /><br />
+                    <span> רחוב:</span><input type="text" id="street" name="street1" maxlength="30" required /> <br />
                     <span> מספר:</span><input type="number" id="Hnum" required name="number1" /><br />
-                    <span> מספר מדריכים:</span><input type="text" id="numofguides" required name="UGuideNum1" /><br />
-                    <span> מספר דיירים:</span><input type="text" id="numofresidents" required name="UResNum1" /><br />
+                    <span> מספר מדריכים:</span><input type="number" id="numofguides" required name="UGuideNum1" /><br />
+                    <span> מספר דיירים:</span><input type="number" id="numofresidents" required name="UResNum1" /><br />
                     <span>סוג:</span><select id="unittype" onchange="GetApartmentType()" required name="SUnitType1">
                         <option value=""> בחר סוג יחידה ארגונית</option>
                         <option value="דירה"> דירה</option>
