@@ -242,6 +242,7 @@
         }
     </script>
     <title></title>
+
 </head>
 <body dir="rtl" style="background-color:aliceblue" onload="Gets()">
     <img src="../Photos/LOGO.PNG" />
@@ -250,7 +251,7 @@
         <p class="expl">בטבלה שלהלן מוצגים כל פרטי המדריכים. על מנת לערוך פרטי מדריך יש ללחוץ על כפתור "ערוך מדריך", לעדכן את פרטיו ולבסוף ללחוץ על שמור.</p>
         <br />
         <div class="row">
-            <form dir="rtl" action="/action_page.php" method="post">
+            <form dir="rtl" action="/action_page.php" method="post" >
                 <table id="GuidesTable" class="display nowrap">
                     <thead>
                         <tr>
@@ -314,23 +315,63 @@
                     <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
                 </div>
                 <br /><hr />
-                <!--<div id="addNewGuide">-->
-                    <h1>הוספת מדריך חדש</h1><br />
+                <div>
+                    <h1 class="col-100">הוספת מדריך חדש</h1><br />
                     <p class="expl">על מנת להוסיף מדריך חדש, יש למלא את פרטיו ולבסוף ללחוץ על כפתור שמור.</p>
-                <!--</div>-->
+                    <div id="formDiv" class="col-100">
+                        <div class="row">
+                            <div class="col-100">
+                                <span>בחר יחידה ארגונית:</span>
+                                <select id="SelectUnit"></select><br />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-100">
+                                <span>ת"ז: </span>
+                                <input type="text" id="id" pattern="^\d{9}$" required /><br />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-100">
+                                <span>שם פרטי: </span>
+                                <input type="text" id="first" required /><br />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-100">
+                                <span>שם משפחה: </span>
+                                <input type="text" id="last" required /><br />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-100">
+                                <span> תאריך לידה:</span>
+                                <input type="date" id="bdate" required /><br />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-100">
+                                <span> טלפון:</span>
+                                <input type="tel" id="tel" /><br required />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-25">
+                                <span>    רמת הכשרה:    </span>
+                            </div>
+                            <div class="col-75">
+                                <select id="SelectTraining" required></select><br />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-100">
+                                <span> סיסמא:</span>
+                                <input type="text" id="pass" required /><br />
+                            </div>
+                        </div>
+                        <br /><input type="submit" class="btn btn-warning btn-lg" id="SaveB" value="שמור" onclick="InsertUser()" /><br />
 
-                <div class="col" id="formDiv" >
-                    <select id="SelectUnit"></select><br />
-                    <span>ת"ז: </span><input type="text" id="id" pattern="^\d{9}$" required /><br />
-                    <span>שם פרטי: </span><input type="text" id="first" required/><br />
-                    <span>שם משפחה: </span><input type="text" id="last" required/><br />
-                    <span> תאריך לידה:</span><input type="date" id="bdate" required/><br />
-                    <span> טלפון:</span><input type="tel" id="tel" /><br required/>
-                    <span>    רמת הכשרה:    </span>
-                    <select id="SelectTraining" required></select><br />
-                    <span> סיסמא:</span><input type="text" id="pass" required/><br />
-                    <br /><input type="submit" class="btn btn-warning btn-lg" id="SaveB" value="שמור" onclick="InsertUser()" /><br />
-
+                    </div>
                 </div>
             </form>
         </div>
