@@ -186,6 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="Pages\AllLastYearWorkscheduleForAllUnits.html" />
     <Content Include="Pages\changeHistory.html" />
     <Content Include="Pages\ExceptionDashboard.html" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -202,6 +203,7 @@
     <Content Include="Pages\Apartment.html" />
     <Content Include="Pages\WorkscheduleForBigManager.html" />
     <Content Include="Pages\AllLastYearWorkscheduleForUnit.html" />
+    <Content Include="Pages\WorkscheduleForunit.html" />
     <Content Include="Pages\WorkscheduleForGuide.html" />
     <Content Include="Pages\WorkArrangement.html" />
     <Content Include="Pages\SubmitShifts.html" />

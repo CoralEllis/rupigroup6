@@ -24,33 +24,13 @@
 
         function GetSHifts() {
             Unitid = 2;//in the future get it from localstorage
-            ajaxCall("GET", "../api/Period/LastYear?id=" + Unitid, "", GETPeriodsS, error);
+            ajaxCall("GET", "../api/Official/WorkSchdual?unit=" + Unitid, "", GETOfficialS, error);
         }
         function error(err) {
             swal("ישנה בעיה", "נסה לבצע את הפעולה שעשית בשנית", "error");
         }
-        function GETPeriodsS(data) {
-            str = "<option value=''> בחר תקופת שיבוץ</option>";
-            for (var i = 0; i < data.length; i++) {
-                end = data[i].Enddate.split("T");
-                start = data[i].Startdate.split("T");
-                Speriod = moment(start[0]);
-                Eperiod = moment(end[0]);
-                str = str + "<option value='" + Speriod.format("YYYY-MM-DD") + "|" + Eperiod.format("YYYY-MM-DD") + "'>" + Eperiod.format('DD/MM/YYYY') + " - " + Speriod.format('DD/MM/YYYY') + "</option>";
-            }
-            $("#period").html(str);
-
-            $("#Emptyperiod").show();
-
-        }
-        function getshifts(select) {
-            Unitid = 2;//in the future get it from localstorage
-            id = select.options[select.selectedIndex].value;
-            mahrozet = id.split('|');
-            ajaxCall("GET", "../api/Official/AllRelavnt?start=" + mahrozet[0] + "&end=" + mahrozet[1] + "&unit=" + Unitid, "", GETOfficialS, error);
-        }
         function GETOfficialS(data) {
-            for (var i = 0; i < 7; i++) {
+               for (var i = 0; i < 7; i++) {
                 $("#" + i).html(" ");
             }
             ShiftsArray = [];
@@ -94,7 +74,6 @@
                     }
                 }
             }
-            $("#submitshift").show();
         }
         function TellMeTheDay(YomBa) {
             switch (YomBa) {
@@ -131,12 +110,9 @@
     <!--onload="GetUser()"-->
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid" id="SubmShift">
-        <h1>צפייה בסידורי עבודה קודמים</h1><br />
-        <div id="Emptyperiod" style="display:none" dir="rtl">
-            <span>בחר מהרשימה תקופת שיבוץ: </span><span> </span>
-            <select id="period" onchange="getshifts(this)"> </select><br />
-        </div>
-        <div class="row" id="submitshift" dir="rtl" style="display:none">
+        <h1>צפייה בסידור עבודה נוכחי</h1><br />
+
+        <div class="row" id="submitshift" dir="rtl">
             <table id="workschdualtable">
                 <thead>
                     <tr>

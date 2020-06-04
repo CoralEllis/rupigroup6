@@ -23,11 +23,25 @@
         //}
 
         function GetSHifts() {
-            Unitid = 2;//in the future get it from localstorage
-            ajaxCall("GET", "../api/Period/LastYear?id=" + Unitid, "", GETPeriodsS, error);
+            ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, error);
+   
+        }
+          function GetOrganizeUnitS(data) {
+            str = "<option>בחר יחידה ארגונית</option>";
+            for (var i = 0; i < data.length; i++) {
+                str += "<option value='" + data[i].Id + "'>" + data[i].Unitname + "</option>"
+            }
+            $("#SelectUnit").html(str);
         }
         function error(err) {
             swal("ישנה בעיה", "נסה לבצע את הפעולה שעשית בשנית", "error");
+        }
+           function GetWorkSchedule(select) {
+            id = select.options[select.selectedIndex].value;
+               unit = id.toString();
+             
+               ajaxCall("GET", "../api/Period/LastYear?id=" + unit, "", GETPeriodsS, error);
+
         }
         function GETPeriodsS(data) {
             str = "<option value=''> בחר תקופת שיבוץ</option>";
@@ -43,6 +57,7 @@
             $("#Emptyperiod").show();
 
         }
+        
         function getshifts(select) {
             Unitid = 2;//in the future get it from localstorage
             id = select.options[select.selectedIndex].value;
@@ -132,6 +147,11 @@
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid" id="SubmShift">
         <h1>צפייה בסידורי עבודה קודמים</h1><br />
+        <div class="row">
+            <span> בחר יחידה ארגונית שברצונך לאייש עבורה משמרת:  </span><span></span>
+            <select id="SelectUnit" onchange="GetWorkSchedule(this)"></select>
+
+        </div>
         <div id="Emptyperiod" style="display:none" dir="rtl">
             <span>בחר מהרשימה תקופת שיבוץ: </span><span> </span>
             <select id="period" onchange="getshifts(this)"> </select><br />
