@@ -79,7 +79,13 @@ namespace Tar1.Models
 
 
         }
-       
+        public List<OfficialShift> GetWorkSchdual(int unit)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetWorkSchdual(unit);
+        }
+
+
 
 
     }

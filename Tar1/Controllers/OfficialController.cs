@@ -40,6 +40,13 @@ namespace Tar1.Controllers
             OfficialShift OS = new OfficialShift();
             return OS.GetallShifts(start,end,unit);
         }
+        [HttpGet]
+        [Route("api/Official/WorkSchdual")]
+        public List<OfficialShift> GetWorkSchdual(int unit)
+        {
+            OfficialShift OS = new OfficialShift();
+            return OS.GetWorkSchdual(unit);
+        }
 
         // POST api/<controller>
         public void Post([FromBody]List<OfficialShift> OffShiftArr)

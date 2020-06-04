@@ -4,11 +4,12 @@ form {
     color: #005473;
     text-align: right;
 }
+
 .container-fluid {
     color: #005473;
-    direction:rtl !important;
-    font-family:Calibri;
-    font-size:25px;
+    direction: rtl !important;
+    font-family: Calibri;
+    font-size: 25px;
 }
 
 
@@ -18,13 +19,15 @@ form {
     direction: unset !important;
     text-align: right;
 }
+
     .datadiv > button {
         margin-right: 50%;
         margin-top: 30px;
-        color:whitesmoke
+        color: whitesmoke
     }
-#newLevel{
-    font-size:25px !important;
+
+#newLevel {
+    font-size: 25px !important;
 }
 
 #SaveB {
@@ -35,31 +38,34 @@ form {
     font-size: 20px;
 }
 
-#UnitTable{
+#UnitTable {
     color: #005473;
-
 }
 
 .nowrap {
     width: 50%;
 }
+
 th, td {
     width: auto;
     background-color: aliceblue;
-    text-align:center;
+    text-align: center;
 }
-#formDiv{
 
-    font-size:25px;
-    padding-right:250px;
+#formDiv {
+    font-size: 25px;
+    padding-right: 250px;
 }
+
 body {
     background-color: aliceblue;
 }
-.editMyGuide{
-    text-align:right;
+
+.editMyGuide {
+    text-align: right;
     /*margin-left:30px;*/
 }
+
 p {
     text-align: center;
 }
@@ -71,21 +77,25 @@ p {
     color: #005473;
     font-family: Calibri;
 }
+
     #putguides > input, #putguides > span {
         color: #005473;
         font-family: Calibri;
         direction: rtl;
     }
-#TableHours > thead > tr > th{
-    text-align:center;
+
+#TableHours > thead > tr > th {
+    text-align: center;
 }
 
 #putguides > div {
     direction: rtl;
 }
-    #putguides > h1 {
-     color:#66CCFF;
-    }
+
+#putguides > h1 {
+    color: #66CCFF;
+}
+
 #Emptyperiod, #emptyshifts {
     margin-left: 1000px;
     margin-top: 30px;
@@ -94,26 +104,30 @@ p {
 #GTable > thead > tr > th, #ExcepTable > thead > tr > th {
     text-align: center;
 }
-.specialtd{
-    width:40% !important;
+
+.specialtd {
+    width: 40% !important;
 }
-.smalltd{
-    width:20%;
+
+.smalltd {
+    width: 20%;
 }
+
 #ExcepTable {
     width: 100%;
 }
+
 #GTable > tbody > tr > td > button {
     font-size: 25px;
 }
 
-    #GuidesTable {
-        width: 50%;
-        /*margin-right: -20px;*/
-    }
+#GuidesTable {
+    width: 50%;
+    /*margin-right: -20px;*/
+}
 
-#managerEditDiv{
-    padding-right:200px;
+#managerEditDiv {
+    padding-right: 200px;
 }
 
 #managerTable {
@@ -135,12 +149,14 @@ p {
     font-size: 25px;
     color: #005473;
     direction: rtl;
-    width:auto;
+    width: auto;
     margin-right: 180px;
 }
+
 #editDiv1 {
     margin-left: 200px !important;
 }
+
 .expl {
     font-size: 25px;
     color: #005473;
@@ -181,7 +197,7 @@ p {
     width: 100%;
 }
 
-#icons > p, #ExtraHours > p, #commens>p {
+#icons > p, #ExtraHours > p, #commens > p {
     text-align: center;
     text-decoration: underline;
     font-size: 40px;
@@ -191,16 +207,17 @@ input[type=number] {
     width: 60px;
 }
 
-button, input[type=submit], button[type=button], #cancelSaveBTN, #saveBTN, .container-fluid>button{
+button, input[type=submit], button[type=button], #cancelSaveBTN, #saveBTN, .container-fluid > button {
     background-color: #008CBA;
     color: white;
     font-family: Calibri;
-    font-size:25px !important;
+    font-size: 25px !important;
 }
 
 #saveBTN {
     margin-right: 600px;
 }
+
 #insAPT {
     background-color: #008CBA;
     color: white;
@@ -231,7 +248,15 @@ button[type=button], #cancelSaveBTN, #saveBTN {
         background-color: #CCFFCC;
     }
 
+#workschdualtable {
+    width: auto;
+    border: none;
+}
 
+    #workschdualtable > thead > tr > th, #workschdualtable > tbody > tr > td {
+        border: none;
+        color: #005473;
+    }
 
 #deleteguidebutton {
     background-color: #FF0000 !important;
@@ -251,6 +276,25 @@ button[type=button], #cancelSaveBTN, #saveBTN {
     width: 200px;
 }
 
+.workschdual {
+    color: #005473;
+    font-family: Calibri;
+    text-align: center;
+    font-size: 20px;
+    border-color: #005473;
+    border-style: ridge;
+    height: 300px;
+    width: 150px;
+    background-color: #e7f7ff;
+    margin: 1px;
+}
+
+    .workschdual > .row {
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: -30%;
+    }
+
 #SubmShift {
     color: cadetblue;
     font-family: Calibri;
@@ -258,7 +302,11 @@ button[type=button], #cancelSaveBTN, #saveBTN {
     font-size: 20px;
     color: #66CCFF;
 }
-
+.myshift {
+    background-color: #94dbc1;
+    color: #0b3325;
+    border-color: #0b3325;
+}
     #SubmShift > div > h5 {
         font-weight: bold;
     }
@@ -289,13 +337,15 @@ button[type=button], #cancelSaveBTN, #saveBTN {
     margin-right: auto;
     margin-left: auto;
 }
-#insertUnit{
-    font-size:25px;
+
+#insertUnit {
+    font-size: 25px;
 }
+
 #insertAPT {
     font-size: 25px;
     text-align: right;
-    margin-left:1000px;
+    margin-left: 1000px;
 }
 
 .shiftsShow > input[type=button] {
@@ -389,7 +439,7 @@ img {
     margin-top: 5px;
 }
 
-h1, h2, .container-fluid > h1, .container-fluid>h2 {
+h1, h2, .container-fluid > h1, .container-fluid > h2 {
     text-align: center;
     color: #66CCFF;
     font-size: 70px !important;
@@ -426,20 +476,22 @@ input, select {
     margin-left: auto;
     margin-right: auto;
 }
-#newPeriod{
-    font-size:25px;
-    padding-right:200px;
 
+#newPeriod {
+    font-size: 25px;
+    padding-right: 200px;
 }
 
 #pForm {
     font-size: 25px;
     padding-right: 200px;
 }
+
 #PeriodButton {
     font-size: 25px;
     margin-left: 700px;
 }
+
 table, th, td {
     font-size: 25px;
     border: 2px solid cadetblue;
@@ -483,19 +535,22 @@ span:before {
     background-color: cadetblue;
     border: none;
 }
+
 .bigshifts {
     direction: rtl;
     text-align: center;
     border-width: 0.5px;
     border-style: solid;
     border-color: #005473;
-    width:50%;
-    margin-right:500px;
-    }
-.bigshifts>button {
- margin:10px;
- color:whitesmoke;
+    width: 50%;
+    margin-right: 500px;
 }
+
+    .bigshifts > button {
+        margin: 10px;
+        color: whitesmoke;
+    }
+
 .col-25 {
     float: left;
     width: 25%;

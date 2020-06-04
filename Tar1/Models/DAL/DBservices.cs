@@ -2650,5 +2650,50 @@ namespace Tar1.Models.DAL
 
 
         }
+
+        public List<OfficialShift> GetWorkSchdual(int unit)
+        {
+            List<OfficialShift> OS = new List<OfficialShift>();
+            SqlConnection con = null;
+            string today = DateTime.Today.ToString("yyyy-MM-dd");
+
+            string unitid = unit.ToString();
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = "select OfficialShift_2020.EndShift,OfficialShift_2020.ShiftDate,OfficialShift_2020.ShiftType,OfficialShift_2020.StartShift,OfficialShift_2020.UserId, User_2020.FirstName,User_2020.LastName from OfficialShift_2020 inner join Shift_2020 on OfficialShift_2020.ShiftDate = Shift_2020.ShiftDate and OfficialShift_2020.ShiftType = Shift_2020.ShiftType";
+                selectSTR += " inner join User_2020 on OfficialShift_2020.UserId= User_2020.UserId where '" + today+"' between Shift_2020.StartPeriod and Shift_2020.EndPeriod or '"+ today+"' < Shift_2020.StartPeriod and OfficialShift_2020.UnitId = '" + unitid + "'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    OfficialShift realshift = new OfficialShift();
+                    realshift.Shiftdate = Convert.ToDateTime(dr["ShiftDate"]).Date;
+                    realshift.Shifttype = Convert.ToString(dr["ShiftType"]);
+                    TimeSpan myTimeSpan = ((dr).GetTimeSpan(dr.GetOrdinal("StartShift")));
+                    realshift.Startshifthour = new DateTime(myTimeSpan.Ticks);
+                    TimeSpan myTimeSpan2 = ((dr).GetTimeSpan(dr.GetOrdinal("EndShift")));
+                    realshift.Endshifthour = new DateTime(myTimeSpan2.Ticks);
+                    realshift.Userid = Convert.ToString(dr["UserId"]);
+                    realshift.Name = Convert.ToString(dr["FirstName"]) + " " + Convert.ToString(dr["LastName"]);
+                    OS.Add(realshift);
+                }
+                return OS;
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+
     }
 }
