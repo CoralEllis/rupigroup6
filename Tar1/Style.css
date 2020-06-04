@@ -225,6 +225,7 @@ button[type=button], #cancelSaveBTN, #saveBTN {
     font-family: Calibri;
     text-align: center;
     font-size: 50px;
+    margin-right:15px;
 }
 
     #submitshift > div > .shiftsShow {
@@ -286,8 +287,10 @@ button[type=button], #cancelSaveBTN, #saveBTN {
     background-color: aliceblue;
     font-size: 20px;
     color: cadetblue;
-    margin-right: auto;
-    margin-left: auto;
+    /*margin-right: auto;
+    margin-left: auto;*/
+    margin-right: 45px !important;
+    margin-top: -10px !important;
 }
 #insertUnit{
     font-size:25px;
@@ -521,4 +524,10 @@ span:before {
         width: 100%;
         margin-top: 0;
     }
+}
+
+#SubShiftIn {
+    text-align: center !important;
+    align-self: center;
+    margin-right: 42px;
 }

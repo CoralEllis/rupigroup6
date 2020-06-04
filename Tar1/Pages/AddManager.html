@@ -49,7 +49,7 @@
                         $("#ManagerName").val(myData[i].Firstname);
                         $("#ManagerLastName").val(myData[i].Lastname);
                         birthFormat = moment(myData[i].Birthdate);
-                        $("#ManagerBirth").val(birthFormat.format('DD/MM/YYYY'));
+                        $("#ManagerBirth").val(birthFormat.format('YYYY-MM-DD'));
                         $("#ManagerTelephone").val(myData[i].Telephone);
                         $("#ManagerPassword").val(myData[i].Password);
                         if (myData[i].Isactive == true) {

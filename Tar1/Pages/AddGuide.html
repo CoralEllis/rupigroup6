@@ -43,7 +43,7 @@
                         $("#GuideName").val(myData[i].Firstname);
                         $("#GuideLastName").val(myData[i].Lastname);
                         birthFormat = moment(myData[i].Birthdate);
-                        $("#GuideBirth").val(birthFormat.format('DD/MM/YYYY'));
+                        $("#GuideBirth").val(birthFormat.format('YYYY-MM-DD'));
                         $("#GuideTelephone").val(myData[i].Telephone);
                         $("#GuidePassword").val(myData[i].Password);
                         $("#SelectGuideTL").val(myData[i].TrainingLevelId);
