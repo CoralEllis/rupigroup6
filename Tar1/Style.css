@@ -531,3 +531,44 @@ span:before {
     align-self: center;
     margin-right: 42px;
 }
+.myshift {
+    background-color: #94dbc1;
+    color: #0b3325;
+    border-color: #0b3325;
+}
+
+
+
+.workschdual {
+    color: #005473;
+    font-family: Calibri;
+    text-align: center;
+    font-size: 20px;
+    border-color: #005473;
+    border-style: ridge;
+    height: 300px;
+    width: 150px;
+    background-color: #e7f7ff;
+    margin: 1px;
+}
+
+    .workschdual > .row {
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: -30%;
+    }
+
+#workschdualtable {
+    width: auto;
+    border: none;
+}
+
+    #workschdualtable > thead > tr > th, #workschdualtable > tbody > tr > td {
+        border: none;
+        color: #005473;
+    }
+
+
+
+
+
