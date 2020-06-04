@@ -532,12 +532,10 @@ span:before {
     margin-right: 42px;
 }
 .myshift {
-    background-color: #94dbc1;
-    color: #0b3325;
-    border-color: #0b3325;
+    background-color: #94dbc1 !important;
+    color: #0b3325 !important;
+    border-color: #0b3325 !important;
 }
-
-
 
 .workschdual {
     color: #005473;

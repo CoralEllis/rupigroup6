@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link href="../Style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <meta charset="utf-8" />
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script type="text/javascript"></script>
+    <script src="../Scripts/ajaxCalls.js"></script>
+    <script src="../Scripts/moment.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        ShiftsArray = [];
+        //user;
+        //function GetUser() {
+        //    x = localStorage.getItem("User");
+        //    user = JSON.parse(x);
+        //}
+
+        function GetS() {
+             ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, error);           
+     
+        }
+          function GetOrganizeUnitS(data) {
+            str = "<option>בחר יחידה ארגונית</option>";
+            for (var i = 0; i < data.length; i++) {
+                str += "<option value='" + data[i].Id + "'>" + data[i].Unitname + "</option>"
+            }
+            $("#SelectUnit").html(str);
+        }
+         function GetWorkSchedule(select) {
+            id = select.options[select.selectedIndex].value;
+            unit = id.toString();
+           ajaxCall("GET", "../api/Official/WorkSchdual?unit=" + unit, "", GETOfficialS, error);
+
+        }
+        function error(err){
+            swal("ישנה בעיה ", "נסה לבצע את הפעולה שעשית בשנית", "error");
+        }
+        function GETOfficialS(data) {
+            for (var i = 0; i < 7; i++) {
+                $("#" + i).html(" ");
+            }
+            ShiftsArray = [];
+            if (data.length == 0) {
+                swal("אין סידור עבודה להציג ", "אנא פנה למנהל היחידה לבדיקה או טען מחדש את העמוד", "error");
+                return null;
+            }
+            for (var i = 0; i < data.length; i++) {
+                d = data[i].Shiftdate.split("T");
+                x = data[i].Startshifthour.split("T");
+                y = data[i].Endshifthour.split("T");
+                shiftdatestart = d[0] + " " + x[1];
+                shiftdateend = d[0] + " " + y[1];
+                shift = {
+                    "Type": data[i].Shifttype,
+                    "StartShift": moment(shiftdatestart),
+                    "EndShift": moment(shiftdateend),
+                    "UserName": data[i].Name
+                }
+                ShiftsArray.push(shift);
+            }
+            ShiftsArray.sort(sortByDateAsc);
+            str = "";
+            for (var i = 0; i < ShiftsArray.length; i++) {
+                datestr = ShiftsArray[i].StartShift.format('DD/MM/YYYY');
+
+                if (i > 0 && datestr == ShiftsArray[i - 1].StartShift.format('DD/MM/YYYY') && ShiftsArray[i].Type == ShiftsArray[i - 1].Type) {
+                    guidesstr = "<br />" + ShiftsArray[i].UserName;
+                    document.getElementById("guides|" + ShiftsArray[i].Type + "|" + datestr).innerHTML += guidesstr;
+                }
+                else {
+                    shiftd = ShiftsArray[i].StartShift.day();
+                    weekday = TellMeTheDay(shiftd);
+                    str = "<div class='row workschdual'>" + weekday + " " + datestr + "<br />" + ShiftsArray[i].Type + "<br />" + ShiftsArray[i].EndShift.format('HH:mm') + " - " + ShiftsArray[i].StartShift.format('HH:mm') + "<div class='row' id='guides|" + ShiftsArray[i].Type + "|" + datestr + "'>מדריכים משובצים:<br />" + ShiftsArray[i].UserName + "</div></div>";
+                    switch (shiftd) {
+                        case shiftd:
+                            document.getElementById(shiftd).innerHTML += str;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            
+            $("#submitshift").show();
+        }
+        function TellMeTheDay(YomBa) {
+            switch (YomBa) {
+                case 0:
+                    return 'יום ראשון';
+                    break;
+                case 1:
+                    return 'יום שני';
+                    break;
+                case 2:
+                    return 'יום שלישי';
+                    break;
+                case 3:
+                    return 'יום רביעי';
+                    break;
+                case 4:
+                    return 'יום חמישי';
+                    break;
+                case 5:
+                    return 'יום שישי ';
+                    break;
+                case 6:
+                    return 'יום שבת';
+                    break;
+                default:
+                    break;
+            }
+        }
+        sortByDateAsc = function (lhs, rhs) { return lhs.StartShift > rhs.StartShift ? 1 : lhs.StartShift < rhs.StartShift ? -1 : 0 }
+    </script>
+    <title></title>
+</head>
+<body dir="rtl" style="background-color:aliceblue" onload="GetS()">
+    <!--onload="GetUser()"-->
+    <img src="../Photos/LOGO.PNG" />
+    <div class="container-fluid" id="SubmShift">
+        <h1>צפייה בסידור עבודה נוכחי</h1><br />
+        <div class="row">
+            <span> בחר יחידה ארגונית שברצונך לאייש עבורה משמרת:  </span><span></span>
+            <select id="SelectUnit" onchange="GetWorkSchedule(this)"></select>
+
+        </div>
+        <div class="row" id="submitshift" dir="rtl" style="display:none">
+            <table id="workschdualtable">
+                <thead>
+                    <tr>
+                        <th>א'</th>
+                        <th>ב'</th>
+                        <th>ג'</th>
+                        <th>ד'</th>
+                        <th>ה'</th>
+                        <th>ו'</th>
+                        <th>ש'</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div id="0">
+                            </div>
+                        </td>
+
+                        <td>
+                            <div id="1">
+                            </div>
+                        </td>
+
+                        <td>
+                            <div id="2">
+                            </div>
+                        </td>
+                        <td>
+                            <div id="3">
+                            </div>
+                        </td>
+                        <td>
+                            <div id="4">
+                            </div>
+                        </td>
+                        <td>
+                            <div id="5">
+                            </div>
+                        </td>
+                        <td>
+                            <div id="6">
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

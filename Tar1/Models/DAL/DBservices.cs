@@ -2662,7 +2662,7 @@ namespace Tar1.Models.DAL
             {
                 con = connect("DBConnectionString");
                 String selectSTR = "select OfficialShift_2020.EndShift,OfficialShift_2020.ShiftDate,OfficialShift_2020.ShiftType,OfficialShift_2020.StartShift,OfficialShift_2020.UserId, User_2020.FirstName,User_2020.LastName from OfficialShift_2020 inner join Shift_2020 on OfficialShift_2020.ShiftDate = Shift_2020.ShiftDate and OfficialShift_2020.ShiftType = Shift_2020.ShiftType";
-                selectSTR += " inner join User_2020 on OfficialShift_2020.UserId= User_2020.UserId where '" + today+"' between Shift_2020.StartPeriod and Shift_2020.EndPeriod or '"+ today+"' < Shift_2020.StartPeriod and OfficialShift_2020.UnitId = '" + unitid + "'";
+                selectSTR += " inner join User_2020 on OfficialShift_2020.UserId= User_2020.UserId where (('" + today+"' between Shift_2020.StartPeriod and Shift_2020.EndPeriod) or '"+ today+"' < Shift_2020.StartPeriod) and OfficialShift_2020.UnitId = '" + unitid + "'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (dr.Read())
