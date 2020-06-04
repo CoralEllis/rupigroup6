@@ -34,6 +34,14 @@ namespace AkimShifts.Controllers
             return period.GetAllRelavnt(Unitid);
         }
         [HttpGet]
+        [Route("api/Period/LastYear")]
+        public List<Period> GetLastYear(int id)
+        {
+          
+            Period period = new Period();
+            return period.getAllPeriods(id);
+        }
+        [HttpGet]
         [Route("api/Period/{id:int}")]
         public bool Get(int id)
         {

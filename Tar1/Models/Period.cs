@@ -54,7 +54,12 @@ namespace Tar1.Models
             return dbs.GetHistoryPeriod(unit);
 
         }
-       
 
+       public List<Period> getAllPeriods(int id)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.getAllPeriods(id);
+
+        }
     }
 }

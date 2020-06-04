@@ -201,7 +201,7 @@
     <Content Include="Pages\ConstraintManagement.html" />
     <Content Include="Pages\Apartment.html" />
     <Content Include="Pages\WorkscheduleForBigManager.html" />
-    <Content Include="Pages\WorkscheduleForUnitManager.html" />
+    <Content Include="Pages\AllLastYearWorkscheduleForUnit.html" />
     <Content Include="Pages\WorkscheduleForGuide.html" />
     <Content Include="Pages\WorkArrangement.html" />
     <Content Include="Pages\SubmitShifts.html" />

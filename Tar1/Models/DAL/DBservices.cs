@@ -2694,6 +2694,44 @@ namespace Tar1.Models.DAL
             }
         }
 
+        public List<Period> getAllPeriods(int unit)
+        {
+            List<Period> P = new List<Period>();
+            SqlConnection con = null;
+            
+            DateTime TodayYearAgo = DateTime.Now.AddYears(-1);   
+            string today = TodayYearAgo.ToString("yyyy-MM-dd");
+            string unitid = unit.ToString();
+            try
+            {
+                con = connect("DBConnectionString");
+                String selectSTR = "select * from SchedulingPeriod_2020 where '"+today+"' < StartPeriod and UnitId='" + unitid + "'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dr.Read())
+                {
+                    Period period = new Period();
+                    period.Startdate = Convert.ToDateTime(dr["StartPeriod"]).Date;
+                    period.Enddate = Convert.ToDateTime(dr["EndPeriod"]).Date;
+                    P.Add(period);
+                }
+                return P;
 
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+
+
+        }
+        
     }
 }
