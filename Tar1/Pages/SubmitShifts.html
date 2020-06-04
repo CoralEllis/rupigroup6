@@ -46,7 +46,7 @@
             str = "";
             for (var i = 0; i < ShiftsArray.length; i++) {
                 datestr = ShiftsArray[i].StartShift.format('DD/MM/YYYY');
-                str = "<div class='row shiftsShow' id='" + ShiftsArray[i].StartShift.format("YYYY-MM-DD") + "|" + ShiftsArray[i].Type + "'><p>" + ShiftsArray[i].Type + "<br />" + datestr + "<br />" + ShiftsArray[i].EndShift.format('HH:mm') + " - " + ShiftsArray[i].StartShift.format('HH:mm') + "<br /> הערות:</p> <br /><textarea id='" + ShiftsArray[i].StartShift.format("YYYY-MM-DD") + "||" + ShiftsArray[i].Type + "'  ></textarea><br /><input type='button' id='" + ShiftsArray[i].StartShift.format("YYYY-MM-DD") + "|||" + ShiftsArray[i].Type + "' value='לחץ לחסימה'  onclick='ChangeShiftPref(this.parentNode.id,this)' /></div><br />";
+                str = "<div class='row shiftsShow' id='" + ShiftsArray[i].StartShift.format("YYYY-MM-DD") + "|" + ShiftsArray[i].Type + "'><p id='SubShiftIn'>" + ShiftsArray[i].Type + "<br />" + datestr + "<br />" + ShiftsArray[i].EndShift.format('HH:mm') + " - " + ShiftsArray[i].StartShift.format('HH:mm') + "<br /> הערות:</p> <br /><textarea id='" + ShiftsArray[i].StartShift.format("YYYY-MM-DD") + "||" + ShiftsArray[i].Type + "'  ></textarea><br /><input type='button' id='" + ShiftsArray[i].StartShift.format("YYYY-MM-DD") + "|||" + ShiftsArray[i].Type + "' value='לחץ לחסימה'  onclick='ChangeShiftPref(this.parentNode.id,this)' /></div><br />";
                 shiftd = ShiftsArray[i].StartShift.day();
                 switch (shiftd) {
                     case shiftd:
@@ -164,6 +164,7 @@
     <!--onload="GetUser()"-->
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid" id="SubmShift">
+        <br />
         <h1>הגשת העדפות</h1><br />
         <div class="col-4">
             <h5 style="color:cadetblue; background-color:#CCFFCC;"> משמרת ירוקה = משמרת הוגשה</h5>
