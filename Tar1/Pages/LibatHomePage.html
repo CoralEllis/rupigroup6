@@ -13,15 +13,22 @@
     <script type="text/javascript"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
 
-    <title></title>
+    <title>עמוד ראשי - סמנכ"ל משאבי אנוש והדרכה</title>
+    <script>
+        function putname() {
+            User = JSON.parse(localStorage.getItem("User"));
+            str = " שלום " + User.Firstname;
+            $("#Hello").html(str);
+        }
+    </script>
 </head>
-<body dir="rtl" style="background-color:aliceblue">
+<body dir="rtl" style="background-color:aliceblue" onload="putname()">
     <img src="../Photos/LOGO.PNG" />
     <div class="container" id="BigUnitManager">
         <div class="row">
             <img src="../Photos/diverse-people.jpg" id="panoramaLM" />
         </div>
-        <h1 style="font-size:100px"> סמנכ"לית משאבי אנוש</h1><br />
+        <h1 style="font-size:100px" id="Hello"></h1><br />
         <div class="row">
             <div class="col-6" style="cursor: pointer;">
                 <a href="ExceptionDashboard.html">

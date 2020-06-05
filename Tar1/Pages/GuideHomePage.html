@@ -12,17 +12,24 @@
             crossorigin="anonymous"></script>
     <script type="text/javascript"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
-    <title></title>
+    <title>עמוד ראשי - מדריך</title>
+    <script>
+        function putname() {
+            User = JSON.parse(localStorage.getItem("User"));
+            str = " שלום " + User.Firstname;
+            $("#Hello").html(str);
+        }
+    </script>
 </head>
-<body dir="rtl" style="background-color:aliceblue">
+<body dir="rtl" style="background-color:aliceblue" onload="putname()">
     <img src="../Photos/LOGO.PNG" />
     <div class="container" id="Guide">
         <div class="row">
             <img src="../Photos/group-people-hugging-each-other-park_.jpg" class="mainpic" />
         </div>
-        <h1 style="font-size:100px">מדריך</h1><br />
+        <h1 style="font-size:100px" id="Hello"></h1><br />
         <div class="row">
-            <div class="col-6" style="cursor:pointer;">
+            <div class="col-4" style="cursor:pointer;">
                 <a href="SubmitShifts.html">
                     <div class="row">
                         <label style="cursor:pointer; margin-right:150px;">הגשת העדפות</label>
@@ -32,7 +39,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-6" style="cursor: pointer;">
+            <div class="col-4" style="cursor: pointer;">
                 <a href="WorkscheduleForGuide.html">
                     <div class="row">
 
@@ -40,6 +47,17 @@
                     </div>
                     <div class="row">
                         <img src="../Photos/calendar-mock-up.jpg" class="Guidespics" />
+                    </div>
+                </a>
+            </div>
+            <div class="col-4" style="cursor: pointer;">             
+                    <a href="AllLastYearWorkscheduleForUnit.html">
+                    <div class="row">
+                        <label style="cursor: pointer">צפייה בסידורים קודמים</label>
+                    </div>
+                    <div class="row">
+                        <img src="../Photos/-looking-calendar.jpg" class="Bigmanagerpics" />
+
                     </div>
                 </a>
             </div>

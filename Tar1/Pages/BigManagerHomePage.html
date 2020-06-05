@@ -13,15 +13,22 @@
     <script type="text/javascript"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
 
-    <title></title>
+    <title>עמוד ראשי - מנהל מערך הדיור</title>
+    <script>
+        function putname() {
+            User = JSON.parse(localStorage.getItem("User"));
+            str = " שלום " + User.Firstname;
+            $("#Hello").html(str);
+        }
+    </script>
 </head>
-<body dir="rtl" style="background-color:aliceblue">
+<body dir="rtl" style="background-color:aliceblue" onload="putname()">
     <img src="../Photos/LOGO.PNG" />
     <div class="container" id="BigUnitManager">
         <div class="row">
             <img src="../Photos/modern-office-room-with-blank-screen-laptop.jpg" id="panoramaBigM" />
         </div>
-        <h1 style="font-size:100px"> מנהל מערך הדיור</h1><br />
+        <h1 style="font-size:100px" id="Hello"> </h1><br />
         <div class="row">
             <div class="col-4" style="cursor: pointer;">
                 <a href="WorkscheduleForBigManager.html">
@@ -46,17 +53,17 @@
             </div>
 
             <div class="col-4" style="cursor: pointer;">
-                <div class="row">
-                    <label style="cursor: pointer">צפייה בסידורים קודמים</label>
-                </div>
-                <div class="row">
-                    <img src="../Photos/-looking-calendar.jpg" class="Bigmanagerpics" />
+                <a href="AllLastYearWorkscheduleForAllUnits.html">
+                    <div class="row">
+                        <label style="cursor: pointer">צפייה בסידורים קודמים</label>
+                    </div>
+                    <div class="row">
+                        <img src="../Photos/-looking-calendar.jpg" class="Bigmanagerpics" />
 
-                </div>
+                    </div>
+                </a>
             </div>
-
-        </div>        <br />
-
+        </div>    
     </div>
 </body>
 </html>

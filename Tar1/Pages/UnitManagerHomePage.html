@@ -12,15 +12,22 @@
             crossorigin="anonymous"></script>
     <script type="text/javascript"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
-    <title></title>
+    <title>עמוד ראשי - מנהל יחידה ארגונית</title>
+    <script>
+        function putname() {
+            User = JSON.parse(localStorage.getItem("User"));
+            str = " שלום " + User.Firstname;
+            $("#Hello").html(str);
+        }
+    </script>
 </head>
-<body dir="rtl" onload="GetUsers()" style="background-color:aliceblue">
+<body dir="rtl" onload="putname()" style="background-color:aliceblue">
     <img src="../Photos/LOGO.PNG" />
     <div class="container" id="UnitManager">
         <div class="row">
             <img src="../Photos/teamwork.jpg" class="teamwork" />
         </div>
-        <h1 style="font-size:100px"> מנהל יחידה ארגונית</h1><br />
+        <h1 style="font-size:100px" id="Hello"></h1><br />
         <div class="row">
             <div class="col-4" onclick="GoToGuides()" style="cursor: pointer;">
                 <a href="AddGuide.html">
@@ -55,28 +62,39 @@
         </div>
         <br />
         <div class="row">
-            <div class="col-6" style="cursor: pointer;">
+            <div class="col-4" style="cursor: pointer;">
                 <a href="WorkscheduleForUnitManager.html">
                     <div class="row">
                         <label style="cursor: pointer;margin-right:100px">צפייה בסידור נוכחי</label>
                     </div>
                     <div class="row">
-                        <img src="../Photos/science-education.jpg" class="unitmanagerpics" style="margin-right:160px;" />
+                        <img src="../Photos/science-education.jpg" class="unitmanagerpics" style="margin-right:40px;"/>
                     </div>
                 </a>
             </div>
-            <div class="col-6" style="cursor: pointer;">
+            <div class="col-4" style="cursor: pointer;">
                 <a href="changeHistory.html">
                     <div class="row">
                         <label style="cursor: pointer;margin-right:60px">שינוי משמרות קודמות</label>
                     </div>
                     <div class="row">
-                        <img src="../Photos/small-wooden-clock.jpg" class="unitmanagerpics" style="margin-right:150px" />
+                        <img src="../Photos/small-wooden-clock.jpg" class="unitmanagerpics" style="margin-right:40px;"/>
+                    </div>
+                </a>
+            </div>
+            <div class="col-4" style="cursor: pointer;">
+                <a href="AllLastYearWorkscheduleForUnit.html">
+                    <div class="row">
+                        <label style="cursor: pointer">צפייה בסידורים קודמים</label>
+                    </div>
+                    <div class="row">
+                        <img src="../Photos/-looking-calendar.jpg" class="Bigmanagerpics" />
+
                     </div>
                 </a>
             </div>
         </div>
-        <br />
+        
 
     </div>
 </body>
