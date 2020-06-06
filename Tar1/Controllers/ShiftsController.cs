@@ -35,7 +35,6 @@ namespace AkimShifts.Controllers
         {
             Shift s = new Shift();
             s.PostShifts(ShiftArr);
-
         }
 
         // PUT api/<controller>/5
