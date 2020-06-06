@@ -12,13 +12,12 @@
             crossorigin="anonymous"></script>
     <script type="text/javascript"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <script src="../Scripts/moment.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/moment@2.22.2/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment-range/4.0.1/moment-range.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
-        //user;
-        //function GetUser() {
-        //    x = localStorage.getItem("User");
-        //    user = JSON.parse(x);
-        //}
         i = 0;
         ShiftsArray = [];
         Unitid = 2;
@@ -26,7 +25,7 @@
         SArray = [];
         function ShowShifts() {
             startdate = $("#start").val().toString();
-            end_date = $("end").val().toString();
+            end_date = $("#end").val().toString();
             if (moment(end_date).isBefore(startdate)) {
                 swal("תאריך סיום גדול מתאריך התחלה", "אנא הכנס טווח תאריכים תקני", "warning");
                 return null;
@@ -35,6 +34,7 @@
         }
         sortByDateAsc = function (lhs, rhs) { return lhs.Shiftdate > rhs.Shiftdate ? 1 : lhs.Shiftdate < rhs.Shiftdate ? -1 : 0 }
         function GetShiftS(data) {
+            console.log(data);
             if (data.length > 0) {
                 again = true;
                 for (var f = 0; f < data.length; f++) {
