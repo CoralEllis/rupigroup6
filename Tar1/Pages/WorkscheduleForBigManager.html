@@ -27,14 +27,18 @@
      
         }
           function GetOrganizeUnitS(data) {
-            str = "<option>בחר יחידה ארגונית</option>";
+            str = "<option value=''>בחר יחידה ארגונית</option>";
             for (var i = 0; i < data.length; i++) {
                 str += "<option value='" + data[i].Id + "'>" + data[i].Unitname + "</option>"
             }
             $("#SelectUnit").html(str);
         }
          function GetWorkSchedule(select) {
-            id = select.options[select.selectedIndex].value;
+             id = select.options[select.selectedIndex].value;
+             if (id == '') {
+                 swal("לא נבחרה יחידה ארגונית ", "אנא בחר יחידה ארגונית מתוך הרשימה", "error");
+                 return null;
+             }
             unit = id.toString();
            ajaxCall("GET", "../api/Official/WorkSchdual?unit=" + unit, "", GETOfficialS, error);
 
