@@ -31,7 +31,7 @@
         }
         function GETOfficialS(data) {
             userid = '123456789'//TAKE FROM LOCAL STORAGE
-              for (var i = 0; i < 7; i++) {
+            for (var i = 0; i < 7; i++) {
                 $("#" + i).html(" ");
             }
             ShiftsArray = [];
@@ -119,54 +119,56 @@
         <h1>צפייה בסידור עבודה נוכחי</h1><br />
 
         <div class="row" id="submitshift" dir="rtl">
-            <table id="workschdualtable">
-                <thead>
-                    <tr>
-                        <th>א'</th>
-                        <th>ב'</th>
-                        <th>ג'</th>
-                        <th>ד'</th>
-                        <th>ה'</th>
-                        <th>ו'</th>
-                        <th>ש'</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div id="0">
-                            </div>
-                        </td>
+            <div class="table-responsive-md">
+                <table id="workschdualtable">
+                    <thead>
+                        <tr>
+                            <th scope="col">א'</th>
+                            <th scope="col">ב'</th>
+                            <th scope="col">ג'</th>
+                            <th scope="col">ד'</th>
+                            <th scope="col">ה'</th>
+                            <th scope="col">ו'</th>
+                            <th scope="col">ש'</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div id="0">
+                                </div>
+                            </td>
 
-                        <td>
-                            <div id="1">
-                            </div>
-                        </td>
+                            <td>
+                                <div id="1">
+                                </div>
+                            </td>
 
-                        <td>
-                            <div id="2">
-                            </div>
-                        </td>
-                        <td>
-                            <div id="3">
-                            </div>
-                        </td>
-                        <td>
-                            <div id="4">
-                            </div>
-                        </td>
-                        <td>
-                            <div id="5">
-                            </div>
-                        </td>
-                        <td>
-                            <div id="6">
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-               </div>
+                            <td>
+                                <div id="2">
+                                </div>
+                            </td>
+                            <td>
+                                <div id="3">
+                                </div>
+                            </td>
+                            <td>
+                                <div id="4">
+                                </div>
+                            </td>
+                            <td>
+                                <div id="5">
+                                </div>
+                            </td>
+                            <td>
+                                <div id="6">
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </body>
 </html>
