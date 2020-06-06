@@ -54,15 +54,5 @@ namespace Tar1.Models
             DBservices dbs = new DBservices();
             return dbs.GetExceptions(unitid, dt);
         }
-        public void DelException()
-        {
-            DBservices dbs = new DBservices();
-            dbs.DeleteException(this);
-        }
-        public void UpdateEx()
-        {
-            DBservices dbs = new DBservices();
-            dbs.UpdateException(this);
-        }
     }
 }

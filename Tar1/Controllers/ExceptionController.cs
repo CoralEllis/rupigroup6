@@ -50,15 +50,13 @@ namespace AkimShifts.Controllers
         // PUT api/<controller>/5
         public void Put([FromBody]Exceptions Ex)
         {
-            Ex.UpdateEx();
+          
         }
 
         // DELETE api/<controller>/5
         public void Delete([FromBody] Exceptions Ex)
         {
-            //Exceptions e = new Exceptions();
-            //e.DelException(Ex);
-            Ex.DelException();
+
         }
     }
 }

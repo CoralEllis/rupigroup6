@@ -77,7 +77,8 @@
                     "StartShift": moment(shiftdatestart),
                     "EndShift": moment(shiftdateend),
                     "Guidenum": data[i].GuideNum1,
-                    "NuminOfficialShift": []
+                    "NuminOfficialShift": [],
+                    "NuminSaveShift": []
                 }
                 ShiftsArray.push(shift);
             }
@@ -117,10 +118,12 @@
                     "Shifttype": data[i].Shifttype,
                     "Shiftdate": moment(shiftdatestart).format("YYYY-MM-DD"),
                     "UserName": User[1],
-                    "Done": false
+                    "Done": false,
+                    "StartShift": moment(shiftdatestart)
                 }
                 SaveShifts.push(SaveShift);
             }
+            SaveShifts.sort(sortByDateAsc);
         }
         function GETOfficialE(err) {
             console.log(err);
@@ -141,6 +144,7 @@
                         loop3:
                         for (var a = 0; a < SaveShifts.length; a++) {
                             if (ShiftsArray[i].Type == SaveShifts[a].Shifttype && ShiftsArray[i].StartShift.format("YYYY-MM-DD") == SaveShifts[a].Shiftdate) {
+                                ShiftsArray[i].NuminSaveShift.push(a);
                                 if (SaveShifts[a].Done == true)
                                     continue loop3;
                                 else if (SaveShifts[a].Userid != "666666666" && SaveShifts[a].Userid != "777777777" && SaveShifts[a].Userid != "888888888" && SaveShifts[a].Userid != "999999999") {
@@ -681,7 +685,6 @@
                 }
                 if (RealShiboz == false) {
                     alert("שים לב, המשמרת מאויישת במלואה, במידה והנך רוצה לשנות שיבוץ יש למחוק קודם את מדריך מאוייש ולאחר מכן לשבץ שוב!");
-                    //swal("שים לב, המשמרת מאויישת במלואה, במידה והנך רוצה לשנות שיבוץ יש למחוק קודם את מדריך מאוייש ולאחר מכן לשבץ שוב");
                 }
             }
             else if (x.textContent == 'מחק מדריך') {
@@ -696,6 +699,7 @@
                         ShiftsArray[num].NuminOfficialShift[i].Occupied = false;
                         //Delete guide's shift from OficialShift
                         OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid = " ";
+                        OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].idBefore = SaveShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid;
                         break;
                     }
                 }
@@ -711,12 +715,6 @@
                 for (var j = 0; j < Exceptions.length; j++) {
                     if (Exceptions[j].User == id && Exceptions[j].ShiftDate == info[0] && Exceptions[j].ShiftType == info[1])
                         Exceptions.splice(j, 1);
-                }
-                for (var d = 0; d < OldExceptions.length; d++) {
-                    if (OldExceptions[d].User == id && OldExceptions[d].ShiftDate == info[0] && OldExceptions[d].ShiftType == info[1]) {
-                        OldExceptions.splice(d, 1);
-                        ajaxCall("DELETE", "../api/Exception", JSON.stringify(OldExceptions[d]), DeleteS, DeleteE)
-                    }
                 }
             }
             dateShift = OfficialShifts[ShiftsArray[num].NuminOfficialShift[0].NumInArray].Shiftdate;
@@ -817,28 +815,23 @@
                             }
                             Exceptions.push(Excpt);
                         }
-                        if (Guides[i].WeeklyHours > HoursPerWeek)//60  job hours per week
-                        {
-                            Excpt = {
-                                "User": Guides[i].UserId,
-                                "Unit": Unitid,
-                                "Index": "חריגה משעות עבודה שבועיות",
-                                "ShiftType": type,
-                                "ShiftDate": dateShift
+                        for (var w = 0; w < Guides[i].WeeklyHours.length; w++) {
+                            if (Guides[i].WeeklyHours[w] > HoursPerWeek)//60  job hours per week
+                            {
+                                Excpt = {
+                                    "User": Guides[i].UserId,
+                                    "Unit": Unitid,
+                                    "Index": "חריגה משעות עבודה שבועיות",
+                                    "ShiftType": type,
+                                    "ShiftDate": dateShift
+                                }
+                                Exceptions.push(Excpt);
                             }
-                            Exceptions.push(Excpt);
                         }
                         break;
                     }
                 }
             }
-        }
-        function DeleteS(data) {
-            alert("Delete Success");
-        }
-        function DeleteE(err) {
-            alert("Delete Failed");
-            console.log(err);
         }
         function newNumber(x) {
             x = x.toString();
@@ -848,11 +841,13 @@
             }
             return dfg;
         }
+
         function PostWorkArrangment() {
             for (var g = 0; g < Guides.length; g++) {
                 if (Guides[g].ShiftsSorted.length > 0)
                     Guides[g].ShiftsSorted.sort(sortByDateAsc);
             }
+            place = 0;
             for (var j = 0; j < Guides.length; j++) {
                 if (Guides[j].ShiftsSorted.length > 0) {
                     HasABreak = false;//36 hours break
@@ -874,7 +869,7 @@
                             BreakShift = milisecond.asHours();
                             if (BreakShift >= MaxRestHours) {
                                 HasABreak = true;
-                                //break;
+                                place = f;
                             }
                         }
                         if (f == Guides[j].ShiftsSorted.length - 1 && HasABreak == false) {
@@ -884,7 +879,7 @@
                             BreakShift = milisecond.asHours();
                             if (BreakShift >= MaxRestHours) {
                                 HasABreak = true;
-                                //break;
+                                place = f;
                             }
                         }
                         if (f + 1 < Guides[j].ShiftsSorted.length && HasABreak == false) {
@@ -894,7 +889,7 @@
                             BreakShift = milisecond.asHours();
                             if (BreakShift >= MaxRestHours) {
                                 HasABreak = true;
-                                //break;
+                                place = f;
                             }
                         }
                         if (CheckEightHours == true) {
@@ -912,29 +907,6 @@
                                         "ShiftDate": Guides[j].ShiftsSorted[f].ShiftDate
                                     }
                                     Exceptions.push(Excpt);
-
-                                    //Swal.fire({
-                                    //    title: 'שים לב!',
-                                    //    text: 'ישנו הפרש של פחות מ- 8 שעות עבור  ' + Guides[j].Username + '  בין המשמרות:  ' + Guides[j].ShiftsSorted[f].ShiftDate + ' ' + Guides[j].ShiftsSorted[f].ShiftType + ' ו' + Guides[j].ShiftsSorted[f + 1].ShiftDate + ' ' + Guides[j].ShiftsSorted[f + 1].ShiftType,
-                                    //    icon: 'warning',
-                                    //    showCancelButton: true,
-                                    //    confirmButtonColor: '#3085d6',
-                                    //    cancelButtonColor: '#d33',
-                                    //    confirmButtonText: 'הגש סידור עבודה',
-                                    //    cancelButtonText: 'בטל וחזור',
-                                    //}).then((result) => {
-
-                                    //    if (result.dismiss == 'cancel') {
-                                    //        //return;
-                                    //    }
-                                    //    if (result.value) {
-                                    //        Swal.fire(
-                                    //            'הסידור הוגש',
-                                    //            '',
-                                    //            'success'
-                                    //        )
-                                    //    }
-                                    //})
                                 }
                             }
                         }
@@ -943,33 +915,11 @@
                         Excpt = {
                             "User": Guides[j].UserId,
                             "Unit": Unitid,
-                            "Index": "אי קבלת מנוחה שבועית"
-                            //"ShiftType": type,
-                            //"ShiftDate": dateShift
+                            "Index": "אי קבלת מנוחה שבועית",
+                            "ShiftType": Guides[j].ShiftsSorted[place].ShiftType,
+                            "ShiftDate": Guides[j].ShiftsSorted[place].ShiftDate
                         }
                         Exceptions.push(Excpt);
-
-                        //Swal.fire({
-                        //    title: 'שים לב!',
-                        //    text: Guides[j].Username + " לא קיבל 36 שעות מנוחה ברציפות",
-                        //    icon: 'warning',
-                        //    showCancelButton: true,
-                        //    confirmButtonColor: '#3085d6',
-                        //    cancelButtonColor: '#d33',
-                        //    confirmButtonText: 'הגש סידור עבודה',
-                        //    cancelButtonText: 'בטל וחזור',
-                        //}).then((result) => {
-                        //    if (result.dismiss == 'cancel') {
-                        //        //return;
-                        //    }
-                        //    if (result.value) {
-                        //        Swal.fire(
-                        //            'הסידור הוגש',
-                        //            '',
-                        //            'success'
-                        //        )
-                        //    }
-                        //})
                     }
                 }
             }
@@ -999,27 +949,25 @@
             console.log(OfficialShifts);
             if (again == true) {
                 for (var i = 0; i < OfficialShifts.length; i++) {
-                    if (OfficialShifts[i].Userid != "666666666" && OfficialShifts[i].Userid != "777777777" && OfficialShifts[i].Userid != "888888888" && OfficialShifts[i].Userid != "999999999")
-                        ajaxCall("PUT", "../api/Official", JSON.stringify(OfficialShifts[i]), PostShiftAgainS, PostShiftAgainE);
-                }
-                for (var e = 0; e < Exceptions.length; e++) {
-                    for (var a = 0; a < OldExceptions.length; a++) {
-                        if (Exceptions[e].ShiftType == OldExceptions[a].ShiftType && Exceptions[e].ShiftDate == OldExceptions[a].ShiftDate && Exceptions[e].Unit == OldExceptions[a].Unit)
-                            ajaxCall("PUT", "../api/Exception", JSON.stringify(Exceptions[e]), PostExAgainS, PostExAgainE);
+                    if (OfficialShifts[i].Userid != "666666666" && OfficialShifts[i].Userid != "777777777" && OfficialShifts[i].Userid != "888888888" && OfficialShifts[i].Userid != "999999999") {
+                        OfficialShift = {
+                            "Userid": OfficialShifts[i].Userid,
+                            "Startshifthour": OfficialShifts[i].Startshifthour,
+                            "Endshifthour": OfficialShifts[i].Endshifthour,
+                            "Unitid": OfficialShifts[i].Unitid,
+                            "Shifttype": OfficialShifts[i].Shifttype,
+                            "Shiftdate": OfficialShifts[i].Shiftdate
+                        }
+                        console.log(OfficialShift, OfficialShifts[i].idBefore)
+                        ajaxCall("Put", "../api/Official/CheckHours?idbefore=" + OfficialShifts[i].idBefore, JSON.stringify(OfficialShift), succesPut, error);
                     }
                 }
             }
             else {
                 ajaxCall("POST", "../api/Official", JSON.stringify(OfficialShifts), PostShiftS, PostShiftE);
             }
-        }
-        function PostShiftAgainS(data) {
-            alert("The Shift was Update");
-            console.log(data);
-        }
-        function PostShiftAgainE(error) {
-            alert("Update failed");
-            console.log(error);
+            if (Exceptions.length != 0)
+                ajaxCall("POST", "../api/Exception", JSON.stringify(Exceptions), PostExceptionS, PostExceptionE);
         }
         function PostExceptionS(data) {
             alert("Hi");
@@ -1029,17 +977,16 @@
             alert("No Exceptions");
             console.log(error);
         }
-        function PostExAgainS(data) {
+        function succesPut(data) {
             alert("Exception update");
             console.log(data);
         }
-        function PostExAgainE(error) {
+        function error(error) {
             alert("Exception update failed");
             console.log(error);
         }
         function PostShiftS(data) {
             alert("post Shift");
-            ajaxCall("POST", "../api/Exception", JSON.stringify(Exceptions), PostExceptionS, PostExceptionE);
         }
         function PostShiftE(error) {
             alert("Bi");
@@ -1054,7 +1001,6 @@
             userDiv = $("#Extra" + ID);
             userDiv.html(name + ": " + hours.toFixed(2));
         }
-
         sortByDateAsc = function (lhs, rhs) { return lhs.StartShift > rhs.StartShift ? 1 : lhs.StartShift < rhs.StartShift ? -1 : 0 }
     </script>
     <title>בניית סידור עבודה</title>
