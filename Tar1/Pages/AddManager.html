@@ -221,23 +221,27 @@
         function SaveChanges() {
             birthFormat = moment($("#ManagerBirth").val());
             birth = birthFormat.format('YYYY-DD-MM');
-           
-            if (moment(end).isBefore(birth)) {
-                swal("תאריך סיום גדול מתאריך התחלה", "אנא הכנס טווח תאריכים תקני", "warning");
+
+            if (moment(moment()).isBefore(birth)) {
+                swal("תאריך לידה גדול מהיום", "תאריך לידה לא תקני", "warning");
                 return null;
             }
-           
+            role = $("#ManagerRole option:selected").text();
+            if (role == "סמנכל משאבי אנוש") {
+                role = "סמנכלית";
+            }
             ManagertoSave = {
                 Userid: $("#ManagerId").val(),
                 Firstname: $("#ManagerName").val(),
                 Lastname: $("#ManagerLastName").val(),
                 Birthdate: birth,
                 Telephone: $("#ManagerTelephone").val(),
-                Role: $("#ManagerRole option:selected").text(),
+                Role:role,
                 Password: $("#ManagerPassword").val(),
                 Isactive: $("#SelectManagerStatus").val(),
                 Unitid: $("#SelectEdit option:selected").val(),
             }
+            console.log(ManagertoSave);
             str = "abc";
             ajaxCall("PUT", "../api/User/" + str, JSON.stringify(ManagertoSave), PutManagerS, PutManagerE);
         }

@@ -47,6 +47,15 @@ namespace Tar1.Controllers
             OfficialShift OS = new OfficialShift();
             return OS.GetWorkSchdual(unit);
         }
+        [HttpGet]
+        [Route("api/Official/Allunits")]
+        public List<OfficialShift> GeAllunits(int unit,string id)
+        {
+            OfficialShift OS = new OfficialShift();
+            return OS.getShiftFromAllOrgan(unit,id);
+        }
+
+        
 
         // POST api/<controller>
         public void Post([FromBody]List<OfficialShift> OffShiftArr)
