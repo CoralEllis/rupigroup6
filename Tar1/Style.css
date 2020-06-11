@@ -108,7 +108,7 @@ p {
 }
 
     #GuidesTable {
-        width: 50%;
+        width: 50% !important;
         /*margin-right: -20px;*/
     }
 
