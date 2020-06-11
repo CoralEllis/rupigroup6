@@ -1,0 +1,164 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
+    <link href="../Style.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <meta charset="utf-8" />
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script type="text/javascript"></script>
+    <script src="../Scripts/ajaxCalls.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="../Scripts/moment.js"></script>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+    <script>
+        var myData;
+        $(document).ready(function () {
+            $("#cancelSaveBTN").on("click", function () {
+                $("#editDiv").hide();
+            });
+            ajaxCall("GET", "../api/Constraint", "", getSuccess, error);
+            $("#editDiv").hide();
+        });
+        function buttonEvents() {
+            $(document).on("click", ".editBtn", function () {
+                markSelected(this);
+                //str = "<input type='text' maxlength='100' class='inputTL' id='cons" + this.id + "' value='" + this.name + "' ><br />";
+                //str += "<input type='number' class='inputTL' value='" + this.value + "' >";
+                //$("#editCons").html(str);
+                $("#editDiv").show();
+                for (var i = 0; i < myData.length; i++) {
+                    if (myData[i].ConstraintID == this.id) {
+                        $("#consName").val(myData[i].ConstraintName);
+                        $("#consVal").val(myData[i].ConstraintValue);
+                    }
+                    
+                }
+                $("#editDiv :input").prop("disabled", false);
+            });
+        }
+        function markSelected(btn) {
+            $("#ConsTable tr").removeClass("selected");
+            row = (btn.parentNode).parentNode;
+            row.className = 'selected';
+        }
+        function getSuccess(data) {
+            myData = data;
+            try {
+                tbl = $('#ConsTable').DataTable({
+                    data: data,
+                    columns: [
+                        { data: "ConstraintID" },
+                        { data: "ConstraintName" },
+                        { data: "ConstraintValue" },
+                        {
+                            render: function (data, type, row, meta) {
+                                let dataC = "data-ConsId='" + row.ConstraintID + "'";
+
+                                editBtn = "<button type='button' value='" + row.ConstraintValue + "' name='" + row.ConstraintName + "' id='" + row.ConstraintID + "' class = 'editBtn btn btn-success' " + dataC + "> ערוך אילוץ </button>";
+                                return editBtn;
+                            }
+                        },
+                    ],
+                });
+                buttonEvents();
+            }
+
+            catch (err) {
+                alert(err);
+            }
+        }
+        function error(err) {
+            swal("Error: " + err);
+        }
+        function save() {
+            //x = document.getElementById("editCons").childNodes[1].id;
+            //y = document.getElementById("editCons").childNodes[1].value;
+            //z = document.getElementById("editCons").childNodes[4].value;
+            //res = x.split("s");
+            //x = res[1];
+            //console.log(x, y, z);
+
+
+            constraint = {
+                //"ConstraintID": x,
+                "ConstraintName": $("#consName").val,
+                "ConstraintValue": $("#consVal").val,
+            }
+            console.log(constraint);
+            //ajaxCall("PUT", "../api/Constraint/" + x, JSON.stringify(constraint), PutSuccess, PutError);
+        }
+        function PutSuccess(data) {
+            swal("האילוצים עודכנו בהצלחה", "", "success");
+        }
+        function PutError(error) {
+            swal("השינויים לא נשמרו", "בדוק את הנתונים היטב ונסה שנית", "error");
+        }
+    </script>
+    <title>ניהול אילוצים</title>
+</head>
+<body dir="rtl" style="background-color:aliceblue" >
+    <img src="../Photos/LOGO.PNG" />
+    <h2>צפייה/עריכה אילוצים</h2>
+    <p class="expl">בטבלה מוצגים כל האילוצים. על מנת לערוך שם וערך אילוץ , יש ללחוץ על הכפתור "ערוך אילוץ" ולבסוף ללחוץ על כפתור עדכן.</p>
+    <br />
+    <div class="container">
+        <form action="/action_page.php">
+            <div class="table-responsive-lg">
+                <table id="ConsTable" class="display nowrap" style="width:50%">
+                    <thead>
+                        <tr>
+                            <th scope="col">מספר</th>
+                            <th scope="col">שם האילוץ</th>
+                            <th scope="col">(שעות)ערך האילוץ</th>
+                            <th scope="col">עריכה</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div id="editDiv">
+                <div class="row">
+                    <div class="col-25">
+                        <label >עדכן שם אילוץ:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type='text' maxlength='100' class='inputTL' id='consName' >
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>עדכן ערך אילוץ:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type='number' class='inputTL' id='consVal'>
+                    </div>
+                </div>
+                <div class="row">
+                    <button type="submit" class="btn btn-primary btn-lg" id="saveBTN" onclick="save()">עדכן</button>
+                    <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
+                </div>
+            </div>
+            
+        </form>
+    </div>
+
+</body>
+</html>
