@@ -254,7 +254,7 @@
     </script>
 
 </head>
-<body dir="rtl" style="background-color:aliceblue">
+<!--<body dir="rtl" style="background-color:aliceblue">
 
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid">
@@ -367,5 +367,199 @@
             </form>
         </div>
     </div>
+</body>-->
+<body dir="rtl" style="background-color:aliceblue">
+    <img src="../Photos/LOGO.PNG" />
+    <h2>צפייה בפרטי מנהלים</h2>
+    <p class="expl">בטבלה מוצגים פרטי המנהלים. על מנת לערוך פרטי מנהל יש ללחוץ על כפתור "ערוך מנהל"</p>
+    <br />
+    <div class="container">
+        <form action="/action_page.php">
+            <div class="table-responsive-lg">
+                <table id="managerTable" class="display nowrap" style="width:50%">
+                    <thead>
+                        <tr>
+                            <th scope="col">ת"ז</th>
+                            <th scope="col">שם</th>
+                            <th scope="col">שם משפחה</th>
+                            <th scope="col">תאריך לידה</th>
+                            <th scope="col">מס' טלפון</th>
+                            <th scope="col">תפקיד</th>
+                            <th scope="col">סיסמה</th>
+                            <th scope="col">סטטוס</th>
+                            <th scope="col">יחידה ארגונית</th>
+                            <th scope="col">עריכת מנהל</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div id="editDiv">
+                <h1 id="editDiv1">עריכת מנהל</h1><br />
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">ת"ז:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="9" id="ManagerId">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">שם:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="30" id="ManagerName" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">שם משפחה:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="30" id="ManagerLastName" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">תאריך לידה:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="date" id="ManagerBirth" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">טלפון:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="10" id="ManagerTelephone" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">סיסמה:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="30" id="ManagerPassword" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">תפקיד:</label>
+                    </div>
+                    <div class="col-75">
+                        <select id="ManagerRole">
+                            <option value="1">מנהל יחידה ארגונית</option>
+                            <option value="2">מנהל מערך הדיור</option>
+                            <option value="3">סמנכל משאבי אנוש</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">סטטוס:</label>
+                    </div>
+                    <div class="col-75">
+                        <select id="SelectManagerStatus">
+                            <option value="false">לא פעיל</option>
+                            <option value="true">פעיל</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">יחידה ארגונית:</label>
+                    </div>
+                    <div class="col-75">
+                        <select id="SelectEdit"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <button type="button" class="btn btn-primary btn-lg" id="saveBTN" onclick="SaveChanges()">שמור</button>
+                    <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
+                </div>
+            </div>
+            <h1>הוספת מנהל חדש</h1><br />
+            <p class="expl">על מנת להוסיף מנהל חדש, יש למלא את פרטיו ולבסוף ללחוץ על כפתור שמור.</p>
+            <div id="formDiv">
+                <div class="row">
+                    <div class="col-25">
+                        <label>יחידה ארגונית:</label>
+                    </div>
+                    <div class="col-75">
+                        <select id="SelectUnit"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>ת"ז:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="9" id="id" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>שם פרטי:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="30" id="first" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>שם משפחה:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="30" id="last" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>תאריך לידה:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="date" id="bdate" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>טלפון:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="10" id="tel" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>מנהל מערך הדיור?</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="radio" id="BigManager" name="Manager" value="bigManager" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>מנהל יחידה ארגונית?</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="radio" id="SmallManager" name="Manager" value="littleManager" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>סיסמה:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="30" id="pass" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <input type="submit" value="שמור" id="SaveB" onclick="InsertUser()" />
+                </div>
+            </div>
+        </form>
+    </div>
+
 </body>
 </html>

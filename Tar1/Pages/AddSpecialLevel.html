@@ -113,7 +113,7 @@
         }
     </script>
 </head>
-<body style="background-color:aliceblue">
+<!--<body style="background-color:aliceblue">
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid">
         <br />
@@ -155,5 +155,61 @@
         <br />
         <br />
     </div>
+</body>-->
+<body dir="rtl" style="background-color:aliceblue">
+    <img src="../Photos/LOGO.PNG" />
+    <h2>צפייה ברמות הכשרה למדריכים</h2>
+    <p class="expl">בטבלה מוצגות כל רמות ההכשרה. על מנת לערוך שם רמת הכשרה, יש ללחוץ על הכפתור "ערוך רמת הכשרה" ולבסוף ללחוץ על כפתור עדכן</p>
+    <br />
+    <div class="container">
+        <form action="/action_page.php">
+            <div class="table-responsive-lg">
+                <table id="SlevelTable" class="display nowrap">
+                    <thead>
+                        <tr>
+                            <th scope="col">מספר</th>
+                            <th scope="col">רמת הכשרה</th>
+                            <th scope="col">עריכה</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <br />
+            <br />
+            <div id="editDiv">
+                <div class="row">
+                    <div class="col-25">
+                        <div id="editDiv" class="row">
+                        </div>
+                    </div>
+                    <div class="col-75">
+                        <div id="edittt">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <button type="submit" class="btn btn-primary btn-lg" id="saveBTN" onclick="save()">עדכן</button>
+                    <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
+                </div>
+            </div>
+            <h1>הוספת רמת הכשרה</h1><br />
+            <p class="expl">אם ברצונך להוסיף רמת הכשרה חדשה, יש לרשום את שמה ולבסוף ללחוץ על שמור</p>
+            <div id="formDiv">
+                <div class="row">
+                    <div class="col-25">
+                        <label id="newLevel">הכנס רמת הכשרה חדשה:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength='70' id="NameOfSpeicialLevel" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <input type="submit" value="שמור" onclick="PostSpicialLevel()" /><br />
+                </div>
+            </div>
+        </form>
+    </div>
+
 </body>
 </html>

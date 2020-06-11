@@ -31,7 +31,7 @@ form {
 }
 
 #SaveB {
-    margin-right: 570PX;
+    /*margin-right: 570PX;*/
     background-color: #008CBA;
     color: white;
     font-family: Calibri;
@@ -54,7 +54,7 @@ th, td {
 
 #formDiv {
     font-size: 25px;
-    padding-right: 250px;
+    /*padding-right: 250px;*/
 }
 
 body {
@@ -122,8 +122,12 @@ p {
 }
 
 #GuidesTable {
-    width: 50%;
-    /*margin-right: -20px;*/
+    /*width: 50%;*/
+    /*margin-left: 50px;*/
+    display:block;
+    margin-right:auto;
+    margin-left:auto;
+    align-self:center;
 }
 
 #managerEditDiv {
@@ -150,11 +154,11 @@ p {
     color: #005473;
     direction: rtl;
     width: auto;
-    margin-right: 180px;
+    /*margin-right: 180px;*/
 }
 
 #editDiv1 {
-    margin-left: 200px !important;
+    /*margin-left: 200px !important;*/
 }
 
 .expl {
@@ -182,8 +186,8 @@ p {
     width: 60%;
     text-align: right;
     height: auto;
-    color: cadetblue;
-    background-color: aliceblue;
+    color:cadetblue;
+    background-color:aliceblue;
 }
 
 .inputTL {
@@ -191,7 +195,7 @@ p {
     text-align: center;
 }
 
-#icons {
+#icons{
     height: 100%;
 }
 
@@ -220,7 +224,7 @@ button, input[type=submit], button[type=button], #cancelSaveBTN, #saveBTN, .cont
 }
 
 #saveBTN {
-    margin-right: 600px;
+    /*margin-right: 600px;*/
 }
 
 #insAPT {
@@ -498,9 +502,9 @@ span:before {
 }
 
 #before, #after {
-    background-color: lightgray !important;
-    width: auto !important;
-    color: cadetblue;
+    background-color: lightgray!important;
+    width:auto !important;
+    color:cadetblue;
 }
 
 #ChoosenShift > div > div > input[type=time] {
@@ -514,9 +518,8 @@ span:before {
     background-color: cadetblue;
     border: none;
 }
-
-#ChoosenShift {
-    color: cadetblue;
+#ChoosenShift{
+ color:cadetblue;
 }
 
 .bigshifts {
@@ -601,16 +604,60 @@ span:before {
         border: none;
         color: #005473;
     }
-
-.flex-container {
-    display: flex;
-    flex-wrap: nowrap;
+* {
+    box-sizing: border-box;
 }
 
-    .flex-container > div {
-     
-        margin: 10px;
-        text-align: center;
-       
-        font-size: 25px;
+
+
+label {
+    padding: 12px 12px 12px 0;
+    display: inline-block;
+}
+
+input[type=submit] {
+    /*background-color: #4CAF50;*/
+    /*color: white;*/
+    padding: 12px 20px;
+    /*border: none;*/
+    /*border-radius: 4px;*/
+    cursor: pointer;
+    float: right;
+}
+
+    input[type=submit]:hover {
+        background-color: #45a049;
     }
+
+.container {
+    border-radius: 5px;
+    /*background-color: #f2f2f2;*/
+    padding: 20px;
+}
+
+.col-25 {
+    float: left;
+    width: 25%;
+    margin-top: 6px;
+}
+
+.col-75 {
+    float: left;
+    width: 75%;
+    margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+    .col-25, .col-75, input[type=submit] {
+        width: 100%;
+        margin-top: 0;
+    }
+}
