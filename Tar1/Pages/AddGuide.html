@@ -242,100 +242,350 @@
     </script>
     <title>צפייה/עדכון/הוספה מדריכים</title>
 </head>
-<body dir="rtl" style="background-color:aliceblue" onload="Gets()">
+<!--<body dir="rtl" style="background-color:aliceblue" onload="Gets()">
     <img src="../Photos/LOGO.PNG" />
-    <div class="container-fluid">
-        <br />
-        <h1>צפייה בפרטי מדריכים</h1><br />
-        <p class="expl">בטבלה שלהלן מוצגים כל פרטי המדריכים. על מנת לערוך פרטי מדריך יש ללחוץ על כפתור "ערוך מדריך", לעדכן את פרטיו ולבסוף ללחוץ על שמור.</p>
-        <br />
-        <div class="row">
-            <form dir="rtl" action="/action_page.php" method="post">
-                <table id="GuidesTable" class="display nowrap">
+    <h2>צפייה בפרטי מדריכים</h2>
+    <p class="expl">בטבלה שלהלן מוצגים כל פרטי המדריכים. על מנת לערוך פרטי מדריך יש ללחוץ על כפתור "ערוך מדריך", לעדכן את פרטיו ולבסוף ללחוץ על שמור.</p>
+    <br />
+    <div class="container">
+        <form action="/action_page.php">
+            <div class="table-responsive-lg">
+                <table id="GuidesTable" class="display nowrap" >
                     <thead>
                         <tr>
-                            <th>ת"ז</th>
-                            <th>שם פרטי</th>
-                            <th>שם משפחה</th>
-                            <th>תאריך לידה</th>
-                            <th>טלפון</th>
-                            <th>סיסמה</th>
-                            <th>רמת הכשרה</th>
-                            <th>סטטוס</th>
-                            <th>עריכה</th>
+                            <th scope="col">ת"ז</th>
+                            <th scope="col">שם פרטי</th>
+                            <th scope="col">שם משפחה</th>
+                            <th scope="col">תאריך לידה</th>
+                            <th scope="col">טלפון</th>
+                            <th scope="col">סיסמה</th>
+                            <th scope="col">רמת הכשרה</th>
+                            <th scope="col">סטטוס</th>
+                            <th scope="col">עריכה</th>
                         </tr>
                     </thead>
                 </table>
-                <div id="editDiv">
-                    <h1 id="editDiv1">עריכת פרטי מדריכים</h1><br />
-
-                    <div class="row">
-                        <div>
-                            <label class="editMyGuide">ת"ז:</label>
-                            <input type="text" maxlength="9" id="GuideId">
-                        </div>
-                        <div>
-                            <label class="editMyGuide">שם:</label>
-                            <input type="text" maxlength="30" id="GuideName" required>
-
-                        </div>
-                        <div>
-                            <label class="editMyGuide">שם משפחה:</label>
-                            <input type="text" maxlength="30" id="GuideLastName" required>
-                        </div>
-                        <div>
-                            <label class="editMyGuide">תאריך לידה:</label>
-                            <input type="date" id="GuideBirth" required />
-                        </div>
+            </div>
+            <div id="editDiv">
+                <h1 id="editDiv1">עריכת פרטי מדריכים</h1><br />
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">ת"ז:</label>
                     </div>
-                    <br />
-                    <div class="row">
-                        <div>
-                            <label class="editMyGuide">טלפון:</label>
-                            <input type="text" maxlength="10" id="GuideTelephone" required>
-                        </div>
-                        <div>
-                            <label class="editMyGuide">סיסמה:</label>
-                            <input type="text" maxlength="30" id="GuidePassword" required>
-                        </div>
-                        <div>
-                            <label class="editMyGuide">רמת הכשרה:</label>
-                            <select id="SelectGuideTL"></select>
-                        </div>
-                        <div>
-                            <label class="editMyGuide">סטטוס:</label>
-                            <select id="SelectGuideStatus">
-                                <option value="false">לא פעיל</option>
-                                <option value="true">פעיל</option>
-                            </select>
-                        </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="9" id="GuideId" required>
                     </div>
-                    <br />
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">שם:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="30" id="GuideName" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">שם משפחה:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="30" id="GuideLastName" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">תאריך לידה:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="date" id="GuideBirth" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">טלפון:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="10" id="GuideTelephone" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">סיסמה:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="30" id="GuidePassword" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">רמת הכשרה:</label>
+                    </div>
+                    <div class="col-75">
+                        <select id="SelectGuideTL"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">סטטוס:</label>
+                    </div>
+                    <div class="col-75">
+                        <select id="SelectGuideStatus">
+                            <option value="false">לא פעיל</option>
+                            <option value="true">פעיל</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
                     <button type="button" class="btn btn-primary btn-lg" id="saveBTN" onclick="SaveChanges()">שמור</button>
                     <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
                 </div>
-                <br /><hr />
-                <!--<div id="addNewGuide">-->
+            </div>
                 <h1>הוספת מדריך חדש</h1><br />
                 <p class="expl">על מנת להוסיף מדריך חדש, יש למלא את פרטיו ולבסוף ללחוץ על כפתור שמור.</p>
-                <!--</div>-->
-
-                <div class="col" id="formDiv">
-                    <select id="SelectUnit"></select><br />
-                    <span>ת"ז: </span><input type="text"  maxlength="9" id="id"  required /><br />
-                    <span>שם פרטי: </span><input type="text" maxlength="30" id="first" required /><br />
-                    <span>שם משפחה: </span><input type="text" maxlength="30" id="last" required /><br />
-                    <span> תאריך לידה:</span><input type="date" id="bdate" required /><br />
-                    <span> טלפון:</span><input type="tel" maxlength="10" id="tel" /><br required />
-                    <span>    רמת הכשרה:    </span>
-                    <select id="SelectTraining" required></select><br />
-                    <span> סיסמא:</span><input type="text" maxlength="30" id="pass" required /><br />
-                    <br /><input type="submit" class="btn btn-warning btn-lg" id="SaveB" value="שמור" onclick="InsertUser()" /><br />
-
+                <div id="formDiv">
+                    <div class="row">
+                        <div class="col-25">
+                            <label>יחידה ארגונית:</label>
+                        </div>
+                        <div class="col-75">
+                            <select id="SelectUnit"></select><br />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25">
+                            <label>ת"ז:</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="text" id="id" maxlength="9" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25">
+                            <label>שם פרטי:</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="text" id="first" maxlength="30" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25">
+                            <label>שם משפחה:</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="text" id="last" maxlength="30" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25">
+                            <label>תאריך לידה:</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="date" id="bdate" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25">
+                            <label>טלפון:</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="text" maxlength="10" id="tel" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25">
+                            <label>רמת הכשרה:</label>
+                        </div>
+                        <div class="col-75">
+                            <select id="SelectTraining" required></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25">
+                            <label>סיסמה:</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="text" maxlength="30" id="pass" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <input type="submit" class="btn btn-warning btn-lg" id="SaveB" value="שמור" onclick="InsertUser()" />
+                    </div>
                 </div>
-            </form>
-        </div>
+        </form>
     </div>
-    <input type="text" />
+
+</body>-->
+<body dir="rtl" style="background-color:aliceblue" onload="Gets()">
+    <img src="../Photos/LOGO.PNG" />
+    <h2>צפייה בפרטי מדריכים</h2>
+    <p class="expl">בטבלה שלהלן מוצגים כל פרטי המדריכים. על מנת לערוך פרטי מדריך יש ללחוץ על כפתור "ערוך מדריך", לעדכן את פרטיו ולבסוף ללחוץ על שמור.</p>
+    <br />
+    <div class="container">
+        <form action="/action_page.php">
+            <div class="table-responsive-lg">
+                <table id="GuidesTable" class="display nowrap">
+                    <thead>
+                        <tr>
+                            <th scope="col">ת"ז</th>
+                            <th scope="col">שם פרטי</th>
+                            <th scope="col">שם משפחה</th>
+                            <th scope="col">תאריך לידה</th>
+                            <th scope="col">טלפון</th>
+                            <th scope="col">סיסמה</th>
+                            <th scope="col">רמת הכשרה</th>
+                            <th scope="col">סטטוס</th>
+                            <th scope="col">עריכה</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div id="editDiv">
+                <h1 id="editDiv1">עריכת פרטי מדריכים</h1><br />
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">ת"ז:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="9" id="GuideId" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">שם:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="30" id="GuideName" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">שם משפחה:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="30" id="GuideLastName" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">תאריך לידה:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="date" id="GuideBirth" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">טלפון:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="10" id="GuideTelephone" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">סיסמה:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="30" id="GuidePassword" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">רמת הכשרה:</label>
+                    </div>
+                    <div class="col-75">
+                        <select id="SelectGuideTL"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">סטטוס:</label>
+                    </div>
+                    <div class="col-75">
+                        <select id="SelectGuideStatus">
+                            <option value="false">לא פעיל</option>
+                            <option value="true">פעיל</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <button type="button" class="btn btn-primary btn-lg" id="saveBTN" onclick="SaveChanges()">שמור</button>
+                    <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
+                </div>
+            </div>
+            <h1>הוספת מדריך חדש</h1><br />
+            <p class="expl">על מנת להוסיף מדריך חדש, יש למלא את פרטיו ולבסוף ללחוץ על כפתור שמור.</p>
+            <div id="formDiv">
+                <div class="row">
+                    <div class="col-25">
+                        <label>יחידה ארגונית:</label>
+                    </div>
+                    <div class="col-75">
+                        <select id="SelectUnit"></select><br />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>ת"ז:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" id="id" maxlength="9" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>שם פרטי:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" id="first" maxlength="30" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>שם משפחה:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" id="last" maxlength="30" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>תאריך לידה:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="date" id="bdate" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>טלפון:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="10" id="tel" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>רמת הכשרה:</label>
+                    </div>
+                    <div class="col-75">
+                        <select id="SelectTraining" required></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>סיסמה:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="30" id="pass" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <input type="submit" class="btn btn-warning btn-lg" id="SaveB" value="שמור" onclick="InsertUser()" />
+                </div>
+            </div>
+        </form>
+    </div>
+
 </body>
 </html>

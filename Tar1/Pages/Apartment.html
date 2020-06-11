@@ -120,7 +120,7 @@
         }
     </script>
 </head>
-<body style="background-color:aliceblue">
+<!--<body style="background-color:aliceblue">
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid">
         <br />
@@ -161,12 +161,65 @@
                 </div>
             </form>
             <br /><input type="submit" id="SaveB" value="שמור" onclick="InsertUnit()" /><br />
-            <!--<br /><input type="submit" id="insAPT" value="שמור" onclick="InsertUnit()" /><br />-->
+            <br /><input type="submit" id="insAPT" value="שמור" onclick="InsertUnit()" /><br />
 
         </div>
         <br />
         <br />
     </div>
+</body>-->
+<body dir="rtl" style="background-color:aliceblue" ">
+    <img src="../Photos/LOGO.PNG" />
+    <h2>צפייה בסוגי דירות</h2>
+    <p class="expl">בטבלה מוצגות כל סוגי הדירות. על מנת לערוך סוג דירה, יש ללחוץ על כפתור "ערוך סוג דירה" ולבסוף ללחוץ על כפתור עדכן.</p>
+    <br />
+    <div class="container">
+        <form action="/action_page.php">
+            <div class="table-responsive-lg">
+                <table id="AparTable" class="display nowrap" style="width:40%">
+                    <thead>
+                        <tr>
+                            <th scope="col">מס' סוג דירה</th>
+                            <th scope="col">סוג דירה</th>
+                            <th scope="col">עריכה</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div id="editDiv">
+                <h1 id="editDiv1">עריכת פרטי דירה</h1><br />
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyGuide">עדכן סוג דירה:</label>
+                    </div>
+                    <div class="col-75">
+                        <div id="editApType">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <button type="submit" class="btn btn-primary btn-lg" id="saveBTN" onclick="save()">עדכן</button>
+                    <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
+                </div>
+            </div>
+            <h1>הוספת סוג דירה</h1><br />
+            <p class="expl">על מנת להוסיף סוג דירה, יש למלא את שם סוג הדירה ולבסוף ללחוץ על "שמור".</p>
+            <div id="formDiv">
+                <div class="row">
+                    <div class="col-25">
+                        <label>שם סוג דירה:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="30" id="name" />
+                    </div>
+                </div>
+                <div class="row">
+                    <input type="submit" id="SaveB" value="שמור" onclick="InsertUnit()" />
+                </div>
+            </div>
+        </form>
+    </div>
+
 </body>
 </html>
 

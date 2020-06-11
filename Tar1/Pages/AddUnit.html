@@ -273,7 +273,7 @@
     </script>
 
 </head>
-<body dir="rtl" style="background-color:aliceblue">
+<!--<body dir="rtl" style="background-color:aliceblue">
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid">
         <br />
@@ -363,5 +363,159 @@
             </form>
         </div>
     </div>
+</body>-->
+<body dir="rtl" style="background-color:aliceblue">
+    <img src="../Photos/LOGO.PNG" />
+    <h2>צפייה ביחידות ארגוניות</h2>
+    <p class="expl">בטבלה שלהלן מוצגות כל היחידות הארגוניות. על מנת לערוך יחידה ארגונית, יש ללחוץ על כפתור ערוך יחידה ולבסוף ללחוץ על כפתור שמור.</p>
+    <br />
+    <div class="container">
+        <form action="/action_page.php">
+            <div class="table-responsive-lg">
+                <table id="UnitTable" class="display nowrap" style="width:50%">
+                    <thead>
+                        <tr>
+                            <th scope="col">שם היחידה</th>
+                            <th scope="col">עיר</th>
+                            <th scope="col">רחוב ומספר</th>
+                            <th scope="col">מספר מדריכים</th>
+                            <th scope="col">מספר דיירים</th>
+                            <th scope="col">סוג יחידה</th>
+                            <th scope="col">עריכה</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div id="editDiv">
+                <h1 id="editDiv1">עריכת יחידה ארגונית</h1><br />
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyUnit">שם היחידה:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="30" id="UnitName" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyUnit">עיר:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="40" id="UnitCity" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyUnit">רחוב ומספר:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" maxlength="30" id="UnitStreetNum" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyUnit">מספר המדריכים:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="number" id="UnitNumGuides" required />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyUnit">מספר הדיירים:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="number" id="UnitNumRes" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label class="editMyUnit">סוג היחידה:</label>
+                    </div>
+                    <div class="col-75">
+                        <select id="SelectUnitType">
+                            <option value="0">הוסטל</option>
+                            <option value="3">דירה עצמאית</option>
+                            <option value="2">דירה חצי עצמאית</option>
+                            <option value="1">דירה טיפולית</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <button type="button" class="btn btn-primary btn-lg" id="saveBTN" onclick="SaveChanges()">שמור</button>
+                    <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
+                </div>
+            </div>
+            <h1>הוספת יחידה ארגונית חדשה</h1><br />
+            <p class="expl">על מנת להוסיף יחידה ארגונית חדשה, יש למלא את פרטיה ולבסוף ללחוץ על כפתור "שמור".</p>
+            <div id="formDiv">
+                <div class="row">
+                    <div class="col-25">
+                        <label>שם היחידה:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" id="name" maxlength="30" name="name1" required />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>עיר:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" id="city" maxlength="40" name="city1" required />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>רחוב:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" id="street" name="street1" maxlength="30" required />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>מספר:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="number" id="Hnum" required name="number1" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>מספר מדריכים:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="number" id="numofguides" required name="UGuideNum1" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>מספר דיירים:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="number" id="numofresidents" required name="UResNum1" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>סוג:</label>
+                    </div>
+                    <div class="col-75">
+                        <select id="unittype" onchange="GetApartmentType()" required name="SUnitType1">
+                            <option value=""> בחר סוג יחידה ארגונית</option>
+                            <option value="דירה"> דירה</option>
+                            <option value="הוסטל"> הוסטל</option>
+                        </select><br /><div id="apartmenttype">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <br /><input type="submit" id="SaveB" value="שמור" />
+                </div>
+            </div>
+        </form>
+    </div>
+
 </body>
 </html>
