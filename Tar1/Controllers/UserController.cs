@@ -60,21 +60,22 @@ namespace AkimShifts.Controllers
         {
             user.InsertUser();
         }
+        [HttpPut]
+        [Route("api/User/manager")]
 
         // PUT api/<controller>/5
-        public void Put(string id, [FromBody]User u)
+        public void Put([FromBody]User u)
+        {               
+             u.updateManager();
+        }
+        [HttpPut]
+        [Route("api/User/Guide/{id}")]
+        public void Put(string id,[FromBody]User u)
         {
-            if (id == "abc")
-            {
-                u.updateManager();
-            }
-            else u.updateUser(id);
+            u.updateUser(id);
         }
 
-
-
-
-        // DELETE api/<controller>/5
+      // DELETE api/<controller>/5
         public void Delete(int id)
         {
         }

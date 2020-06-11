@@ -258,10 +258,6 @@ button[type=button], #cancelSaveBTN, #saveBTN {
     margin-right: 15px;
 }
 
-    #submitshift > div > .shiftsShow {
-        background-color: #CCFFCC;
-    }
-
 
 
 #deleteguidebutton {
@@ -599,9 +595,11 @@ span:before {
         margin-top: -30%;
     }
 
-#workschdualtable {
+#workschdualtable, #sumbitTable {
     width: auto;
     border: none;
+  
+    margin-right:30%;
 }
 
     #workschdualtable > thead > tr > th, #workschdualtable > tbody > tr > td {
@@ -679,3 +677,10 @@ input[type=submit] {
         margin-top: 0;
     }
 }
+#sumbitTable > thead > tr > th, #sumbitTable > tbody > tr > td{
+    border:none;
+}
+    #sumbitTable > tbody > tr > td >div> .shiftsShow {
+        background-color: #CCFFCC;
+    }
+

@@ -190,12 +190,7 @@
             if (um == true)
                 role = 'מנהל יחידה ארגונית';
             else role = 'מנהל מערך הדיור';
-            unit = $("#SelectUnit").val();
-            unitid = 0;
-            for (var i = 0; i < UnitArray.length; i++) {
-                if (unit == UnitArray[i].Unitname)
-                    unitid = UnitArray[i].Id;
-            }
+           
             User = {
                 "Userid": id,
                 "Password": pass,
@@ -206,7 +201,7 @@
                 "Role": role,
                 "Unitmanager": um,
                 "Bigmanager": bm,
-                "Unitid": unitid,
+                "Unitid": $("#SelectUnit").val(),
                 "Isactive": 1,
             }
             ajaxCall("POST", "../api/User", JSON.stringify(User), PostUserS, PostUserE);
@@ -220,7 +215,7 @@
         }
         function SaveChanges() {
             birthFormat = moment($("#ManagerBirth").val());
-            birth = birthFormat.format('YYYY-DD-MM');
+            birth = birthFormat.format('YYYY-MM-DD');
 
             if (moment(moment()).isBefore(birth)) {
                 swal("תאריך לידה גדול מהיום", "תאריך לידה לא תקני", "warning");
@@ -241,9 +236,9 @@
                 Isactive: $("#SelectManagerStatus").val(),
                 Unitid: $("#SelectEdit option:selected").val(),
             }
-            console.log(ManagertoSave);
-            str = "abc";
-            ajaxCall("PUT", "../api/User/" + str, JSON.stringify(ManagertoSave), PutManagerS, PutManagerE);
+        
+            ajaxCall("PUT", "../api/User/manager", JSON.stringify(ManagertoSave), PutManagerS, PutManagerE);
+            $("#editDiv").hide();
         }
         function PutManagerS(data) {
             swal("המשתמש עודכן בהצלחה", "", "success");
