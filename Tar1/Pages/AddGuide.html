@@ -203,7 +203,7 @@
         }
         function SaveChanges() {
             birthFormat = moment($("#GuideBirth").val());
-            birth = birthFormat.format('YYYY-DD-MM');
+            birth = birthFormat.format('YYYY-MM-DD');
             if (moment(moment()).isBefore(birth)) {
                 swal("תאריך לידה גדול מהיום", ",תאריך לידה לא  תקני", "warning");
                 return null;
@@ -219,7 +219,7 @@
                 Isactive: $("#SelectGuideStatus").val(),
             }
             console.log(GuidetoSave);
-            ajaxCall("PUT", "../api/User/" + GuidetoSave.Userid, JSON.stringify(GuidetoSave), PutGuideS, PutGuideE);
+            ajaxCall("PUT", "../api/User/Guide/" + GuidetoSave.Userid, JSON.stringify(GuidetoSave), PutGuideS, PutGuideE);
 
             id = GuidetoSave.Userid;
             trl = $("#SelectGuideTL").val();
@@ -227,6 +227,7 @@
                 "Id": trl,
             }
             ajaxCall("PUT", "../api/TrainingLevel/" + id, JSON.stringify(SpicialLevel), PutTrianingS, PutTrianingE);
+                $("#editDiv").hide();
         }
         function PutGuideS(data) {
             swal("המדריך עודכן בהצלחה", "", "success");
@@ -513,6 +514,9 @@
                     <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
                 </div>
             </div>
+            <br />
+            <hr />
+            <br />
             <h1>הוספת מדריך חדש</h1><br />
             <p class="expl">על מנת להוסיף מדריך חדש, יש למלא את פרטיו ולבסוף ללחוץ על כפתור שמור.</p>
             <div id="formDiv">
