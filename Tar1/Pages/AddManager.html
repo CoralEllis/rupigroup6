@@ -91,12 +91,12 @@
             });
         }
         function markSelected(btn) {
-            $("#managerTable tr").removeClass("selected"); // remove seleced class from rows that were selected before
-            row = (btn.parentNode).parentNode; // button is in TD which is in Row
-            row.className = 'selected'; // mark as selected
+            $("#managerTable tr").removeClass("selected");
+            row = (btn.parentNode).parentNode;
+            row.className = 'selected'; 
         }
         function getSuccess(data) {
-            myData = data; // keep the cars array in a global variable;
+            myData = data;
             try {
                 tbl = $('#managerTable').DataTable({
                     data: data,
@@ -221,11 +221,12 @@
         function SaveChanges() {
             birthFormat = moment($("#ManagerBirth").val());
             birth = birthFormat.format('YYYY-DD-MM');
+           
             if (moment(end).isBefore(birth)) {
                 swal("תאריך סיום גדול מתאריך התחלה", "אנא הכנס טווח תאריכים תקני", "warning");
                 return null;
             }
-            console.log(birth);
+           
             ManagertoSave = {
                 Userid: $("#ManagerId").val(),
                 Firstname: $("#ManagerName").val(),
