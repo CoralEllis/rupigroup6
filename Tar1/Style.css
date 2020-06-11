@@ -182,8 +182,8 @@ p {
     width: 60%;
     text-align: right;
     height: auto;
-    color:cadetblue;
-    background-color:aliceblue;
+    color: cadetblue;
+    background-color: aliceblue;
 }
 
 .inputTL {
@@ -191,7 +191,7 @@ p {
     text-align: center;
 }
 
-#icons{
+#icons {
     height: 100%;
 }
 
@@ -498,9 +498,9 @@ span:before {
 }
 
 #before, #after {
-    background-color: lightgray!important;
-    width:auto !important;
-    color:cadetblue;
+    background-color: lightgray !important;
+    width: auto !important;
+    color: cadetblue;
 }
 
 #ChoosenShift > div > div > input[type=time] {
@@ -514,8 +514,9 @@ span:before {
     background-color: cadetblue;
     border: none;
 }
-#ChoosenShift{
- color:cadetblue;
+
+#ChoosenShift {
+    color: cadetblue;
 }
 
 .bigshifts {
@@ -599,4 +600,17 @@ span:before {
     #workschdualtable > thead > tr > th, #workschdualtable > tbody > tr > td {
         border: none;
         color: #005473;
+    }
+
+.flex-container {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+    .flex-container > div {
+     
+        margin: 10px;
+        text-align: center;
+       
+        font-size: 25px;
     }

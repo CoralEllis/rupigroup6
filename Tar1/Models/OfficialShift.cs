@@ -85,6 +85,11 @@ namespace Tar1.Models
             return dbs.GetWorkSchdual(unit);
         }
 
+        public List<OfficialShift> getShiftFromAllOrgan(int unit, string id)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.getShiftFromAllOrgan(unit,id);
+        }
 
 
 
