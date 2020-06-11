@@ -96,8 +96,12 @@ p {
     color: #66CCFF;
 }
 
-#Emptyperiod, #emptyshifts {
+ #emptyshifts {
     margin-left: 1000px;
+    margin-top: 30px;
+}
+#Emptyperiod {
+    /*margin-left: 1000px;*/
     margin-top: 30px;
 }
 
@@ -604,6 +608,20 @@ span:before {
         border: none;
         color: #005473;
     }
+
+.flex-container {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+    .flex-container > div {
+        margin: 10px;
+        text-align: center;
+        font-size: 25px;
+    }
+
+
+
 * {
     box-sizing: border-box;
 }

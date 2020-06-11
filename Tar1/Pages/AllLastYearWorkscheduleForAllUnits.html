@@ -155,14 +155,15 @@
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid" id="SubmShift">
         <h1>צפייה בסידורי עבודה קודמים</h1><br />
+
         <div class="row">
             <span> בחר יחידה ארגונית שברצונך לאייש עבורה משמרת:  </span><span></span>
             <select id="SelectUnit" onchange="GetWorkSchedule(this)"></select>
 
         </div>
-        <div id="Emptyperiod" style="display:none" dir="rtl">
-            <span>בחר מהרשימה תקופת שיבוץ: </span><span> </span>
-            <select id="period" onchange="getshifts(this)"> </select><br />
+        <div id="Emptyperiod" class="row" style="display:none" dir="rtl">
+                <label>בחר מהרשימה תקופת שיבוץ: </label><span> </span>
+                <select id="period" onchange="getshifts(this)"> </select><br />
         </div>
         <div class="row" id="submitshift" dir="rtl" style="display:none">
             <div class="table-responsive-md">

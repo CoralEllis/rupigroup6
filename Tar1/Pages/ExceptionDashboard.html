@@ -368,16 +368,18 @@
             <button onclick="GetExcep()">הראה לי את החריגות</button>
         </div>
         <canvas id="excepPai" style="width:30%;height:40%"></canvas>
-        <table id="ExcepTable" class="display nowrap" style="display:none">
-            <thead>
-                <tr>
-                    <th>שם המדריך</th>
-                    <th>תאריך המשמרת</th>
-                    <th>סוג המשמרת</th>
-                    <th>סוג החריגה</th>
-                </tr>
-            </thead>
-        </table>
+        <div class="table-responsive-lg">
+            <table id="ExcepTable" class="display nowrap" style="display:none">
+                <thead>
+                    <tr>
+                        <th scope="col">שם המדריך</th>
+                        <th scope="col">תאריך המשמרת</th>
+                        <th scope="col">סוג המשמרת</th>
+                        <th scope="col">סוג החריגה</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
         <h1> דשבורד שעות</h1>
         <div class="datadiv" id="divHours" style="display:none">
             <span> יש לבחור טווח תאריכים בהם תרצי לראות נתוני השעות עבור המדריכים</span>
@@ -391,15 +393,17 @@
         <br />
         <canvas id="Extra" style="width:30%;height:40%"></canvas>
         <br />
-        <table id="TableHours" class="display nowrap" style="display:none">
-            <thead>
-                <tr>
-                    <th>שם המדריך</th>
-                    <th>שעות עבודה</th>
-                    <th>שעות עבודה נוספות</th>
-                </tr>
-            </thead>
-        </table>
+        <div class="table-responsive-lg">
+            <table id="TableHours" class="display nowrap" style="display:none">
+                <thead>
+                    <tr>
+                        <th scope="col">שם המדריך</th>
+                        <th scope="col">שעות עבודה</th>
+                        <th scope="col">שעות עבודה נוספות</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
 </body>
 </html>
