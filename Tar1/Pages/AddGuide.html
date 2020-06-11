@@ -205,10 +205,10 @@
             birthFormat = moment($("#GuideBirth").val());
             birth = birthFormat.format('YYYY-DD-MM');
             if (moment(moment()).isBefore(birth)) {
-                swal("תאריך לידה גדול מהיום", "אנא הכנס טווח תאריכים תקני", "warning");
+                swal("תאריך לידה גדול מהיום", ",תאריך לידה לא  תקני", "warning");
                 return null;
             }
-            console.log(birth);
+
             GuidetoSave = {
                 Userid: $("#GuideId").val(),
                 Firstname: $("#GuideName").val(),
@@ -220,12 +220,12 @@
             }
             ajaxCall("PUT", "../api/User/" + GuidetoSave.Userid, JSON.stringify(GuidetoSave), PutGuideS, PutGuideE);
 
-            //id = GuidetoSave.Userid;
-            //trl = $("#SelectGuideTL").val();
-            //SpicialLevel = {
-            //    "Id": trl,
-            //}
-            //ajaxCall("PUT", "../api/TrainingLevel/" + id, JSON.stringify(SpicialLevel), PutTrianingS, PutTrianingE);
+            id = GuidetoSave.Userid;
+            trl = $("#SelectGuideTL").val();
+            SpicialLevel = {
+                "Id": trl,
+            }
+            ajaxCall("PUT", "../api/TrainingLevel/" + id, JSON.stringify(SpicialLevel), PutTrianingS, PutTrianingE);
         }
         function PutGuideS(data) {
             swal("המדריך עודכן בהצלחה", "", "success");

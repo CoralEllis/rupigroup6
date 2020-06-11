@@ -1593,7 +1593,7 @@ namespace Tar1.Models.DAL
                 cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '" + active + "' , UserRole = '" + u.Role + "' , IsUnitManager = '0' , BigManager = '1' WHERE UserId =" + u.Userid;
 
             }
-            else if (u.Role == "סמנכל משאבי אנוש")
+            else if (u.Role == "סמנכלית	")
             {
                 cStr = "UPDATE User_2020 SET UserId ='" + u.Userid + "' , FirstName = '" + u.Firstname + "' , LastName = '" + u.Lastname + "' , Birthdate = '" + bdate + "' , Telephone = '" + u.Telephone + "' , UPassword = '" + u.Password + "' , Active = '" + active + "' , UserRole = '" + u.Role + "' , IsUnitManager = '0' , BigManager = '0' WHERE UserId =" + u.Userid;
 
