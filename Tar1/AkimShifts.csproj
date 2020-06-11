@@ -186,7 +186,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="Pages\AddGuide - bootstrap.html" />
+    <Content Include="Pages\AddManager - bootstrap.html" />
+    <Content Include="Pages\AddSpecialLevel - bootstrap.html" />
+    <Content Include="Pages\AddUnit - bootstrap.html" />
     <Content Include="Pages\AllLastYearWorkscheduleForAllUnits.html" />
+    <Content Include="Pages\Apartment - bootstrap.html" />
     <Content Include="Pages\changeHistory.html" />
     <Content Include="Pages\ExceptionDashboard.html" />
     <Content Include="Content\bootstrap-theme.css" />

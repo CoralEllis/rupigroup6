@@ -31,7 +31,7 @@ form {
 }
 
 #SaveB {
-    margin-right: 570PX;
+    /*margin-right: 570PX;*/
     background-color: #008CBA;
     color: white;
     font-family: Calibri;
@@ -54,7 +54,7 @@ th, td {
 
 #formDiv {
     font-size: 25px;
-    padding-right: 250px;
+    /*padding-right: 250px;*/
 }
 
 body {
@@ -122,8 +122,12 @@ p {
 }
 
 #GuidesTable {
-    width: 50%;
-    /*margin-right: -20px;*/
+    /*width: 50%;*/
+    /*margin-left: 50px;*/
+    display:block;
+    margin-right:auto;
+    margin-left:auto;
+    align-self:center;
 }
 
 #managerEditDiv {
@@ -150,11 +154,11 @@ p {
     color: #005473;
     direction: rtl;
     width: auto;
-    margin-right: 180px;
+    /*margin-right: 180px;*/
 }
 
 #editDiv1 {
-    margin-left: 200px !important;
+    /*margin-left: 200px !important;*/
 }
 
 .expl {
@@ -220,7 +224,7 @@ button, input[type=submit], button[type=button], #cancelSaveBTN, #saveBTN, .cont
 }
 
 #saveBTN {
-    margin-right: 600px;
+    /*margin-right: 600px;*/
 }
 
 #insAPT {

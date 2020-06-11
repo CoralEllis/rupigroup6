@@ -43,7 +43,7 @@
                         $("#GuideName").val(myData[i].Firstname);
                         $("#GuideLastName").val(myData[i].Lastname);
                         birthFormat = moment(myData[i].Birthdate);
-                        $("#GuideBirth").val(birthFormat.format('YYYY-MM-DD'));
+                        $("#GuideBirth").val(birthFormat.format('YYYY-DD-MM'));
                         $("#GuideTelephone").val(myData[i].Telephone);
                         $("#GuidePassword").val(myData[i].Password);
                         $("#SelectGuideTL").val(myData[i].TrainingLevelId);
@@ -218,6 +218,7 @@
                 Password: $("#GuidePassword").val(),
                 Isactive: $("#SelectGuideStatus").val(),
             }
+            console.log(GuidetoSave);
             ajaxCall("PUT", "../api/User/" + GuidetoSave.Userid, JSON.stringify(GuidetoSave), PutGuideS, PutGuideE);
 
             //id = GuidetoSave.Userid;
@@ -234,6 +235,7 @@
 
         }
         function PutGuideE(error) {
+            console.log(error);
        swal("השינויים לא נשמרו", "בדוק את הנתונים היטב ונסה שנית", "error");
             return false;
         }
@@ -275,6 +277,7 @@
                         <div>
                             <label class="editMyGuide">שם:</label>
                             <input type="text" maxlength="30" id="GuideName" required>
+
                         </div>
                         <div>
                             <label class="editMyGuide">שם משפחה:</label>
