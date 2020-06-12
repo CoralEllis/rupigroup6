@@ -345,10 +345,15 @@ button[type=button], #cancelSaveBTN, #saveBTN {
     font-size: 50px;
 }
 
-#panoramaLM {
-    width: 1200px;
-    height: 200px;
-}
+    #BigUnitManager > label {
+        text-align: center;
+    }
+
+
+    #panoramaLM {
+        width: 1200px;
+        height: 200px;
+    }
 
 
 .teamwork {
@@ -460,7 +465,7 @@ input, select {
 
 #newPeriod {
     font-size: 25px;
-    padding-right: 200px;
+    /*padding-right: 200px;*/
 }
 
 #pForm {
@@ -470,7 +475,7 @@ input, select {
 
 #PeriodButton {
     font-size: 25px;
-    margin-left: 700px;
+    /*margin-left: 700px;*/
 }
 
 table, th, td {
@@ -684,3 +689,14 @@ input[type=submit] {
         background-color: #CCFFCC;
     }
 
+#legsIMG {
+    width: 700px;
+    height: 300px;
+    display: block !important;
+    margin-left:auto !important;
+    margin-right:220px !important;
+}
+
+#Placeholder > div >  div > h4{
+    text-align:center;
+}
