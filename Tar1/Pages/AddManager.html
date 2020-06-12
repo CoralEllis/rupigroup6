@@ -249,127 +249,14 @@
     </script>
 
 </head>
-<!--<body dir="rtl" style="background-color:aliceblue">
 
-    <img src="../Photos/LOGO.PNG" />
-    <div class="container-fluid">
-        <br />
-        <h1> צפייה בפרטי מנהלים</h1><br />
-        <p class="expl">בטבלה מוצגים פרטי המנהלים. על מנת לערוך פרטי מנהל יש ללחוץ על כפתור "ערוך מנהל"</p>
-        <br />
-        <form id="pForm">
-            <table id="managerTable" class="display nowrap" style="width:50%">
-                <thead>
-                    <tr>
-                        <th>ת"ז</th>
-                        <th>שם</th>
-                        <th>שם משפחה</th>
-                        <th>תאריך לידה</th>
-                        <th>מס' טלפון</th>
-                        <th>תפקיד</th>
-                        <th>סיסמה</th>
-                        <th>סטטוס</th>
-                        <th>יחידה ארגונית</th>
-                        <th>עריכת מנהל</th>
-                    </tr>
-                </thead>
-            </table>
-        </form>
-        <br />
-        <br />
-        <div id="editDiv">
-            <h1 id="editDiv1"> עריכת מנהל</h1><br />
-            <div id="managerEditDiv">
-                <div class="row">
-                    <div>
-                        <label class="editMyGuide">ת"ז:</label>
-                        <input type="text" maxlength="9" id="ManagerId">
-                    </div>
-                    <span></span>
-                    <div>
-                        <label class="editMyGuide">שם:</label>
-                        <input type="text" maxlength="30" id="ManagerName" required>
-                    </div>
-                    <span></span>
-                    <div>
-                        <label class="editMyGuide">שם משפחה:</label>
-                        <input type="text" maxlength="30" id="ManagerLastName" required>
-                    </div>
-
-                </div>
-                <div class="row">
-                    <div>
-                        <label class="editMyGuide">תאריך לידה:</label>
-                        <input type="date" id="ManagerBirth" required />
-                    </div>
-                    <span></span>
-                    <div>
-                        <label class="editMyGuide">טלפון:</label>
-                        <input type="text" maxlength="10" id="ManagerTelephone" required>
-                    </div>
-                    <span></span>
-                    <div>
-                        <label class="editMyGuide">סיסמה:</label>
-                        <input type="text" maxlength="30" id="ManagerPassword" required>
-                    </div>
-                </div>
-                <div class="row">
-                    <div>
-                        <label class="editMyGuide">תפקיד:</label>
-                        <select id="ManagerRole">
-                            <option value="1">מנהל יחידה ארגונית</option>
-                            <option value="2">מנהל מערך הדיור</option>
-                            <option value="3">סמנכל משאבי אנוש</option>
-                        </select>
-                    </div>
-                    <span></span>
-                    <div>
-                        <label class="editMyGuide">סטטוס:</label>
-                        <select id="SelectManagerStatus">
-                            <option value="false">לא פעיל</option>
-                            <option value="true">פעיל</option>
-                        </select>
-                    </div>
-                    <span></span>
-                    <div>
-                        <label class="editMyGuide">בחר יחידה ארגונית:</label>
-                        <select id="SelectEdit"></select>
-                    </div>
-                </div>
-            </div>
-            <br />
-            <button type="button" class="btn btn-primary btn-lg" id="saveBTN" onclick="SaveChanges()">שמור</button>
-            <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
-        </div>
-        <br /><hr />
-        <br />
-        <h1>  הוספת מנהל חדש</h1><br />
-        <div class="row">
-            <form dir="rtl" action="/action_page.php" method="post">
-                <div class="col" id="formDiv">
-                    <select id="SelectUnit"></select><br />
-                    <span>ת"ז: </span><input type="text" maxlength="9" id="id"  required /><br />
-                    <span>שם פרטי: </span><input type="text" maxlength="30" id="first" required /><br />
-                    <span>שם משפחה: </span><input type="text" maxlength="30" id="last" required /><br />
-                    <span> תאריך לידה:</span><input type="date" id="bdate" required /><br />
-                    <span> טלפון:</span><input type="tel" maxlength="10" id="tel" required /><br />
-                    <input type="radio" id="BigManager" name="Manager" value="bigManager" /><label> מנהל מערך הדיור?</label><br />
-                    <input type="radio" id="SmallManager" name="Manager" value="littleManager" /><label> מנהל יחידה ארגונית?</label><br />
-                    <span> סיסמא:</span><input type="text" maxlength="30" id="pass" required /><br />
-                </div>
-                <br /><input type="submit" value="שמור" id="SaveB" onclick="InsertUser()" /><br />
-
-            </form>
-        </div>
-    </div>
-</body>-->
 <body dir="rtl" style="background-color:aliceblue">
     <img src="../Photos/LOGO.PNG" />
     <h2>צפייה בפרטי מנהלים</h2>
     <p class="expl">בטבלה מוצגים פרטי המנהלים. על מנת לערוך פרטי מנהל יש ללחוץ על כפתור "ערוך מנהל"</p>
     <br />
     <div class="container">
-        <form action="/action_page.php">
+        <form onsubmit="return false">
             <div class="table-responsive-lg">
                 <table id="managerTable" class="display nowrap" style="width:50%">
                     <thead>
@@ -474,6 +361,9 @@
                     <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
                 </div>
             </div>
+            <br />
+            <hr />
+            <br />
             <h1>הוספת מנהל חדש</h1><br />
             <p class="expl">על מנת להוסיף מנהל חדש, יש למלא את פרטיו ולבסוף ללחוץ על כפתור שמור.</p>
             <div id="formDiv">

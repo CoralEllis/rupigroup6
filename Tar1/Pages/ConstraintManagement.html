@@ -1,10 +1,6 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-
-
-    <title>צפייה/ עדכון אילוצים</title>
-
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 
@@ -12,8 +8,8 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
-
     <link href="../Style.css" rel="stylesheet" />
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
@@ -24,14 +20,18 @@
     <script src="../Scripts/ajaxCalls.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="../Scripts/moment.js"></script>
+
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         var myData;
+        var constraintID = 0;
         $(document).ready(function () {
             $("#cancelSaveBTN").on("click", function () {
                 $("#editDiv").hide();
@@ -42,10 +42,19 @@
         function buttonEvents() {
             $(document).on("click", ".editBtn", function () {
                 markSelected(this);
-                str = "<span>עדכן שם אילוץ:</span><input type='text' maxlength='100' class='inputTL' id='cons" + this.id + "' value='" + this.name + "' ><br />";
-                str += "<span>עדכן ערך אילוץ:</span><input type='number' class='inputTL' value='" + this.value + "' >";
-                $("#editCons").html(str);
+                //str = "<input type='text' maxlength='100' class='inputTL' id='cons" + this.id + "' value='" + this.name + "' ><br />";
+                //str += "<input type='number' class='inputTL' value='" + this.value + "' >";
+                //$("#editCons").html(str);
                 $("#editDiv").show();
+                for (var i = 0; i < myData.length; i++) {
+                    if (myData[i].ConstraintID == this.id) {
+                        $("#consName").val(myData[i].ConstraintName);
+                        $("#consVal").val(myData[i].ConstraintValue);
+                        constraintID = this.id;
+
+                    }
+
+                }
                 $("#editDiv :input").prop("disabled", false);
             });
         }
@@ -60,6 +69,9 @@
                 tbl = $('#ConsTable').DataTable({
                     data: data,
                     columns: [
+                        { data: "ConstraintID" },
+                        { data: "ConstraintName" },
+                        { data: "ConstraintValue" },
                         {
                             render: function (data, type, row, meta) {
                                 let dataC = "data-ConsId='" + row.ConstraintID + "'";
@@ -68,9 +80,6 @@
                                 return editBtn;
                             }
                         },
-                        { data: "ConstraintValue" },
-                        { data: "ConstraintName" },
-                        { data: "ConstraintID" },
                     ],
                 });
                 buttonEvents();
@@ -84,18 +93,21 @@
             swal("Error: " + err);
         }
         function save() {
-            x = document.getElementById("editCons").childNodes[1].id;
-            y = document.getElementById("editCons").childNodes[1].value;
-            z = document.getElementById("editCons").childNodes[4].value;
-            res = x.split("s");
-            x = res[1];
-            console.log(x, y, z);
+            //x = document.getElementById("editCons").childNodes[1].id;
+            //y = document.getElementById("editCons").childNodes[1].value;
+            //z = document.getElementById("editCons").childNodes[4].value;
+            //res = x.split("s");
+            //x = res[1];
+            //console.log(x, y, z);
+
+
             constraint = {
-                "ConstraintID": x,
-                "ConstraintName": y,
-                "ConstraintValue": z,
+                "ConstraintID": constraintID,
+                "ConstraintName": $("#consName").val(),
+                "ConstraintValue": $("#consVal").val(),
             }
-            ajaxCall("PUT", "../api/Constraint/" + x, JSON.stringify(constraint), PutSuccess, PutError);
+            console.log(constraint);
+            ajaxCall("PUT", "../api/Constraint/" + constraintID, JSON.stringify(constraint), PutSuccess, PutError);
         }
         function PutSuccess(data) {
             swal("האילוצים עודכנו בהצלחה", "", "success");
@@ -104,40 +116,52 @@
             swal("השינויים לא נשמרו", "בדוק את הנתונים היטב ונסה שנית", "error");
         }
     </script>
+    <title>ניהול אילוצים</title>
 </head>
-<body style="background-color:aliceblue">
+<body dir="rtl" style="background-color:aliceblue">
     <img src="../Photos/LOGO.PNG" />
-    <div class="container-fluid">
-        <br />
-        <br />
-        <h1>צפייה/עריכה אילוצים </h1>
-        <br />
-        <br />
-        <form id="pForm">
-            <p class="expl">.בטבלה מוצגים כל האילוצים. על מנת לערוך שם וערך אילוץ , יש ללחוץ על הכפתור "ערוך אילוץ" ולבסוף ללחוץ על כפתור עדכן</p>
-            <br />
-            <table id="ConsTable" class="display nowrap" style="width:50%">
-                <thead>
-                    <tr>
-                        <th>עריכה</th>
-                        <th>(שעות)ערך האילוץ</th>
-                        <th>שם האילוץ</th>
-                        <th>מספר</th>
-                    </tr>
-                </thead>
-            </table>
-        </form>
-        <br />
-        <br />
-        <div id="editDiv" class="row">
-            <div id="editCons">
+    <h2>צפייה/עריכה אילוצים</h2>
+    <p class="expl">בטבלה מוצגים כל האילוצים. על מנת לערוך שם וערך אילוץ , יש ללחוץ על הכפתור "ערוך אילוץ" ולבסוף ללחוץ על כפתור עדכן.</p>
+    <br />
+    <div class="container">
+        <form onsubmit="return false">
+            <div class="table-responsive-lg">
+                <table id="ConsTable" class="display nowrap" style="width:50%">
+                    <thead>
+                        <tr>
+                            <th scope="col">מספר</th>
+                            <th scope="col">שם האילוץ</th>
+                            <th scope="col">(שעות)ערך האילוץ</th>
+                            <th scope="col">עריכה</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div id="editDiv">
+                <div class="row">
+                    <div class="col-25">
+                        <label>עדכן שם אילוץ:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type='text' maxlength='100' class='inputTL' id='consName'>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label>עדכן ערך אילוץ:</label>
+                    </div>
+                    <div class="col-75">
+                        <input type='number' class='inputTL' id='consVal'>
+                    </div>
+                </div>
+                <div class="row">
+                    <button type="submit" class="btn btn-primary btn-lg" id="saveBTN" onclick="save()">עדכן</button>
+                    <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-lg" id="saveBTN" onclick="save()">עדכן</button>
-            <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
-
-        </div>
-        <br />
+        </form>
     </div>
+
 </body>
 </html>
