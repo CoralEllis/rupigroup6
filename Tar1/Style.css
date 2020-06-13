@@ -97,7 +97,7 @@ p {
 }
 
  #emptyshifts {
-    margin-left: 1000px;
+    /*margin-left: 1000px;*/
     margin-top: 30px;
 }
 #Emptyperiod {
@@ -129,7 +129,7 @@ p {
     /*width: 50%;*/
     /*margin-left: 50px;*/
     display:block;
-    margin-right:auto;
+    margin-right:-130px;
     margin-left:auto;
     align-self:center;
 }
@@ -149,6 +149,7 @@ p {
 }
 
 #addNewGuide {
+
     margin-left: 250px;
 }
 
@@ -427,7 +428,7 @@ img {
 
 h1, h2, .container-fluid > h1, .container-fluid > h2 {
     text-align: center;
-    color: #66CCFF;
+    color: #66CCFF !important;
     font-size: 70px !important;
 }
 
@@ -533,8 +534,8 @@ span:before {
     border-width: 0.5px;
     border-style: solid;
     border-color: #005473;
-    width: 50%;
-    margin-right: 500px;
+    width: 80%;
+    /*margin-right: 500px;*/
 }
 
     .bigshifts > button {
@@ -699,4 +700,10 @@ input[type=submit] {
 
 #Placeholder > div >  div > h4{
     text-align:center;
+}
+
+#AvailableGuidesH2{
+    font-family:Calibri !important;
+    font-weight:500 !important;
+    font-size:70px !important;
 }

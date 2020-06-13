@@ -52,7 +52,7 @@
             unit = id.toString();
             //ajaxCall("GET", "../api/Period/Id?id=" + unit, "", GETPeriodsS, error);
             ajaxCall("GET", "../api/Period/History?id=" + id, "", GETPeriodsS, error);
-           ajaxCall("GET", "../api/Period/" + id, "", GETPrepernessS, error);
+            ajaxCall("GET", "../api/Period/" + id, "", GETPrepernessS, error);
         }
         function GETPrepernessS(data) {
             Preperness = data;
@@ -66,7 +66,7 @@
             SNightShiftHours = data[7].ConstraintValue;
         }
         function error(err) {
-              swal("ישנה בעיה", "נסה לבצע את הפעולה שעשית בשנית", "error");
+            swal("ישנה בעיה", "נסה לבצע את הפעולה שעשית בשנית", "error");
         }
         function GETPeriodsS(data) {
             str = "<option value=''> בחר תקופת שיבוץ</option>";
@@ -190,9 +190,6 @@
         }
         function GETGuideS(data) {
             guides = data;
-            guides[0].Weeklyhours = 62;
-            guides[0].MonthlyHours = 201;
-            guides[0].MonthlyExtraHours = 62;
             Guideinthelist = false;
             str = "<select id='guideslist' onchange='changeindex(this)'><option value=' '> בחר מדריך לשיבוץ</option>";
             for (var i = 0; i < data.length; i++) {
@@ -383,20 +380,34 @@
 </head>
 <body dir="rtl" style="background-color:aliceblue" onload="gets()">
     <img src="../Photos/LOGO.PNG" />
-    <div class="container-fluid" id="putguides">
-        <h1> שינוי נתוני משמרות קודמות</h1><br />
+    <h1> שינוי נתוני משמרות קודמות</h1><br />
+    <div class="container" id="putguides">
+        <form onsubmit="return false">
+            <div id="Emptyperiod" style="display:none" dir="rtl">
+                <div class="row">
+                    <div class="col-40">
+                        <label>בחר מהרשימה תקופת שיבוץ: </label> <span></span>
+                    </div>
+                    <div class="col-60">
+                        <select id="period" onchange="getshifts(this)"> </select>
+                    </div>
 
-        <div id="Emptyperiod" style="display:none" dir="rtl">
-            <span>בחר מהרשימה תקופת שיבוץ: </span><span> </span>
-            <select id="period" onchange="getshifts(this)"> </select><br />
-        </div>
-        <div id="emptyshifts" style="display:none" dir="rtl">
-            <span> בחר מהרשימה משמרת לשינוי נתונים: </span><span></span>
-            <select id="shifts" onchange="ShowShift()"> </select>
-        </div><br /><br />
-        <div id="bigshift">
+                </div>
+            </div>
+            <div id="emptyshifts" style="display:none" dir="rtl">
+                <div class="row">
+                    <div class="col-40">
+                        <label> בחר מהרשימה משמרת לשינוי נתונים: </label> <span></span>
+                    </div>
+                    <div class="col-60">
+                        <select id="shifts" onchange="ShowShift()"> </select>
+                    </div>
+                </div>
+            </div><br /><br />
+            <div id="bigshift">
 
-        </div><br />
+            </div><br />
+        </form>
     </div>
     <div class="modal fade" id="Continue" tabindex="-1" role="dialog" aria-labelledby="extra" aria-hidden="true">
         <div class="modal-dialog" role="document">

@@ -370,37 +370,55 @@
 </head>
 <body dir="rtl" style="background-color:aliceblue" onload="gets()">
     <img src="../Photos/LOGO.PNG" />
-    <div class="container-fluid" id="putguides">
-        <h1> איוש מדריכים למשמרות</h1><br />
-        <div class="row">
-            <span> בחר יחידה ארגונית שברצונך לאייש עבורה משמרת:  </span><span></span>
-            <select id="SelectUnit" onchange="GetWorkSchedule(this)"></select>
-
-        </div>
-        <div id="Emptyperiod" style="display:none" dir="rtl">
-            <span>בחר מהרשימה תקופת שיבוץ: </span><span> </span>
-            <select id="period" onchange="getshifts(this)"> </select><br />
-        </div>
-        <div id="emptyshifts" style="display:none" dir="rtl">
-            <span>בחר מהרשימה משמרת: </span><span></span>
-            <select id="shifts" onchange="checkGuides(this)"> </select>
-        </div>
-
+    <h2 id="AvailableGuidesH2"> איוש מדריכים למשמרות</h2>
+    <div class="container" id="putguides">
+        <form onsubmit="return false">
+            <div class="row">
+                <div class="col-40">
+                    <label> בחר יחידה ארגונית שברצונך לאייש עבורה משמרת:  </label>
+                </div>
+                <div class="col-60">
+                    <select id="SelectUnit" onchange="GetWorkSchedule(this)"></select>
+                </div>
+            </div>
+            <div id="Emptyperiod" style="display:none" dir="rtl">
+                <div class="row">
+                    <div class="col-40">
+                        <label>בחר מהרשימה תקופת שיבוץ: </label>
+                    </div>
+                    <div class="col-60">
+                        <select id="period" onchange="getshifts(this)"> </select>
+                    </div>
+                </div>
+            </div>
+            <div id="emptyshifts" style="display:none" dir="rtl">
+                <div class="row">
+                    <div class="col-40">
+                        <label>בחר מהרשימה משמרת: </label>
+                    </div>
+                    <div class="col-60">
+                        <select id="shifts" onchange="checkGuides(this)"> </select>
+                    </div>
+                </div>
+            </div>
+        </form>
         <div id="guidestbl" style="display:none">
-            <table id="GTable" class="display nowrap">
-                <thead>
-                    <tr>
-                        <th>שם המדריך</th>
-                        <th>יחידה ארגונית</th>
-                        <th>טלפון </th>
-                        <th>מספר שעות חודשיות</th>
-                        <th>מספר שעות נוספות חודשיות</th>
-                        <th>מספר שעות שבועיות</th>
-                        <th>רמת הכשרה</th>
-                        <th>שיבוץ מדריך</th>
-                    </tr>
-                </thead>
-            </table>
+            <div class="table-responsive-lg">
+                <table id="GTable" class="display nowrap">
+                    <thead>
+                        <tr>
+                            <th scope="col">שם המדריך</th>
+                            <th scope="col">יחידה ארגונית</th>
+                            <th scope="col">טלפון </th>
+                            <th scope="col">מספר שעות חודשיות</th>
+                            <th scope="col">מספר שעות נוספות חודשיות</th>
+                            <th scope="col">מספר שעות שבועיות</th>
+                            <th scope="col">רמת הכשרה</th>
+                            <th scope="col">שיבוץ מדריך</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
         <br /><br />
     </div>

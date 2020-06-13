@@ -359,51 +359,100 @@
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid">
         <h1> דשבורד חריגות</h1>
-        <div class="datadiv" id="excepdiv" style="display:none">
-            <span> יש לבחור יחידה ארגונית</span>
-            <select id="SelectUnit"></select><br />
-            <span> יש לבחור טווח תאריכים בהם תרצי לראות נתוני חריגות</span>
-            <span> תאריך התחלה:</span><input type="date" id="start" />
-            <span> תאריך סיום:</span> <input type="date" id="end" /><br />
-            <button onclick="GetExcep()">הראה לי את החריגות</button>
-        </div>
-        <canvas id="excepPai" style="width:30%;height:40%"></canvas>
-        <div class="table-responsive-lg">
-            <table id="ExcepTable" class="display nowrap" style="display:none">
-                <thead>
-                    <tr>
-                        <th scope="col">שם המדריך</th>
-                        <th scope="col">תאריך המשמרת</th>
-                        <th scope="col">סוג המשמרת</th>
-                        <th scope="col">סוג החריגה</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-        <h1> דשבורד שעות</h1>
-        <div class="datadiv" id="divHours" style="display:none">
-            <span> יש לבחור טווח תאריכים בהם תרצי לראות נתוני השעות עבור המדריכים</span>
-            <select id="SelectUnitH"></select><br />
-            <span> יש לבחור טווח תאריכים בהם תרצי לראות נתוני חריגות</span>
-            <span> תאריך התחלה:</span><input type="date" id="startH" />
-            <span> תאריך סיום:</span> <input type="date" id="endH" /><br />
-            <button onclick="GetHOURS()">הראה לי את השעות</button>
-        </div>
-        <canvas id="Normal" style="width:30%;height:40%"></canvas>
-        <br />
-        <canvas id="Extra" style="width:30%;height:40%"></canvas>
-        <br />
-        <div class="table-responsive-lg">
-            <table id="TableHours" class="display nowrap" style="display:none">
-                <thead>
-                    <tr>
-                        <th scope="col">שם המדריך</th>
-                        <th scope="col">שעות עבודה</th>
-                        <th scope="col">שעות עבודה נוספות</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+        <form onsubmit="return false">
+            <div class="datadiv" id="excepdiv" style="display:none">
+                <div class="row">
+                    <div class="col-40">
+                        <label> יש לבחור יחידה ארגונית</label>
+                    </div>
+                    <div class="col-60">
+                        <select id="SelectUnit"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <label> יש לבחור טווח תאריכים בהם תרצי לראות נתוני חריגות</label>
+                </div>
+                <div class="row">
+                    <div class="col-40">
+                        <label> תאריך התחלה:</label>
+                    </div>
+                    <div class="col-60">
+                        <input type="date" id="start" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-40">
+                        <label> תאריך סיום:</label>
+                    </div>
+                    <div class="col-60">
+                        <input type="date" id="end" />
+                    </div>
+                </div>
+                <div class="row">
+                    <input type="submit" value="הראה לי את החריגות" onclick="GetExcep()"/>
+                </div>
+            </div>
+            <canvas id="excepPai" style="width:30%;height:40%"></canvas>
+            <div class="table-responsive-lg">
+                <table id="ExcepTable" class="display nowrap" style="display:none">
+                    <thead>
+                        <tr>
+                            <th scope="col">שם המדריך</th>
+                            <th scope="col">תאריך המשמרת</th>
+                            <th scope="col">סוג המשמרת</th>
+                            <th scope="col">סוג החריגה</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <h1> דשבורד שעות</h1>
+            <div class="datadiv" id="divHours" style="display:none">
+                <div class="row">
+                    <div class="col-40">
+                        <label> יש לבחור יחידה ארגונית</label>
+                    </div>
+                    <div class="col-60">
+                        <select id="SelectUnitH"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <label> יש לבחור טווח תאריכים בהם תרצי לראות נתוני שעות</label>
+                </div>
+                <div class="row">
+                    <div class="col-40">
+                        <label> תאריך התחלה:</label>
+                    </div>
+                    <div class="col-60">
+                        <input type="date" id="startH" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-40">
+                        <label> תאריך סיום:</label>
+                    </div>
+                    <div class="col-60">
+                        <input type="date" id="endH" /><br />
+                    </div>
+                </div>
+                <div class="row">
+                    <input type="submit" value="הראה לי את השעות" onclick="GetHOURS()"/>
+            </div>
+            <canvas id="Normal" style="width:30%;height:40%"></canvas>
+            <br />
+            <canvas id="Extra" style="width:30%;height:40%"></canvas>
+            <br />
+            <div class="table-responsive-lg">
+                <table id="TableHours" class="display nowrap" style="display:none">
+                    <thead>
+                        <tr>
+                            <th scope="col">שם המדריך</th>
+                            <th scope="col">שעות עבודה</th>
+                            <th scope="col">שעות עבודה נוספות</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </form>
     </div>
 </body>
 </html>
