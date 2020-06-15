@@ -16,17 +16,13 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         ShiftsArray = [];
-        //user;
-        //function GetUser() {
-        //    x = localStorage.getItem("User");
-        //    user = JSON.parse(x);
-        //}
-
+        var user;
         function GetSHifts() {
+            user = JSON.parse(localStorage.getItem("User"));
             ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, error);
-   
+
         }
-          function GetOrganizeUnitS(data) {
+        function GetOrganizeUnitS(data) {
             str = "<option value=''>בחר יחידה ארגונית</option>";
             for (var i = 0; i < data.length; i++) {
                 str += "<option value='" + data[i].Id + "'>" + data[i].Unitname + "</option>"
@@ -36,15 +32,15 @@
         function error(err) {
             swal("ישנה בעיה", "נסה לבצע את הפעולה שעשית בשנית", "error");
         }
-           function GetWorkSchedule(select) {
-               id = select.options[select.selectedIndex].value;
-               if (id == '') {
-                   swal("לא נבחרה יחידה ארגונית ", "אנא בחר יחידה ארגונית מתוך הרשימה", "error");
-                   return null;
-               }
-               unit = id.toString();
-             
-               ajaxCall("GET", "../api/Period/LastYear?id=" + unit, "", GETPeriodsS, error);
+        function GetWorkSchedule(select) {
+            id = select.options[select.selectedIndex].value;
+            if (id == '') {
+                swal("לא נבחרה יחידה ארגונית ", "אנא בחר יחידה ארגונית מתוך הרשימה", "error");
+                return null;
+            }
+            unit = id.toString();
+
+            ajaxCall("GET", "../api/Period/LastYear?id=" + unit, "", GETPeriodsS, error);
 
         }
         function GETPeriodsS(data) {
@@ -57,20 +53,17 @@
                 str = str + "<option value='" + Speriod.format("YYYY-MM-DD") + "|" + Eperiod.format("YYYY-MM-DD") + "'>" + Eperiod.format('DD/MM/YYYY') + " - " + Speriod.format('DD/MM/YYYY') + "</option>";
             }
             $("#period").html(str);
-
             $("#Emptyperiod").show();
-
         }
-        
-        function getshifts(select) {
-            Unitid = 2;//in the future get it from localstorage
+
+        function getshifts(select) {         
             id = select.options[select.selectedIndex].value;
             if (id == '') {
                 swal("לא נבחרה תקופת שיבוץ ", "אנא בחר תקופת מתוך הרשימה", "error");
                 return null;
             }
             mahrozet = id.split('|');
-            ajaxCall("GET", "../api/Official/AllRelavnt?start=" + mahrozet[0] + "&end=" + mahrozet[1] + "&unit=" + Unitid, "", GETOfficialS, error);
+            ajaxCall("GET", "../api/Official/AllRelavnt?start=" + mahrozet[0] + "&end=" + mahrozet[1] + "&unit=" + user.Unitid, "", GETOfficialS, error);
         }
         function GETOfficialS(data) {
             for (var i = 0; i < 7; i++) {
@@ -151,7 +144,6 @@
     <title></title>
 </head>
 <body dir="rtl" style="background-color:aliceblue" onload="GetSHifts()">
-    <!--onload="GetUser()"-->
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid" id="SubmShift">
         <h1>צפייה בסידורי עבודה קודמים</h1><br />
@@ -162,8 +154,8 @@
 
         </div>
         <div id="Emptyperiod" class="row" style="display:none" dir="rtl">
-                <label>בחר מהרשימה תקופת שיבוץ: </label><span> </span>
-                <select id="period" onchange="getshifts(this)"> </select><br />
+            <label>בחר מהרשימה תקופת שיבוץ: </label><span> </span>
+            <select id="period" onchange="getshifts(this)"> </select><br />
         </div>
         <div class="row" id="submitshift" dir="rtl" style="display:none">
             <div class="table-responsive-md">
@@ -215,7 +207,7 @@
                     </tbody>
                 </table>
             </div>
-            </div>
         </div>
+    </div>
 </body>
 </html>

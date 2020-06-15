@@ -41,18 +41,14 @@
         Exceptions = [];
         queue = [];
         Preperness = false;
-        //user='';
-        //function GetUser() {
-        //    x = localStorage.getItem("User");
-        //   user = JSON.parse(x);
-        //}
+         var user;
+     
         function gets() {
             ajaxCall("GET", "../api/Constraint", "", GETConstraintSuccess, error);
-            id = 2;// in the futur take from localstorage
-            unit = id.toString();
-            //ajaxCall("GET", "../api/Period/Id?id=" + unit, "", GETPeriodsS, error);
-            ajaxCall("GET", "../api/Period/History?id=" + id, "", GETPeriodsS, error);
-            ajaxCall("GET", "../api/Period/" + id, "", GETPrepernessS, error);
+               user = JSON.parse(localStorage.getItem("User"));
+            unit = user.Unitid;
+            ajaxCall("GET", "../api/Period/History?id=" + user.Unitid, "", GETPeriodsS, error);
+            ajaxCall("GET", "../api/Period/" + user.Unitid, "", GETPrepernessS, error);
         }
         function GETPrepernessS(data) {
             Preperness = data;
@@ -134,7 +130,7 @@
                 document.getElementById("Endhour").disabled = false;
                 unitDate = ShiftsArray[index].StartShift.format("YYYY-MM-DD");
                 guides = [];
-                ajaxCall("GET", "../api/User/WorkUnit?unit=" + unit + "&Date=" + unitDate, "", GETGuideS, error);
+                ajaxCall("GET", "../api/User/WorkUnit?unit=" + user.Unitid + "&Date=" + unitDate, "", GETGuideS, error);
             }
             else {
                 button.innerText = "ערוך משמרת";
@@ -256,7 +252,7 @@
                 "Startshifthour": start.format("HH:mm"),
                 "Shiftdate": ShiftsArray[index].StartShift.format("YYYY-MM-DD"),
                 "Shifttype": ShiftsArray[index].Type,
-                "Unitid": unit
+                "Unitid": user.Unitid
             }
 
             ajaxCall("POST", "../api/Official/CheckHours", JSON.stringify(offics), succesBreak, error);
@@ -286,7 +282,7 @@
 
                         Excpt = {
                             "User": offics.Userid,
-                            "Unit": unit,
+                            "Unit": user.Unitid,
                             "Index": "חריגה ממספר שעות עבודה נוספות חודשיות",
                             "ShiftType": offics.Shifttype,
                             "ShiftDate": offics.Shiftdate,
@@ -298,7 +294,7 @@
                         {
                             Excpt = {
                                 "User": offics.Userid,
-                                "Unit": unit,
+                                "Unit": user.Unitid,
                                 "Index": "חריגה משעות עבודה שבועיות",
                                 "ShiftType": offics.Shifttype,
                                 "ShiftDate": offics.Shiftdate,
@@ -309,7 +305,7 @@
                     case 'monthly': {
                         Excpt = {
                             "User": offics.Userid,
-                            "Unit": unit,
+                            "Unit": user.Unitid,
                             "Index": "חריגה ממספר שעות עבודה חודשיות",
                             "ShiftType": offics.Shifttype,
                             "ShiftDate": offics.Shiftdate,
@@ -360,7 +356,7 @@
                     embed = true;
                     Excpt = {
                         "User": offics.Userid,
-                        "Unit": unit,
+                        "Unit": user.Unitid,
                         "Index": "אי קבלת מנוחה שבועית",
                         "ShiftType": offics.Shifttype,
                         "ShiftDate": offics.Shiftdate,

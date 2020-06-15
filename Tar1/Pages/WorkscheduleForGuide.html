@@ -17,25 +17,19 @@
     <script>
         ShiftsArray = [];
         OutsideShiftsArray = [];
-        //user;
-        //function GetUser() {
-        //    x = localStorage.getItem("User");
-        //    user = JSON.parse(x);
-        //}
+        var user;
 
         function GetSHifts() {
-            Unitid = 2;//in the future get it from localstorage
-            userid = '8999'//TAKE FROM LOCAL STORAGE
-
+            user = JSON.parse(localStorage.getItem("User"));
+            Unitid = user.Unitid;
             ajaxCall("GET", "../api/Official/WorkSchdual?unit=" + Unitid, "", GETOfficialS, error);
-            Unitid = 15;
-            ajaxCall("GET", "../api/Official/Allunits?unit=" + Unitid + "&id=" + userid, "", GETOallShiftsS, error);
+            ajaxCall("GET", "../api/Official/Allunits?unit=" + Unitid + "&id=" + user.Userid, "", GETOallShiftsS, error);
         }
         function error(err) {
             swal("ישנה בעיה", "נסה לבצע את הפעולה שעשית בשנית", "error");
         }
         function GETOfficialS(data) {
-            userid = '123456789'//TAKE FROM LOCAL STORAGE
+            userid = user.Userid;
             for (var i = 0; i < 7; i++) {
                 $("#" + i).html(" ");
             }
@@ -115,43 +109,41 @@
         }
         sortByDateAsc = function (lhs, rhs) { return lhs.StartShift > rhs.StartShift ? 1 : lhs.StartShift < rhs.StartShift ? -1 : 0 }
         function GETOallShiftsS(data) {
-            console.log(data);
             Shiftstr = "";
             if (data.length == 0) {
                 Shiftstr = "אין משמרות להציג";
                 $("#FlexShifrs").html(Shiftstr);
                 return null;
             }
-                   for (var i = 0; i < data.length; i++) {
+            for (var i = 0; i < data.length; i++) {
                 d = data[i].Shiftdate.split("T");
                 x = data[i].Startshifthour.split("T");
                 y = data[i].Endshifthour.split("T");
                 shiftdatestart = d[0] + " " + x[1];
                 shiftdateend = d[0] + " " + y[1];
-                       shift1 = {
-                           "Type": data[i].Shifttype,
-                           "StartShift": moment(shiftdatestart),
-                           "EndShift": moment(shiftdateend),
-                           "UnitName": data[i].Name,
-                       }
+                shift1 = {
+                    "Type": data[i].Shifttype,
+                    "StartShift": moment(shiftdatestart),
+                    "EndShift": moment(shiftdateend),
+                    "UnitName": data[i].Name,
+                }
                 OutsideShiftsArray.push(shift1);
             }
             OutsideShiftsArray.sort(sortByDateAsc);
-       
+
             for (var i = 0; i < OutsideShiftsArray.length; i++) {
-                datestr = OutsideShiftsArray[i].StartShift.format('DD/MM/YYYY');                          
-                    shiftd = OutsideShiftsArray[i].StartShift.day();
-                    weekday = TellMeTheDay(shiftd);
-                    Shiftstr+= "<div class='workschdual myshift' >" + weekday + " " + datestr + "<br />" + OutsideShiftsArray[i].Type + "<br />" + OutsideShiftsArray[i].EndShift.format('HH:mm') + " - " + OutsideShiftsArray[i].StartShift.format('HH:mm') + "<br />יחידה:<br />" + OutsideShiftsArray[i].UnitName + "</div>";
-                }
-                
-           $("#FlexShifrs").html(Shiftstr);            
+                datestr = OutsideShiftsArray[i].StartShift.format('DD/MM/YYYY');
+                shiftd = OutsideShiftsArray[i].StartShift.day();
+                weekday = TellMeTheDay(shiftd);
+                Shiftstr += "<div class='workschdual myshift' >" + weekday + " " + datestr + "<br />" + OutsideShiftsArray[i].Type + "<br />" + OutsideShiftsArray[i].EndShift.format('HH:mm') + " - " + OutsideShiftsArray[i].StartShift.format('HH:mm') + "<br />יחידה:<br />" + OutsideShiftsArray[i].UnitName + "</div>";
+            }
+
+            $("#FlexShifrs").html(Shiftstr);
         }
     </script>
     <title></title>
 </head>
 <body dir="rtl" style="background-color:aliceblue" onload="GetSHifts()">
-    <!--onload="GetUser()"-->
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid" id="SubmShift">
         <h1>צפייה בסידור עבודה נוכחי</h1><br />

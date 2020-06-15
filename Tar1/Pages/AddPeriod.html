@@ -20,11 +20,14 @@
     <script>
         i = 0;
         ShiftsArray = [];
-        Unitid = 2;//tak from localstorage
+  
         again = false;
         SArray = [];
+           var user;
         function CheckShifts() {
-            ajaxCall("GET", "../api/Shifts/" + Unitid, "", GetSavedShiftS, GetSavedShiftE);
+                user=JSON.parse(localStorage.getItem("User"))
+         
+            ajaxCall("GET", "../api/Shifts/" +  user.Unitid, "", GetSavedShiftS, GetSavedShiftE);
         }
         function GetSavedShiftS(data) {
             if (data.length == 0) {
@@ -81,9 +84,10 @@
                     $("#AskPreparedness").html(" ");
                 }
                 else if (Night) {
-                    document.getElementById("NightShift").checked = true
-                    Unitid = 2;//in the future get it from localstorage
-                    ajaxCall("GET", "../api/Period/" + Unitid, "", GETPrepernessS, GetSavedShiftE);
+                    document.getElementById("NightShift").checked = true;
+                          //user=JSON.parse(localStorage.getItem("User"))
+                   
+                    ajaxCall("GET", "../api/Period/" + user.Unitid, "", GETPrepernessS, GetSavedShiftE);
                     for (var g = 0; g < SArray.length; g++) {
                         m = loop.getMonth() + 1;
                         D = loop.getDate() + "/" + m + "/" + loop.getFullYear();
@@ -139,7 +143,7 @@
                 swal("תאריך סיום גדול מתאריך התחלה", "אנא הכנס טווח תאריכים תקני", "warning");
                 return null;
             }
-            ajaxCall("GET", "../api/Shifts/Per?uid=" + Unitid + "&startperiod=" + startdate, "", GetShiftS, GetShiftE);
+            ajaxCall("GET", "../api/Shifts/Per?uid=" + user.Unitid + "&startperiod=" + startdate, "", GetShiftS, GetShiftE);
         }
         sortByDateAsc = function (lhs, rhs) { return lhs.Shiftdate > rhs.Shiftdate ? 1 : lhs.Shiftdate < rhs.Shiftdate ? -1 : 0 }
         function GetShiftS(data) {
@@ -220,7 +224,7 @@
                     "Type": "בוקר",
                     "Start": startH,
                     "End": EndH,
-                    "Uid": 2,
+                    "Uid": user.Unitid,
                     "Startperiod": startdate,
                     "Endperiod": enddate,
                     "Shiftdate": shiftDateR,
@@ -234,7 +238,7 @@
                     "Type": "ערב",
                     "Start": startH,
                     "End": EndH,
-                    "Uid": 2,
+                    "Uid": user.Unitid,
                     "Startperiod": startdate,
                     "Endperiod": enddate,
                     "Shiftdate": shiftDateR,
@@ -249,7 +253,7 @@
                         "Type": "לילה",
                         "Start": startH,
                         "End": EndH,
-                        "Uid": 2,
+                        "Uid": user.Unitid,
                         "Startperiod": startdate,
                         "Endperiod": enddate,
                         "Shiftdate": shiftDateR,
@@ -275,7 +279,7 @@
                 Period = {
                     "Startdate": startdate,
                     "Enddate": enddate,
-                    "Unitid": 2,
+                    "Unitid": user.Unitid,
                     "Preparedness1": Preparedness
                     /*user.Unitid*/
                 }
@@ -316,7 +320,7 @@
         }
 
     </script>
-    <title></title>
+    <title>הוספה או עריכת תקופת שיבות חדשה</title>
 </head>
 <body dir="rtl" style="background-color:aliceblue" onload="CheckShifts()">
     <!--onload="GetUser()"-->

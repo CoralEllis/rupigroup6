@@ -42,9 +42,6 @@
         function buttonEvents() {
             $(document).on("click", ".editBtn", function () {
                 markSelected(this);
-                //str = "<input type='text' maxlength='100' class='inputTL' id='cons" + this.id + "' value='" + this.name + "' ><br />";
-                //str += "<input type='number' class='inputTL' value='" + this.value + "' >";
-                //$("#editCons").html(str);
                 $("#editDiv").show();
                 for (var i = 0; i < myData.length; i++) {
                     if (myData[i].ConstraintID == this.id) {
@@ -92,21 +89,12 @@
         function error(err) {
             swal("Error: " + err);
         }
-        function save() {
-            //x = document.getElementById("editCons").childNodes[1].id;
-            //y = document.getElementById("editCons").childNodes[1].value;
-            //z = document.getElementById("editCons").childNodes[4].value;
-            //res = x.split("s");
-            //x = res[1];
-            //console.log(x, y, z);
-
-
+        function save() {   
             constraint = {
                 "ConstraintID": constraintID,
                 "ConstraintName": $("#consName").val(),
                 "ConstraintValue": $("#consVal").val(),
             }
-            console.log(constraint);
             ajaxCall("PUT", "../api/Constraint/" + constraintID, JSON.stringify(constraint), PutSuccess, PutError);
         }
         function PutSuccess(data) {

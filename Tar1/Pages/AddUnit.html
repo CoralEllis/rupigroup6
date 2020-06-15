@@ -35,30 +35,7 @@
         var ApartmentTypeA;
         ApartmentTypeA = [];
         IdOfUnit = 0;
-        //function buttonEvents(NameOfUnit, City, Street_hn, Numguides, Numresidents, ApartmentT) {
-        //    //$(document).on("click", ".editBtn", function () {
-        //        console.log(this.id);
-        //        alert("flksglnjrt");
-        //    //    markSelected(this);
-        //        $("#editDiv").show();
-        //        //for (var i = 0; i < myData.length; i++) {
-        //        //    if (myData[i].Id == this.id) {
-
-        //    $("#UnitName").val(NameOfUnit);
-        //    $("#UnitCity").val(City);
-        //    $("#UnitStreetNum").val(Street_hn);
-        //    $("#Numofguides").val(Numguides);
-        //    $("#Numofresidents").val(Numresidents);
-        //    $("#ApartmentType1").val(ApartmentT);
-
-        //                //break;
-        //        //    }
-        //        //}
-        //        $("#editDiv :input").prop("disabled", false);
-        //    //});
-        //}
-
-        //function buttonEvents(NameOfUnit, City, Street_hn, Numguides, Numresidents, ApartmentT) {
+       
         function buttonEvents(button, id) {
             $("#editDiv").show();
             markSelected(button);
@@ -75,7 +52,6 @@
                 }
             }
         }
-
 
         function markSelected(btn) {
             $("#UnitTable tr").removeClass("selected");
@@ -123,9 +99,7 @@
                         {
                             render: function (data, type, row, meta) {
                                 let dataU = "data-UId='" + row.Id + "'";
-                                //editBtn = "<button  id='" + row.Id + "' class = 'editBtn btn btn-success' onclick='buttonEvents(" + row.Unitname + "," + row.City + "," + row.Street_hnumber + "," + row.Numofguides + "," + row.Numofresidents + ", " + row.ApartmentType1 + ")'> ערוך יחידה </button>";
-
-                                editBtn = "<button style='background-color: #008CBA;color: white;font - family: Calibri; ' id='" + row.Id + "' class = 'editBtn btn btn-success' " + dataU + "onclick='buttonEvents(this," + row.Id + ")'> ערוך יחידה </button>";
+                                   editBtn = "<button style='background-color: #008CBA;color: white;font - family: Calibri; ' id='" + row.Id + "' class = 'editBtn btn btn-success' " + dataU + "onclick='buttonEvents(this," + row.Id + ")'> ערוך יחידה </button>";
                                 return editBtn;
                             }
                         },
@@ -168,12 +142,12 @@
             }
             if (GuideNum == "") {
                   swal("שים לב שדה מספר מדריכים ריק", "", "error");
-                //alert("חובה למלא שדה מספר מדריכים");
+    
                 return;
             }
             if (UResNum == "") {
                   swal("שים לב שדה מספר דיירים ריק", "", "error");
-                //alert("חובה למלא שדה מספר דיירים");
+  
                 return;
             }
             if (SUnitType == "") {
@@ -227,7 +201,7 @@
         function GetApartmentType() {
             Unittype = $("#unittype").val();
             if (Unittype == "דירה") {
-                //ajaxCall("GET", "../api/ApartmentType", "", GetTypeS, GetTypeE);
+           
                 str = "<select id='TypeOfApartment' ><option > בחר סוג דירה</option>"
                 for (var i = 0; i < ApartmentTypeA.length; i++) {
                     str += "<option id='" + ApartmentTypeA[i].Id + "'> " + ApartmentTypeA[i].Apartmenttype + "</option >";

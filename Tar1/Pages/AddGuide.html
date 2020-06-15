@@ -33,6 +33,7 @@
         var myData;
         UnitArray = [];
         TLarray = [];
+         var user;
         function buttonEvents() {
             $(document).on("click", ".editBtn", function () {
                 markSelected(this);
@@ -69,8 +70,8 @@
             $("#editDiv").hide();
             ajaxCall("GET", "../api/TrainingLevel", "", GetTrianingS, GetTrianingE);
             ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, GetOrganizeUnitE);
-            Unitid = 2;//in the future get it from localstorage
-            ajaxCall("GET", "../api/TrainingLevel/" + Unitid, "", GETGuideS, GETGuideE);
+            user = JSON.parse(localStorage.getItem("User"));
+            ajaxCall("GET", "../api/TrainingLevel/" + user.Unitid, "", GETGuideS, GETGuideE);
             $("#cancelSaveBTN").on("click", function () {
                 $("#editDiv").hide();
             });

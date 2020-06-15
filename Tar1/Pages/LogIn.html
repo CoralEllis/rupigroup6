@@ -15,6 +15,7 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         UsersArray = [];
+       
         function GetUsers() {
             ajaxCall("GET", "../api/User", "", GetUserS, GetUserE);
         }

@@ -15,14 +15,8 @@
     <script src="../Scripts/moment.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
-        ShiftsArray = [];
-        //user;
-        //function GetUser() {
-        //    x = localStorage.getItem("User");
-        //    user = JSON.parse(x);
-        //}
-
-        function GetS() {
+        ShiftsArray = [];  
+               function GetS() {
              ajaxCall("GET", "../api/OrganizeUnit", "", GetOrganizeUnitS, error);           
      
         }
@@ -126,7 +120,6 @@
     <title></title>
 </head>
 <body dir="rtl" style="background-color:aliceblue" onload="GetS()">
-    <!--onload="GetUser()"-->
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid" id="SubmShift">
         <h1>צפייה בסידור עבודה נוכחי</h1><br />

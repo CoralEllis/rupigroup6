@@ -16,15 +16,10 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         ShiftsArray = [];
-        //user;
-        //function GetUser() {
-        //    x = localStorage.getItem("User");
-        //    user = JSON.parse(x);
-        //}
-
-        function GetSHifts() {
-            Unitid = 2;//in the future get it from localstorage
-            ajaxCall("GET", "../api/Period/LastYear?id=" + Unitid, "", GETPeriodsS, error);
+        var user;
+           function GetSHifts() {
+          user = JSON.parse(localStorage.getItem("User"));
+            ajaxCall("GET", "../api/Period/LastYear?id=" + user.Unitid, "", GETPeriodsS, error);
         }
         function error(err) {
             swal("ישנה בעיה", "נסה לבצע את הפעולה שעשית בשנית", "error");
@@ -44,14 +39,13 @@
 
         }
         function getshifts(select) {
-            Unitid = 2;//in the future get it from localstorage
             id = select.options[select.selectedIndex].value;
             if (id == '') {
                 swal("לא נבחרה תקופת שיבוץ ", "אנא בחר תקופת שיבוץ מתוך הרשימה", "error");
                 return null;
             }
             mahrozet = id.split('|');
-            ajaxCall("GET", "../api/Official/AllRelavnt?start=" + mahrozet[0] + "&end=" + mahrozet[1] + "&unit=" + Unitid, "", GETOfficialS, error);
+            ajaxCall("GET", "../api/Official/AllRelavnt?start=" + mahrozet[0] + "&end=" + mahrozet[1] + "&unit=" + user.Unitid, "", GETOfficialS, error);
         }
         function GETOfficialS(data) {
             for (var i = 0; i < 7; i++) {
@@ -132,7 +126,6 @@
     <title></title>
 </head>
 <body dir="rtl" style="background-color:aliceblue" onload="GetSHifts()">
-    <!--onload="GetUser()"-->
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid" id="SubmShift">
         <h1>צפייה בסידורי עבודה קודמים</h1><br />
@@ -142,7 +135,6 @@
         </div>
         <div class="row" id="submitshift" dir="rtl" style="display:none">
             <div class="table-responsive-md">
-                <!--<table id="workschdualtable" class="center">-->
                     <table id="workschdualtable" >
 
                         <thead>

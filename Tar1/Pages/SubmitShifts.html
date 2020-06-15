@@ -15,18 +15,18 @@
     <script src="../Scripts/moment.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
-        //user;
-        //function GetUser() {
-        //    x = localStorage.getItem("User");
-        //    user = JSON.parse(x);
-        //}
+        var user;       
         ShiftsArray = [];
         BlockShifts = [];
         ApplyShift = [];
         again = false;
+        Unitid = 0;
+        UserInfo = 0;
         function GetSHifts() {
-            Unitid = 2;//in the future get it from localstorage
-            ajaxCall("GET", "../api/Shifts/" + Unitid, "", GETShiftS, GETShiftE);
+            user = JSON.parse(localStorage.getItem("User"));  
+            Unitid = user.Unitid;
+            UserInfo = user.Userid;
+            ajaxCall("GET", "../api/Shifts/" + Unitid , "", GETShiftS, GETShiftE);
         }
         function GETShiftS(data) {
             for (var i = 0; i < data.length; i++) {
@@ -55,8 +55,7 @@
                     default:
                         break;
                 }
-            }
-            UserInfo = "2,9438";
+            }        
             ajaxCall("GET", "../api/ApplyShift/" + UserInfo, "", GetAgainS, GetAgainE);
         }
         function GETShiftE(error) {
@@ -113,16 +112,15 @@
             }
         }
         function PostBlockShifts() {
-            unitid = 2;
-            userid = 9438;
+          
             for (var i = 0; i < ShiftsArray.length; i++) {
                 datestr = ShiftsArray[i].StartShift.format("YYYY-MM-DD");
                 IdShift = datestr + "|" + ShiftsArray[i].Type;
                 IdComment = datestr + "||" + ShiftsArray[i].Type;
                 comment = document.getElementById(IdComment).value;
                 AplShift = {
-                    "Userid": userid,
-                    "Unitid": unitid,
+                    "Userid": UserInfo,
+                    "Unitid": Unitid,
                     "Shifttype": ShiftsArray[i].Type,
                     "Comment": comment,
                     "Shiftdate": datestr,
@@ -161,7 +159,6 @@
     <title></title>
 </head>
 <body dir="rtl" style="background-color:aliceblue" onload="GetSHifts()">
-    <!--onload="GetUser()"-->
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid" id="SubmShift">
         <br />

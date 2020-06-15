@@ -16,14 +16,11 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         ShiftsArray = [];
-        //user;
-        //function GetUser() {
-        //    x = localStorage.getItem("User");
-        //    user = JSON.parse(x);
-        //}
-
+        var user; 
         function GetSHifts() {
-            Unitid = 2;//in the future get it from localstorage
+                user = JSON.parse(localStorage.getItem("User"));
+            Unitid = user.Unitid;
+     
             ajaxCall("GET", "../api/Official/WorkSchdual?unit=" + Unitid, "", GETOfficialS, error);
         }
         function error(err) {
@@ -107,7 +104,6 @@
     <title></title>
 </head>
 <body dir="rtl" style="background-color:aliceblue" onload="GetSHifts()">
-    <!--onload="GetUser()"-->
     <img src="../Photos/LOGO.PNG" />
     <div class="container-fluid" id="SubmShift">
         <h1>צפייה בסידור עבודה נוכחי</h1><br />

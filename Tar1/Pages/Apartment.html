@@ -85,7 +85,6 @@
             y = document.getElementById("editApType").childNodes[1].value;
             res = x.split("s");
             x = res[1];
-            console.log(x, y);
             ApartmenTypeJ = {
                 "Id": x,
                 "Apartmenttype": y,
@@ -120,55 +119,8 @@
         }
     </script>
 </head>
-<!--<body style="background-color:aliceblue">
-    <img src="../Photos/LOGO.PNG" />
-    <div class="container-fluid">
-        <br />
-        <h1>צפייה בסוגי דירות</h1>
-        <br />
-        <p class="expl">בטבלה מוצגות כל סוגי הדירות. על מנת לערוך סוג דירה, יש ללחוץ על כפתור "ערוך סוג דירה" ולבסוף ללחוץ על כפתור עדכן.</p>
-        <br />
-        <form id="pForm">
-            <table id="AparTable" class="display nowrap" style="width:40%">
-                <thead>
-                    <tr>
-                        <th scope="col">מס' סוג דירה</th>
-                        <th scope="col">סוג דירה</th>
-                        <th scope="col">עריכה</th>
-                    </tr>
-                </thead>
-            </table>
-        </form>
-        <br />
-        <br />
-        <div id="editDiv" class="row">
-            <div id="editApType">
-            </div>
 
-            <button type="submit" class="btn btn-primary btn-lg" id="saveBTN" onclick="save()">עדכן</button>
-            <input type="button" class="btn btn-warning btn-lg" id="cancelSaveBTN" value="ביטול" />
-
-        </div>
-        <br /><hr />
-        <h1>הוספת סוג דירה</h1><br />
-        <p class="expl">על מנת להוסיף סוג דירה, יש למלא את שם סוג הדירה ולבסוף ללחוץ על "שמור".</p>
-        <br />
-        <br />
-        <div class="row" dir="rtl">
-            <form>
-                <div class="col" id="insertAPT">
-                    <span>שם סוג דירה: </span><input type="text"  maxlength="30"  id="name" /><br />
-                </div>
-            </form>
-            <br /><input type="submit" id="SaveB" value="שמור" onclick="InsertUnit()" /><br />
-            <br /><input type="submit" id="insAPT" value="שמור" onclick="InsertUnit()" /><br />
-
-        </div>
-        <br />
-        <br />
-    </div>
-</body>-->
-<body dir="rtl" style="background-color:aliceblue" ">
+<body dir="rtl" style="background-color:aliceblue">
     <img src="../Photos/LOGO.PNG" />
     <h2>צפייה בסוגי דירות</h2>
     <p class="expl">בטבלה מוצגות כל סוגי הדירות. על מנת לערוך סוג דירה, יש ללחוץ על כפתור "ערוך סוג דירה" ולבסוף ללחוץ על כפתור עדכן.</p>
