@@ -156,7 +156,7 @@
             if (document.getElementById("NightShift").checked == false) {
                 while (loop <= end) {
                     m = loop.getMonth() + 1;
-                    D = loop.getDate() + "/" + m + "/" + loop.getFullYear();                 
+                    D = loop.getDate() + "/" + m + "/" + loop.getFullYear();
                     str += "<br /> <br /><div class='row'><div class='col-md-4'><label style='font-size:25px; font-weight:bold' id='DayDate" + i + "'>" + D + "</label> </div>";
                     str += "<div class='col-md-4'><h4>משמרת בוקר </h4><br /><span>שעות:</span> <input type='time' id='Mend" + i + "' value='15:00'/><strong> - </strong><input type='time' id='Mstr" + i + "' value='07:00'/> <br />";
                     str += " <span> מספר מדריכים:</span> <input type='number' id='Mnum" + i + "' value='1'/> <br /> <br /></div > <div class='col-md-4'>";
@@ -173,7 +173,7 @@
 
                     m = loop.getMonth() + 1;
                     D = loop.getDate() + "/" + m + "/" + loop.getFullYear();
-                      str += " <br /> <br /><div class='row'><div class='col-md-3'><label style='font-size:25px; font-weight:bold'  id='DayDate" + i + "'>" + D + "</label> </div>";
+                    str += " <br /> <br /><div class='row'><div class='col-md-3'><label style='font-size:25px; font-weight:bold'  id='DayDate" + i + "'>" + D + "</label> </div>";
                     str += " <div class='col-md-3'><h4>משמרת בוקר </h4><br /><span>שעות:</span> <input type='time' id='Mend" + i + "' value='15:00'/> <strong> - </strong> <input type='time' id='Mstr" + i + "' value='07:00'/> <br />";
                     str += "<span> מספר מדריכים:</span> <input type='number'  id='Mnum" + i + "' value='1'/> <br /> <br /></div > <div class='col-md-3'>";
                     str += "<h4>משמרת ערב </h4><br /><span>שעות:</span><input type='time' id='Eend" + i + "' value='23:00'/> <strong> - </strong>  <input type='time' id='Estr" + i + "' value='15:00'/> <br /><span> מספר מדריכים:</span> <input type='number' id='Enum" + i + "' value='2'/> <br /> <br />";
@@ -185,8 +185,8 @@
                 }
 
                 strAks = "<label> האם המדריכים נשארים ערים במשמרת הלילה?</label><br />";
-                strAks += "<input type='radio' name='wakeup' value='True' id='yes' /><label>כן</label><br />";
-                strAks += "<input type='radio' name='wakeup' value='false' id='no' /><label>לא</label><br />";
+                strAks += "<input type='radio' name='wakeup' value='True' id='yes' required /><label>כן</label><br />";
+                strAks += "<input type='radio' name='wakeup' value='false' id='no' required /><label>לא</label><br />";
                 $("#AskPreparedness").html(strAks);
             }
 
@@ -260,8 +260,13 @@
             }
             if (again == false) {
                 Preparedness = false;
+
                 if (document.getElementById("NightShift").checked == true) {
                     arr = document.getElementsByName("wakeup");
+                    if (arr[1].checked == false && arr[0].checked == false) {
+                        swal("יש לסמן האם המדריכים ערים בלילה או לא", "", "error");
+                        return null;
+                    }
                     if (arr[0].checked == true)
                         Preparedness = true;
                     else if (arr[1].checked == true)
@@ -319,7 +324,7 @@
     <div class="container-fluid">
         <br />
         <h1> הוספת תקופת שיבוץ חדשה/עריכת תקופת שיבוץ קיימת</h1><br />
-        <form dir="rtl">
+        <form dir="rtl" onsubmit="return false">
             <div class="row" id="newPeriod">
                 <label><strong> בחר תאריכים: </strong></label><span></span>
                 <div class="row">
@@ -365,77 +370,6 @@
         </div>
     </div>
 
-
-
-    <div>
-        <!--<div class="row">
-            <div class="col-md-4">
-                <h4>משמרת בוקר </h4>
-                <br>
-            </div>
-            <div class="col-md-4">
-                <h4>משמרת ערב </h4>
-                <br>
-            </div>
-            <div class="col-md-4">
-                <h4>משמרת לילה </h4>
-                <br>
-            </div>
-        </div>-->
-        <div class="row">
-            <div class="col-md-3">
-                <label style="font-size:25px; font-weight:bold" id="DayDate0">14/6/2020</label>
-            </div> <div class="col-md-3">
-                <h4>משמרת בוקר </h4>
-                <br />
-                <span>שעות:</span>
-                <input type="time" id="Mend0" value="15:00:00"> <strong> - </strong>
-                <input type="time" id="Mstr0" value="07:00:00">
-                <br>
-                <span> מספר מדריכים:</span> <input type="number" id="Mnum0" value="3">
-                <br> <br>
-            </div>
-            <div class="col-md-3">
-                <h4>משמרת ערב </h4>
-                <br />
-                <span>שעות:</span><input type="time" id="Eend0" value="23:00:00"> <strong> - </strong>
-                <input type="time" id="Estr0" value="15:00:00"> <br>
-                <span> מספר מדריכים:</span> <input type="number" id="Enum0" value="2">
-                <br> <br>
-            </div>
-            <div class="col-md-3">
-                <h4>משמרת לילה </h4>
-                <br />
-                <span>שעות:</span>  <input type="time" id="Nend0" value="07:00:00"><strong> - </strong>
-                <input type="time" id="Nstr0" value="23:00:00"> <br>
-                <span> מספר מדריכים:</span> <input type="number" id="Nnum0" value="1">
-                <br> <br>
-            </div> <br> <br>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <label style="font-size:25px; font-weight:bold" id="DayDate0">14/6/2020</label>
-        </div> <div class="col-md-4">
-            <h4>משמרת בוקר </h4>
-            <br />
-            <span>שעות:</span>
-            <input type="time" id="Mend0" value="15:00:00"> <strong> - </strong>
-            <input type="time" id="Mstr0" value="07:00:00">
-            <br>
-            <span> מספר מדריכים:</span> <input type="number" id="Mnum0" value="3">
-            <br> <br>
-        </div>
-        <div class="col-md-4">
-            <h4>משמרת ערב </h4>
-            <br />
-            <span>שעות:</span><input type="time" id="Eend0" value="23:00:00"> <strong> - </strong>
-            <input type="time" id="Estr0" value="15:00:00"> <br>
-            <span> מספר מדריכים:</span> <input type="number" id="Enum0" value="2">
-            <br> <br>
-        </div>
-        <br> <br>
-    </div>
 
 </body>
 </html>
