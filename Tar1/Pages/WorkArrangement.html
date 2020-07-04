@@ -720,7 +720,6 @@
                 for (var i = 0; i < mispar; i++) {
                     if (OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid == id && ShiftsArray[num].NuminOfficialShift[i].Occupied == true) {
                         //Delete guide's shift from ShiftArray
-                        console.log(id, OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid);
                         ShiftsArray[num].NuminOfficialShift[i].Occupied = false;
                         //Delete guide's shift from OficialShift
                         OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid = " ";
@@ -974,7 +973,6 @@
                     tav = 6;
                 }
             }
-            console.log(OfficialShifts);
             if (again == true) {
                 for (var i = 0; i < OfficialShifts.length; i++) {
                     if (OfficialShifts[i].Userid != "666666666" && OfficialShifts[i].Userid != "777777777" && OfficialShifts[i].Userid != "888888888" && OfficialShifts[i].Userid != "999999999") {
@@ -986,7 +984,6 @@
                             "Shifttype": OfficialShifts[i].Shifttype,
                             "Shiftdate": OfficialShifts[i].Shiftdate
                         }
-                        console.log(OfficialShift, OfficialShifts[i].idBefore)
                         ajaxCall("Put", "../api/Official/CheckHours?idbefore=" + OfficialShifts[i].idBefore, JSON.stringify(OfficialShift), succesPut, error);
                     }
                 }
