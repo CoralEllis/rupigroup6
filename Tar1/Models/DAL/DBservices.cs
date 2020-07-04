@@ -2004,7 +2004,7 @@ namespace Tar1.Models.DAL
             string[] DateTime = s.Split(' ');
             string strH = DateTime[1];
             string s1 = os.Endshifthour.ToString();
-            string[] DateTime1 = s.Split(' ');
+            string[] DateTime1 = s1.Split(' ');
             string endH = DateTime1[1];
             string dateShif = os.Shiftdate.ToString("yyyy-MM-dd");
             string cStr = "update OfficialShift_2020 SET UserId='" + os.Userid + "' , StartShift='" + strH + "', EndShift='" + endH + "'";
@@ -2013,7 +2013,6 @@ namespace Tar1.Models.DAL
             try
             {
                 cmd.ExecuteNonQuery();
-
             }
             catch (Exception ex)
             {

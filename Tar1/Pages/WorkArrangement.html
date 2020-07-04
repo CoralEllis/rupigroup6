@@ -64,7 +64,8 @@
         }
         function GetSHifts() {
             user = JSON.parse(localStorage.getItem("User"));
-            Unitid = user.Unitid;
+            //Unitid = user.Unitid;
+            Unitid = 2;
             ajaxCall("GET", "../api/Shifts/" + Unitid, "", GETShiftS, GETShiftE);
             GetPreperness();
         }
@@ -311,7 +312,6 @@
             ExtraDiv = "<p> שעות נוספות</p>" + "<br /><br />";
 
             for (var i = 0; i < data.length; i++) {
-
                 Guide = {
                     "UserId": data[i].Userid,
                     "Username": data[i].Firstname + " " + data[i].Lastname,
@@ -321,7 +321,23 @@
                     "ShiftsSorted": [],
                     "CountPref": data[i].NumOfPref,
                 }
-
+                if (again == true) {
+                    for (var d = 0; d < SaveShifts.length; d++) {
+                        if (SaveShifts[d].Userid == Guide.UserId) {
+                            shiftdatetime = SaveShifts[d].Shiftdate + " " + SaveShifts[d].Startshifthour;
+                            Hathala = moment(shiftdatetime);
+                            shiftend = SaveShifts[d].Shiftdate + " " + SaveShifts[d].Endshifthour;
+                            sium = moment(shiftend);
+                            GuideShiftR = {
+                                "ShiftDate": SaveShifts[d].Shiftdate,
+                                "ShiftType": SaveShifts[d].Shifttype,
+                                "StartShift": Hathala,
+                                "EndHour": sium
+                            }
+                            Guide.ShiftsSorted.push(GuideShiftR);
+                        }
+                    }
+                }
                 ExtraDiv += "<div id='Extra" + Guide.UserId + "' style='margin:2px'>";
                 if (Guide.MonthlyExtraHours != 0) {
                     ExtraDiv += Guide.Username + ": " + Guide.MonthlyExtraHours.toFixed(2) + "   ";
@@ -707,6 +723,7 @@
                         ShiftsArray[num].NuminOfficialShift[i].Occupied = false;
                         //Delete guide's shift from OficialShift
                         OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid = " ";
+                        // Check if there are shifts saved on server
                         OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].idBefore = SaveShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid;
                         break;
                     }
