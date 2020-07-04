@@ -671,7 +671,7 @@
             }
             if (x.textContent == 'שבץ מדריך') {
                 for (var i = 0; i < mispar; i++) {
-                    if (OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid.toString().length == 1 && ShiftsArray[num].NuminOfficialShift[i].Occupied == false) {
+                    if (OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid.toString().length == 1 || OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid == false && ShiftsArray[num].NuminOfficialShift[i].Occupied == false) {
                         RealShiboz = true;
                         OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid = id;
                         OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Startshifthour = StratH;
@@ -718,8 +718,9 @@
                 $("#" + id + "S").prop("disabled", false);
                 $("#" + id + "E").prop("disabled", false);
                 for (var i = 0; i < mispar; i++) {
-                    if (OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid = id && ShiftsArray[num].NuminOfficialShift[i].Occupied == true) {
+                    if (OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid == id && ShiftsArray[num].NuminOfficialShift[i].Occupied == true) {
                         //Delete guide's shift from ShiftArray
+                        console.log(id, OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid);
                         ShiftsArray[num].NuminOfficialShift[i].Occupied = false;
                         //Delete guide's shift from OficialShift
                         OfficialShifts[ShiftsArray[num].NuminOfficialShift[i].NumInArray].Userid = " ";
