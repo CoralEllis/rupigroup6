@@ -27,7 +27,7 @@ namespace Tar1.Controllers
         [Route("api/Official/Unit")]
         public List<OfficialShift> Get(string mahrozet)
         {
-          string [] arr= mahrozet.Split('|');
+            string [] arr= mahrozet.Split('|');
             int Unitid = Convert.ToInt32(arr[2]);
             OfficialShift OS = new OfficialShift();
             return OS.GetEmptyOfficial(Unitid,arr[0],arr[1]);

@@ -56,7 +56,7 @@
                         break;
                 }
             }        
-            ajaxCall("GET", "../api/ApplyShift/" + UserInfo, "", GetAgainS, GetAgainE);
+            ajaxCall("GET", "../api/ApplyShift/Block?User=" + UserInfo + "&Unit=" + Unitid, "", GetAgainS, GetAgainE);
         }
         function GETShiftE(error) {
         swal("הייתה בעיה בטעינת הנתונים", "", "error");         
@@ -68,10 +68,8 @@
                     for (var i = 0; i < ShiftsArray.length; i++) {
                         res = ShiftsArray[i].StartShift._i.split(" ")
                         resdate = res[0];
-                        console.log(resdate);
                         res1 = data[j].Shiftdate.split("T");
                         res1date = res1[0];
-                        console.log(res1date);
                         if (ShiftsArray[i].Type == data[j].Shifttype && resdate == res1date) {
                             id = ShiftsArray[i].StartShift.format("YYYY-MM-DD") + "|" + ShiftsArray[i].Type;
                             x = ShiftsArray[i].StartShift.format("YYYY-MM-DD") + "|||" + ShiftsArray[i].Type;

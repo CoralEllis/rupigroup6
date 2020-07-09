@@ -64,8 +64,7 @@
         }
         function GetSHifts() {
             user = JSON.parse(localStorage.getItem("User"));
-            //Unitid = user.Unitid;
-            Unitid = 2;
+            Unitid = user.Unitid;
             ajaxCall("GET", "../api/Shifts/" + Unitid, "", GETShiftS, GETShiftE);
             GetPreperness();
         }

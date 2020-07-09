@@ -24,13 +24,11 @@ namespace AkimShifts.Controllers
             return appS.GetAS(Unitid);
         }
         [HttpGet]
-        [Route("api/ApplyShift/{id}")]
-        public List<ApplyShift> Get(string id)
+        [Route("api/ApplyShift/Block")]
+        public List<ApplyShift> Get(string User, string Unit)
         {
-            //string info = id.ToString();
-            string[] infor = id.Split(',');
             ApplyShift appS = new ApplyShift();
-            return appS.GetApplyShift(infor[0], infor[1]);
+            return appS.GetApplyShift(Unit,User);
         }
         // POST api/<controller>
         public void Post([FromBody]List<ApplyShift> AS)
