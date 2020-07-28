@@ -2354,17 +2354,14 @@ namespace Tar1.Models.DAL
                     OffiS.Endshifthour = new DateTime(myTimeSpan.Ticks);
                     TimeSpan interval = OffiS.Endshifthour - OffiS.Startshifthour;
                     double x = interval.TotalHours;
+                    if (x < 0)
+                    {
+                        x = x + 24.0;
+                    }
                     if (preprdness == true && OffiS.Shifttype == "לילה")
                     {
-                        double x1 = 0.0;
-                        if (x < 0)
-                        {
-                            x1 = x + 24.0;
-                        }
-                        else if (x > 0)
-                        {
-                            x1 = x;
-                        }
+                        double x1 = x;
+                     
                         if (x1 > SpeNightShift)
                         {
                             normal += SpeNightShift;
